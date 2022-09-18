@@ -9,6 +9,7 @@ include_directories(
 )
 
 set(util_SRCS
+	src/util/log_util.cpp
 )
 source_group(util FILES ${util_SRCS})
 set_source_files_properties(${util_SRCS} PROPERTIES UNITY_GROUP "util")
@@ -24,6 +25,7 @@ source_group(util FILES ${util_HDRS})
 
 set(archimedes_HDRS
 	${util_HDRS}
+	src/archimedes.h
 	src/pch.h
 )
 
