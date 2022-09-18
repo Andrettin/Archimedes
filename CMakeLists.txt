@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.18.0)
 
-project(archimedes VERSION 1.0.0)
-
 set(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo" CACHE STRING "" FORCE)
 
 include_directories(
