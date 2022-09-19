@@ -10,6 +10,9 @@ set(util_SRCS
 	src/util/angle_util.cpp
 	src/util/assert_util.cpp
 	src/util/astronomy_util.cpp
+	src/util/color_container.cpp
+	src/util/date_util.cpp
+	src/util/event_loop.cpp
 	src/util/exception_util.cpp
 	src/util/geocoordinate.cpp
 	src/util/geojson_util.cpp
@@ -18,6 +21,10 @@ set(util_SRCS
 	src/util/point_util.cpp
 	src/util/random.cpp
 	src/util/rect_util.cpp
+	src/util/string_conversion_util.cpp
+	src/util/string_util.cpp
+	src/util/thread_pool.cpp
+	src/util/time_util.cpp
 )
 source_group(util FILES ${util_SRCS})
 set_source_files_properties(${util_SRCS} PROPERTIES UNITY_GROUP "util")
@@ -31,22 +38,40 @@ set(util_HDRS
 	src/util/assert_util.h
 	src/util/astronomy_util.h
 	src/util/char_util.h
+	src/util/color_container.h
+	src/util/container_random_util.h
+	src/util/container_util.h
+	src/util/date_util.h
+	src/util/enum_util.h
+	src/util/event_loop.h
 	src/util/exception_util.h
 	src/util/fractional_int.h
 	src/util/geocoordinate.h
 	src/util/geojson_util.h
+	src/util/georectangle.h
 	src/util/list_util.h
 	src/util/locale_util.h
 	src/util/log_util.h
+	src/util/map_util.h
 	src/util/number_util.h
+	src/util/path_util.h
 	src/util/point_container.h
 	src/util/point_operators.h
 	src/util/point_util.h
+	src/util/queue_util.h
+	src/util/qunique_ptr.h
+	src/util/qvariant_util.h
 	src/util/random.h
 	src/util/rect_util.h
 	src/util/set_util.h
 	src/util/singleton.h
 	src/util/size_operators.h
+	src/util/size_util.h
+	src/util/string_conversion_util.h
+	src/util/string_util.h
+	src/util/string_view_util.h
+	src/util/thread_pool.h
+	src/util/time_util.h
 	src/util/type_traits.h
 	src/util/vector_random_util.h
 	src/util/vector_util.h
