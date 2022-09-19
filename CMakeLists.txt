@@ -12,6 +12,7 @@ set(util_SRCS
 	src/util/astronomy_util.cpp
 	src/util/exception_util.cpp
 	src/util/geocoordinate.cpp
+	src/util/geojson_util.cpp
 	src/util/number_util.cpp
 	src/util/point_container.cpp
 	src/util/point_util.cpp
@@ -33,6 +34,7 @@ set(util_HDRS
 	src/util/exception_util.h
 	src/util/fractional_int.h
 	src/util/geocoordinate.h
+	src/util/geojson_util.h
 	src/util/list_util.h
 	src/util/locale_util.h
 	src/util/log_util.h
@@ -65,6 +67,8 @@ set(archimedes_test_SRCS
 	test/main.cpp
 )
 
+option(WITH_GEOJSON "Compile with support for generating map data from GeoJSON files" OFF)
+
 find_package(Boost 1.69.0 REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIRS})
@@ -91,7 +95,10 @@ set(QT_LIBRARIES
 	Qt5::Quick
 )
 
-set(QT_LIBRARIES ${QT_LIBRARIES} Qt5::LocationPrivate)
+if(WITH_GEOJSON)
+	add_definitions(-DUSE_GEOJSON)
+	set(QT_LIBRARIES ${QT_LIBRARIES} Qt5::LocationPrivate)
+endif()
 
 set(archimedes_LIBS
 	${QT_LIBRARIES}
