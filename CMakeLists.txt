@@ -40,11 +40,13 @@ set(util_HDRS
 	src/util/log_util.h
 	src/util/number_util.h
 	src/util/point_container.h
+	src/util/point_operators.h
 	src/util/point_util.h
 	src/util/random.h
 	src/util/rect_util.h
 	src/util/set_util.h
 	src/util/singleton.h
+	src/util/size_operators.h
 	src/util/type_traits.h
 	src/util/vector_random_util.h
 	src/util/vector_util.h

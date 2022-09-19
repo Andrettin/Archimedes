@@ -1,5 +1,6 @@
 #pragma once
 
+#pragma warning(push, 0)
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -28,12 +29,13 @@
 #include <random>
 #include <set>
 #include <shared_mutex>
+#if __has_include(<source_location>)
 #include <source_location>
+#endif
 #include <sstream>
 #include <stack>
 #include <stdexcept>
 #include <string>
-#include <string_view>
 #include <thread>
 #include <tuple>
 #include <type_traits>
@@ -42,9 +44,11 @@
 #include <variant>
 #include <vector>
 
-/*
+#ifdef _WIN32
+#include <SDKDDKVer.h>
+#endif
+
 #include <boost/asio/awaitable.hpp>
-*/
 
 #include <QApplication>
 #include <QColor>
@@ -71,3 +75,7 @@
 #include <QTranslator>
 #include <QVariant>
 #include <QVariantList>
+#pragma warning(pop)
+
+#include "util/point_operators.h" //to ensure the / operator with an int as RHS is used instead of the Qt one with qreal (which uses rounding)
+#include "util/size_operators.h" //as above
