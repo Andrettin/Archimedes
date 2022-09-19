@@ -21,8 +21,11 @@ set(util_SRCS
 	src/util/date_util.cpp
 	src/util/event_loop.cpp
 	src/util/exception_util.cpp
+	src/util/geocircle_util.cpp
 	src/util/geocoordinate.cpp
 	src/util/geojson_util.cpp
+	src/util/geopath_util.cpp
+	src/util/geoshape_util.cpp
 	src/util/number_util.cpp
 	src/util/point_container.cpp
 	src/util/point_util.cpp
@@ -61,9 +64,12 @@ set(util_HDRS
 	src/util/event_loop.h
 	src/util/exception_util.h
 	src/util/fractional_int.h
+	src/util/geocircle_util.h
 	src/util/geocoordinate.h
 	src/util/geojson_util.h
+	src/util/geopath_util.h
 	src/util/georectangle.h
+	src/util/geoshape_util.h
 	src/util/list_util.h
 	src/util/locale_util.h
 	src/util/log_util.h
