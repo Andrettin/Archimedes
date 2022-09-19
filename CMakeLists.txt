@@ -6,6 +6,13 @@ include_directories(
 	src
 )
 
+set(map_SRCS
+	src/map/map_projection.cpp
+	src/map/mercator_map_projection.cpp
+)
+source_group(map FILES ${map_SRCS})
+set_source_files_properties(${map_SRCS} PROPERTIES UNITY_GROUP "map")
+
 set(util_SRCS
 	src/util/angle_util.cpp
 	src/util/assert_util.cpp
@@ -30,8 +37,16 @@ source_group(util FILES ${util_SRCS})
 set_source_files_properties(${util_SRCS} PROPERTIES UNITY_GROUP "util")
 
 set(archimedes_SRCS
+	${map_SRCS}
 	${util_SRCS}
 )
+
+set(map_HDRS
+	src/map/equirectangular_map_projection.h
+	src/map/map_projection.h
+	src/map/mercator_map_projection.h
+)
+source_group(map FILES ${map_HDRS})
 
 set(util_HDRS
 	src/util/angle_util.h
@@ -79,6 +94,7 @@ set(util_HDRS
 source_group(util FILES ${util_HDRS})
 
 set(archimedes_HDRS
+	${map_HDRS}
 	${util_HDRS}
 	src/archimedes.h
 	src/pch.h
