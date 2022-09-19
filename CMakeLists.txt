@@ -7,7 +7,16 @@ include_directories(
 )
 
 set(util_SRCS
-	src/util/log_util.cpp
+	src/util/angle_util.cpp
+	src/util/assert_util.cpp
+	src/util/astronomy_util.cpp
+	src/util/exception_util.cpp
+	src/util/geocoordinate.cpp
+	src/util/number_util.cpp
+	src/util/point_container.cpp
+	src/util/point_util.cpp
+	src/util/random.cpp
+	src/util/rect_util.cpp
 )
 source_group(util FILES ${util_SRCS})
 set_source_files_properties(${util_SRCS} PROPERTIES UNITY_GROUP "util")
@@ -17,7 +26,26 @@ set(archimedes_SRCS
 )
 
 set(util_HDRS
+	src/util/angle_util.h
+	src/util/assert_util.h
+	src/util/astronomy_util.h
+	src/util/char_util.h
+	src/util/exception_util.h
+	src/util/fractional_int.h
+	src/util/geocoordinate.h
+	src/util/list_util.h
+	src/util/locale_util.h
 	src/util/log_util.h
+	src/util/number_util.h
+	src/util/point_container.h
+	src/util/point_util.h
+	src/util/random.h
+	src/util/rect_util.h
+	src/util/set_util.h
+	src/util/singleton.h
+	src/util/type_traits.h
+	src/util/vector_random_util.h
+	src/util/vector_util.h
 )
 source_group(util FILES ${util_HDRS})
 
