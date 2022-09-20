@@ -127,13 +127,19 @@ set(archimedes_HDRS
 	src/pch.h
 )
 
-set(game_test_SRCS
-#	test/game/game_test.cpp
+set(util_test_SRCS
+	test/util/angle_test.cpp
+	test/util/astronomy_test.cpp
+	test/util/geocoordinate_test.cpp
+	test/util/number_test.cpp
+	test/util/random_test.cpp
+	test/util/string_conversion_test.cpp
+	test/util/time_test.cpp
 )
-source_group(game FILES ${game_test_SRCS})
+source_group(util FILES ${util_test_SRCS})
 
 set(archimedes_test_SRCS
-	${game_test_SRCS}
+	${util_test_SRCS}
 	test/main.cpp
 )
 
@@ -194,7 +200,7 @@ target_precompile_headers(archimedes PRIVATE src/pch.h)
 set_target_properties(archimedes PROPERTIES UNITY_BUILD_MODE GROUP)
 
 set_target_properties(archimedes_test PROPERTIES UNITY_BUILD_MODE GROUP)
-set_source_files_properties(${game_test_SRCS} PROPERTIES UNITY_GROUP "game_test")
+set_source_files_properties(${util_test_SRCS} PROPERTIES UNITY_GROUP "util_test")
 
 target_link_libraries(archimedes ${archimedes_LIBS})
 
