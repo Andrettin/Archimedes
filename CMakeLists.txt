@@ -6,6 +6,14 @@ include_directories(
 	src
 )
 
+set(database_SRCS
+	src/database/gsml_data.cpp
+	src/database/gsml_parser.cpp
+	src/database/gsml_property.cpp
+)
+source_group(database FILES ${database_SRCS})
+set_source_files_properties(${database_SRCS} PROPERTIES UNITY_GROUP "database")
+
 set(map_SRCS
 	src/map/map_projection.cpp
 	src/map/mercator_map_projection.cpp
@@ -40,9 +48,21 @@ source_group(util FILES ${util_SRCS})
 set_source_files_properties(${util_SRCS} PROPERTIES UNITY_GROUP "util")
 
 set(archimedes_SRCS
+	${database_SRCS}
 	${map_SRCS}
 	${util_SRCS}
 )
+
+set(database_HDRS
+	src/database/gsml_data.h
+	src/database/gsml_data_visitor.h
+	src/database/gsml_element_visitor.h
+	src/database/gsml_operator.h
+	src/database/gsml_parser.h
+	src/database/gsml_property.h
+	src/database/gsml_property_visitor.h
+)
+source_group(database FILES ${database_HDRS})
 
 set(map_HDRS
 	src/map/equirectangular_map_projection.h
@@ -100,6 +120,7 @@ set(util_HDRS
 source_group(util FILES ${util_HDRS})
 
 set(archimedes_HDRS
+	${database_HDRS}
 	${map_HDRS}
 	${util_HDRS}
 	src/archimedes.h
