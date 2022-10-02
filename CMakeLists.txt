@@ -7,9 +7,13 @@ include_directories(
 )
 
 set(database_SRCS
+	src/database/data_module.cpp
+	src/database/data_module_container.cpp
+	src/database/database.cpp
 	src/database/gsml_data.cpp
 	src/database/gsml_parser.cpp
 	src/database/gsml_property.cpp
+	src/database/predefines.cpp
 )
 source_group(database FILES ${database_SRCS})
 set_source_files_properties(${database_SRCS} PROPERTIES UNITY_GROUP "database")
@@ -54,6 +58,10 @@ set(archimedes_SRCS
 )
 
 set(database_HDRS
+	src/database/data_module.h
+	src/database/data_module_container.h
+	src/database/data_type_metadata.h
+	src/database/database.h
 	src/database/gsml_data.h
 	src/database/gsml_data_visitor.h
 	src/database/gsml_element_visitor.h
@@ -61,6 +69,7 @@ set(database_HDRS
 	src/database/gsml_parser.h
 	src/database/gsml_property.h
 	src/database/gsml_property_visitor.h
+	src/database/predefines.h
 )
 source_group(database FILES ${database_HDRS})
 
