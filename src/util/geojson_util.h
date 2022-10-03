@@ -43,7 +43,7 @@ inline map_type create_geodata_map(const std::vector<QVariantList> &geojson_data
 	geojson::process_features(geojson_data_list, [&](const QVariantMap &feature) {
 		const QVariantMap properties = feature.value("properties").toMap();
 
-		const map_type::key_type key = key_function(properties);
+		const typename map_type::key_type key = key_function(properties);
 
 		geojson::process_feature_data(feature, [&](const QVariantMap &feature_data) {
 			const QString type_str = feature_data.value("type").toString();
