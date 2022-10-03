@@ -60,6 +60,7 @@ set(archimedes_SRCS
 set(database_HDRS
 	src/database/data_module.h
 	src/database/data_module_container.h
+	src/database/data_type.h
 	src/database/data_type_metadata.h
 	src/database/database.h
 	src/database/gsml_data.h
