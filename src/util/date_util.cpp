@@ -2,6 +2,7 @@
 
 #include "util/date_util.h"
 
+#include "time/timeline.h"
 #include "util/number_util.h"
 
 namespace archimedes::date {
@@ -16,6 +17,17 @@ std::string year_to_string(const int year)
 	}
 
 	return number::to_formatted_string(abs_year);
+}
+
+bool contains_date(const QDateTime &date, const timeline *timeline, const QDateTime &other_date, const archimedes::timeline *other_timeline)
+{
+	if (timeline == other_timeline) {
+		return other_date <= date;
+	} else if (timeline == nullptr) {
+		return false;
+	}
+
+	return timeline->contains_timeline_date(timeline, date);
 }
 
 }

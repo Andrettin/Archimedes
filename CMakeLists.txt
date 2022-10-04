@@ -7,16 +7,30 @@ include_directories(
 )
 
 set(database_SRCS
+	src/database/basic_data_entry.cpp
+	src/database/data_entry.cpp
+	src/database/data_entry_history.cpp
 	src/database/data_module.cpp
 	src/database/data_module_container.cpp
 	src/database/database.cpp
 	src/database/gsml_data.cpp
 	src/database/gsml_parser.cpp
 	src/database/gsml_property.cpp
+	src/database/named_data_entry.cpp
 	src/database/predefines.cpp
 )
 source_group(database FILES ${database_SRCS})
 set_source_files_properties(${database_SRCS} PROPERTIES UNITY_GROUP "database")
+
+set(language_SRCS
+	src/language/grammatical_gender.cpp
+	src/language/language.cpp
+	src/language/name_variant.cpp
+	src/language/word.cpp
+	src/language/word_type.cpp
+)
+source_group(language FILES ${language_SRCS})
+set_source_files_properties(${language_SRCS} PROPERTIES UNITY_GROUP "language")
 
 set(map_SRCS
 	src/map/map_projection.cpp
@@ -25,12 +39,20 @@ set(map_SRCS
 source_group(map FILES ${map_SRCS})
 set_source_files_properties(${map_SRCS} PROPERTIES UNITY_GROUP "map")
 
+set(time_SRCS
+	src/time/calendar.cpp
+	src/time/timeline.cpp
+)
+source_group(time FILES ${time_SRCS})
+set_source_files_properties(${time_SRCS} PROPERTIES UNITY_GROUP "time")
+
 set(util_SRCS
 	src/util/angle_util.cpp
 	src/util/assert_util.cpp
 	src/util/astronomy_util.cpp
 	src/util/color_container.cpp
 	src/util/date_util.cpp
+	src/util/enum_converter.cpp
 	src/util/event_loop.cpp
 	src/util/exception_util.cpp
 	src/util/geocircle_util.cpp
@@ -45,6 +67,7 @@ set(util_SRCS
 	src/util/rect_util.cpp
 	src/util/string_conversion_util.cpp
 	src/util/string_util.cpp
+	src/util/text_processor_base.cpp
 	src/util/thread_pool.cpp
 	src/util/time_util.cpp
 )
@@ -53,11 +76,16 @@ set_source_files_properties(${util_SRCS} PROPERTIES UNITY_GROUP "util")
 
 set(archimedes_SRCS
 	${database_SRCS}
+	${language_SRCS}
 	${map_SRCS}
+	${time_SRCS}
 	${util_SRCS}
 )
 
 set(database_HDRS
+	src/database/basic_data_entry.h
+	src/database/data_entry.h
+	src/database/data_entry_history.h
 	src/database/data_module.h
 	src/database/data_module_container.h
 	src/database/data_type.h
@@ -70,9 +98,20 @@ set(database_HDRS
 	src/database/gsml_parser.h
 	src/database/gsml_property.h
 	src/database/gsml_property_visitor.h
+	src/database/named_data_entry.h
 	src/database/predefines.h
 )
 source_group(database FILES ${database_HDRS})
+
+set(language_HDRS
+	src/language/grammatical_gender.h
+	src/language/language.h
+	src/language/language_family.h
+	src/language/name_variant.h
+	src/language/word.h
+	src/language/word_type.h
+)
+source_group(language FILES ${language_HDRS})
 
 set(map_HDRS
 	src/map/equirectangular_map_projection.h
@@ -80,6 +119,14 @@ set(map_HDRS
 	src/map/mercator_map_projection.h
 )
 source_group(map FILES ${map_HDRS})
+
+set(time_HDRS
+	src/time/calendar.h
+	src/time/day_of_the_week.h
+	src/time/month.h
+	src/time/timeline.h
+)
+source_group(time FILES ${time_HDRS})
 
 set(util_HDRS
 	src/util/angle_util.h
@@ -90,6 +137,7 @@ set(util_HDRS
 	src/util/container_random_util.h
 	src/util/container_util.h
 	src/util/date_util.h
+	src/util/enum_converter.h
 	src/util/enum_util.h
 	src/util/event_loop.h
 	src/util/exception_util.h
@@ -121,6 +169,7 @@ set(util_HDRS
 	src/util/string_conversion_util.h
 	src/util/string_util.h
 	src/util/string_view_util.h
+	src/util/text_processor_base.h
 	src/util/thread_pool.h
 	src/util/time_util.h
 	src/util/type_traits.h
@@ -131,7 +180,9 @@ source_group(util FILES ${util_HDRS})
 
 set(archimedes_HDRS
 	${database_HDRS}
+	${language_HDRS}
 	${map_HDRS}
+	${time_HDRS}
 	${util_HDRS}
 	src/archimedes.h
 	src/pch.h

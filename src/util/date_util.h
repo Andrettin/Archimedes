@@ -1,5 +1,9 @@
 #pragma once
 
+namespace archimedes {
+	class timeline;
+}
+
 namespace archimedes::date {
 
 static constexpr int months_per_year = 12;
@@ -46,5 +50,7 @@ inline int get_days_in_month(const int month, const int year)
 {
 	return QDate(year, month, 1).daysInMonth();
 }
+
+extern bool contains_date(const QDateTime &date, const timeline *timeline, const QDateTime &other_date, const archimedes::timeline *other_timeline = nullptr);
 
 }

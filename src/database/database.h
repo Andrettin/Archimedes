@@ -10,6 +10,7 @@ namespace archimedes {
 class data_entry;
 class data_module;
 class data_type_metadata;
+class timeline;
 
 class database final : public singleton<database>
 {
@@ -103,7 +104,7 @@ public:
 
 	void load_predefines();
 	void load_defines();
-	void load_history();
+	void load_history(const QDateTime &start_date, const timeline *timeline);
 
 	bool is_initialized() const
 	{
