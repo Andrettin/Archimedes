@@ -3,15 +3,38 @@
 #include "util/geoshape_util.h"
 
 #include "map/map_projection.h"
+#include "util/assert_util.h"
 #include "util/geocoordinate.h"
 #include "util/geocircle_util.h"
 #include "util/geopath_util.h"
 #include "util/georectangle.h"
+#include "util/path_util.h"
 #include "util/point_util.h"
 
 namespace archimedes::geoshape {
 
-void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection, const std::string &image_checkpoint_save_filename)
+void write_image(const std::filesystem::path &filepath, color_map<std::vector<std::unique_ptr<QGeoShape>>> &geodata_map, const georectangle &georectangle, const QSize &image_size, const map_projection *map_projection, const QImage &base_image)
+{
+	QImage image = base_image;
+	if (image.isNull()) {
+		image = QImage(image_size, QImage::Format_RGBA8888);
+		image.fill(Qt::transparent);
+	}
+
+	assert_throw(image.size() == image_size);
+
+	for (const auto &[color, geoshapes] : geodata_map) {
+		assert_throw(color.isValid());
+
+		for (const auto &geoshape : geoshapes) {
+			geoshape::write_to_image(*geoshape, image, color, georectangle, map_projection, filepath);
+		}
+	}
+
+	image.save(path::to_qstring(filepath));
+}
+
+void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection, const std::filesystem::path &image_checkpoint_save_filepath)
 {
 	const QGeoRectangle qgeorectangle = georectangle.to_qgeorectangle();
 	QGeoRectangle bounding_qgeorectangle = geoshape.boundingGeoRectangle();
@@ -117,7 +140,7 @@ void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &colo
 			++pixel_checkpoint_count;
 
 			if (pixel_checkpoint_count >= pixel_checkpoint_threshold) {
-				image.save(QString::fromStdString(image_checkpoint_save_filename));
+				image.save(path::to_qstring(image_checkpoint_save_filepath));
 				pixel_checkpoint_count = 0;
 			}
 		}
