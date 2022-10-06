@@ -11,7 +11,7 @@ protected:
 template <typename enum_type>
 class enum_converter final : public enum_converter_base
 {
-private:
+public:
 	enum_converter()
 	{
 		//this check is required for class_initialized variable and, correspondingly,
