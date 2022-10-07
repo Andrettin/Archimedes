@@ -5,6 +5,7 @@
 #include "database/data_module.h"
 #include "database/data_module_container.h"
 #include "database/data_type_metadata.h"
+#include "database/defines_base.h"
 #include "database/predefines.h"
 #include "database/gsml_data.h"
 #include "database/gsml_operator.h"
@@ -514,7 +515,7 @@ void database::load_predefines()
 
 void database::load_defines()
 {
-	if (this->defines_loading_function == nullptr) {
+	if (this->defines == nullptr) {
 		return;
 	}
 
@@ -523,7 +524,7 @@ void database::load_defines()
 		const data_module *data_module = kv_pair.second;
 
 		try {
-			this->defines_loading_function(path);
+			this->defines->load(path);
 		} catch (...) {
 			if (data_module != nullptr) {
 				std::throw_with_nested(std::runtime_error("Failed to load the defines for the \"" + data_module->get_identifier() + "\" module."));
@@ -566,8 +567,8 @@ void database::load_history(const QDateTime &start_date, const timeline *timelin
 
 void database::initialize()
 {
-	if (this->defines_initialization_function != nullptr) {
-		this->defines_initialization_function();
+	if (this->defines != nullptr) {
+		this->defines->initialize();
 	}
 
 	//initialize data entries for each data type

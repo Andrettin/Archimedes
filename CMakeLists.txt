@@ -13,6 +13,7 @@ set(database_SRCS
 	src/database/data_module.cpp
 	src/database/data_module_container.cpp
 	src/database/database.cpp
+	src/database/defines_base.cpp
 	src/database/gsml_data.cpp
 	src/database/gsml_parser.cpp
 	src/database/gsml_property.cpp
@@ -91,6 +92,7 @@ set(database_HDRS
 	src/database/data_type.h
 	src/database/data_type_metadata.h
 	src/database/database.h
+	src/database/defines_base.h
 	src/database/gsml_data.h
 	src/database/gsml_data_visitor.h
 	src/database/gsml_element_visitor.h

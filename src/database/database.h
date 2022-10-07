@@ -10,6 +10,7 @@ namespace archimedes {
 class data_entry;
 class data_module;
 class data_type_metadata;
+class defines_base;
 class timeline;
 
 class database final : public singleton<database>
@@ -353,14 +354,9 @@ public:
 		this->current_module = data_module;
 	}
 
-	void register_defines_loading_function(std::function<void(const std::filesystem::path &)> &&function)
+	void set_defines(defines_base *defines)
 	{
-		this->defines_loading_function = std::move(function);
-	}
-
-	void register_defines_initialization_function(std::function<void()> &&function)
-	{
-		this->defines_initialization_function = std::move(function);
+		this->defines = defines;
 	}
 
 	void register_string_to_qvariant_conversion(const std::string &class_name, std::function<QVariant(const std::string &)> &&function);
@@ -379,8 +375,7 @@ private:
 	const data_module *current_module = nullptr; //the module currently being processed
 	bool initialized = false;
 	std::string workshop_game_id;
-	std::function<void(const std::filesystem::path &)> defines_loading_function;
-	std::function<void()> defines_initialization_function;
+	defines_base *defines = nullptr;
 	std::map<std::string, std::function<QVariant(const std::string &)>> string_to_qvariant_conversion_map; //conversions functions from string to QVariant, mapped to the respective class names
 	std::map<std::string, std::function<bool(QObject *object, const std::string &, const std::string &)>> list_property_function_map;
 	std::vector<std::function<void()>> on_initialization_functions;
