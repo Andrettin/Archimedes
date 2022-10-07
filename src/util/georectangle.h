@@ -77,6 +77,14 @@ public:
 		return this->get_max_geocoordinate().get_longitude() - this->get_min_geocoordinate().get_longitude();
 	}
 
+	bool contains(const geocoordinate &geocoordinate) const
+	{
+		return (geocoordinate.get_longitude() >= this->get_min_geocoordinate().get_longitude()
+			&& geocoordinate.get_latitude() >= this->get_min_geocoordinate().get_latitude()
+			&& geocoordinate.get_longitude() <= this->get_max_geocoordinate().get_longitude()
+			&& geocoordinate.get_latitude() <= this->get_max_geocoordinate().get_latitude());
+	}
+
 	QGeoRectangle to_qgeorectangle() const
 	{
 		return QGeoRectangle(QGeoCoordinate(this->get_max_latitude().to_double(), this->get_min_longitude().to_double()), QGeoCoordinate(this->get_min_latitude().to_double(), this->get_max_longitude().to_double()));
