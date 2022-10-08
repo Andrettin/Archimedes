@@ -4,6 +4,8 @@ set(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo" CACHE STRING "" FORCE)
 
 include_directories(
 	src
+	src/third_party
+	src/third_party/xbrz/include
 )
 
 set(database_SRCS
@@ -52,6 +54,7 @@ set(util_SRCS
 	src/util/assert_util.cpp
 	src/util/astronomy_util.cpp
 	src/util/color_container.cpp
+	src/util/colorization_type.cpp
 	src/util/date_util.cpp
 	src/util/enum_converter.cpp
 	src/util/event_loop.cpp
@@ -61,6 +64,7 @@ set(util_SRCS
 	src/util/geojson_util.cpp
 	src/util/geopath_util.cpp
 	src/util/geoshape_util.cpp
+	src/util/image_util.cpp
 	src/util/number_util.cpp
 	src/util/point_container.cpp
 	src/util/point_util.cpp
@@ -75,12 +79,19 @@ set(util_SRCS
 source_group(util FILES ${util_SRCS})
 set_source_files_properties(${util_SRCS} PROPERTIES UNITY_GROUP "util")
 
+set(xbrz_SRCS
+	src/third_party/xbrz/xbrz.cpp
+)
+source_group(xbrz FILES ${xbrz_SRCS})
+set_source_files_properties(${xbrz_SRCS} PROPERTIES UNITY_GROUP "xbrz")
+
 set(archimedes_SRCS
 	${database_SRCS}
 	${language_SRCS}
 	${map_SRCS}
 	${time_SRCS}
 	${util_SRCS}
+	${xbrz_SRCS}
 )
 
 set(database_HDRS
@@ -136,6 +147,7 @@ set(util_HDRS
 	src/util/astronomy_util.h
 	src/util/char_util.h
 	src/util/color_container.h
+	src/util/colorization_type.h
 	src/util/container_random_util.h
 	src/util/container_util.h
 	src/util/date_util.h
@@ -150,6 +162,7 @@ set(util_HDRS
 	src/util/geopath_util.h
 	src/util/georectangle.h
 	src/util/geoshape_util.h
+	src/util/image_util.h
 	src/util/list_util.h
 	src/util/locale_util.h
 	src/util/log_util.h
@@ -180,12 +193,19 @@ set(util_HDRS
 )
 source_group(util FILES ${util_HDRS})
 
+set(xbrz_HDRS
+	src/third_party/xbrz/include/config.h
+	src/third_party/xbrz/include/xbrz.h
+)
+source_group(xbrz FILES ${xbrz_HDRS})
+
 set(archimedes_HDRS
 	${database_HDRS}
 	${language_HDRS}
 	${map_HDRS}
 	${time_HDRS}
 	${util_HDRS}
+	${xbrz_HDRS}
 	src/archimedes.h
 	src/pch.h
 )
