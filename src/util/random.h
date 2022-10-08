@@ -104,6 +104,8 @@ private:
 	std::mt19937 async_engine;
 };
 
+extern template int16_t random::generate_in_range<int16_t>(std::mt19937 &, const int16_t, const int16_t);
+extern template uint16_t random::generate_in_range<uint16_t>(std::mt19937 &, const uint16_t, const uint16_t);
 extern template int32_t random::generate_in_range<int32_t>(std::mt19937 &, const int32_t, const int32_t);
 extern template uint32_t random::generate_in_range<uint32_t>(std::mt19937 &, const uint32_t, const uint32_t);
 extern template int64_t random::generate_in_range<int64_t>(std::mt19937 &, const int64_t, const int64_t);
