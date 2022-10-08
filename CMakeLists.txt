@@ -64,6 +64,7 @@ set(util_SRCS
 	src/util/geojson_util.cpp
 	src/util/geopath_util.cpp
 	src/util/geoshape_util.cpp
+	src/util/image_provider_base.cpp
 	src/util/image_util.cpp
 	src/util/number_util.cpp
 	src/util/point_container.cpp
@@ -162,6 +163,7 @@ set(util_HDRS
 	src/util/geopath_util.h
 	src/util/georectangle.h
 	src/util/geoshape_util.h
+	src/util/image_provider_base.h
 	src/util/image_util.h
 	src/util/list_util.h
 	src/util/locale_util.h
