@@ -1,6 +1,6 @@
 #include "archimedes.h"
 
-#include "map/image_provider_base.h"
+#include "util/image_provider_base.h"
 
 #include "util/assert_util.h"
 
