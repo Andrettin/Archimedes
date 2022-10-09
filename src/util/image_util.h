@@ -59,6 +59,10 @@ extern QPoint get_frame_pos(const QImage &image, const QSize &frame_size, const 
 
 inline std::vector<QImage> to_frames(const QImage &image, const QSize &frame_size)
 {
+	if (image.size() == frame_size) {
+		return { image };
+	}
+
 	std::vector<QImage> frames;
 
 	const int horizontal_frame_count = image::get_frames_per_row(image, frame_size.width());
