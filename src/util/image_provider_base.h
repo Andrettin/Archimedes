@@ -23,6 +23,11 @@ public:
 		this->image_map[id] = std::move(image);
 	}
 
+	void clear_images()
+	{
+		this->image_map.clear();
+	}
+
 private:
 	std::map<std::string, QImage> image_map;
 };
