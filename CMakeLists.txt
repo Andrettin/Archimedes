@@ -230,6 +230,11 @@ set(archimedes_test_SRCS
 
 option(WITH_GEOJSON "Compile with support for generating map data from GeoJSON files" OFF)
 
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.18.0")
+	#unity builds using defined groups require CMake 3.18
+	option(ENABLE_UNITY_BUILD "Use unity builds for compilation" ON)
+endif()
+
 find_package(Boost 1.69.0 REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIRS})
@@ -267,6 +272,10 @@ set(archimedes_LIBS
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if(ENABLE_UNITY_BUILD)
+	set(CMAKE_UNITY_BUILD ON)
+endif()
 
 if(MSVC)
 	add_compile_options(/W4 /w44800 /wd4244 /wd4458)
