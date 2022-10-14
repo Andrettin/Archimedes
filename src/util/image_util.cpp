@@ -9,7 +9,6 @@
 #include "util/point_util.h"
 #include "util/size_util.h"
 #include "util/thread_pool.h"
-#include "xbrz.h"
 
 namespace archimedes::image {
 
@@ -19,119 +18,6 @@ boost::asio::awaitable<QImage> load(const std::filesystem::path &filepath)
 		QImage image(path::to_qstring(filepath));
 		co_return image;
 	});
-}
-
-static void copy_frame_data(const uint32_t *src_frame_data, uint32_t *dst_data, const QSize &frame_size, const int frame_x, const int frame_y, const int dst_width)
-{
-	//BPP is assumed to be 4, hence why uint32_t buffers are used
-
-	const int frame_width = frame_size.width();
-	const int frame_height = frame_size.height();
-
-	for (int x = 0; x < frame_width; ++x) {
-		for (int y = 0; y < frame_height; ++y) {
-			const int frame_pixel_index = y * frame_width + x;
-			const int pixel_x = frame_x * frame_width + x;
-			const int pixel_y = frame_y * frame_height + y;
-			const int pixel_index = pixel_y * dst_width + pixel_x;
-			dst_data[pixel_index] = src_frame_data[frame_pixel_index];
-		}
-	}
-}
-
-QImage scale(const QImage &src_image, const centesimal_int &scale_factor)
-{
-	if (src_image.format() != QImage::Format_RGBA8888) {
-		const QImage reformatted_src_image = src_image.convertToFormat(QImage::Format_RGBA8888);
-		return image::scale(reformatted_src_image, scale_factor);
-	}
-
-	int scale_multiplier = scale_factor.to_int();
-	if (scale_factor.get_fractional_value() != 0) {
-		if (scale_factor.get_fractional_value() == 50) {
-			scale_multiplier = (scale_factor * 2).to_int();
-		} else {
-			scale_multiplier += 1;
-		}
-	}
-
-	QImage result_image;
-
-	if (scale_multiplier > 1) {
-		result_image = QImage(src_image.size() * scale_multiplier, QImage::Format_RGBA8888);
-		const unsigned char *src_data = src_image.constBits();
-		unsigned char *dst_data = result_image.bits();
-
-		xbrz::scale(scale_multiplier, reinterpret_cast<const uint32_t *>(src_data), reinterpret_cast<uint32_t *>(dst_data), src_image.width(), src_image.height());
-	} else {
-		result_image = src_image;
-	}
-
-	if (scale_factor.get_fractional_value() != 0) {
-		const QSize scaled_size = src_image.size() * scale_factor;
-		result_image = result_image.scaled(scaled_size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation).convertToFormat(QImage::Format_RGBA8888);
-	}
-
-	return result_image;
-}
-
-boost::asio::awaitable<QImage> scale(const QImage &src_image, const centesimal_int &scale_factor, const QSize &old_frame_size)
-{
-	if (src_image.format() != QImage::Format_RGBA8888) {
-		const QImage reformatted_src_image = src_image.convertToFormat(QImage::Format_RGBA8888);
-
-		QImage scaled_image = co_await image::scale(reformatted_src_image, scale_factor, old_frame_size);
-		co_return scaled_image;
-	}
-
-	if (src_image.size() == old_frame_size) {
-		co_return image::scale(src_image, scale_factor); //image has only one frame
-	}
-
-	//scale an image with xBRZ
-	const QSize new_frame_size = old_frame_size * scale_factor;
-
-	const int bpp = src_image.depth() / 8;
-
-	if (bpp != 4) {
-		throw std::runtime_error("BPP must be 4 when scaling an image.");
-	}
-
-	const QSize result_size = src_image.size() * scale_factor;
-	QImage result_image(result_size, QImage::Format_RGBA8888);
-
-	if (result_image.isNull()) {
-		throw std::runtime_error("Failed to allocate image to be scaled.");
-	}
-
-	uint32_t *dst_data = reinterpret_cast<uint32_t *>(result_image.bits());
-
-	//if a simple scale factor is being used for the resizing, then use xBRZ for the rescaling
-	const int horizontal_frame_count = src_image.width() / old_frame_size.width();
-	const int vertical_frame_count = src_image.height() / old_frame_size.height();
-
-	//scale each frame individually
-	std::vector<boost::asio::awaitable<void>> awaitables;
-	const int result_width = result_size.width();
-
-	for (int frame_x = 0; frame_x < horizontal_frame_count; ++frame_x) {
-		for (int frame_y = 0; frame_y < vertical_frame_count; ++frame_y) {
-			boost::asio::awaitable<void> awaitable = thread_pool::get()->co_spawn_awaitable([frame_x, frame_y, &src_image, &scale_factor, &old_frame_size, &new_frame_size, dst_data, result_width]() -> boost::asio::awaitable<void> {
-				const QImage result_frame_image = image::scale_frame(src_image, frame_x, frame_y, scale_factor, old_frame_size);
-
-				const uint32_t *frame_data = reinterpret_cast<const uint32_t *>(result_frame_image.constBits());
-				co_return image::copy_frame_data(frame_data, dst_data, new_frame_size, frame_x, frame_y, result_width);
-			});
-
-			awaitables.push_back(std::move(awaitable));
-		}
-	}
-
-	for (boost::asio::awaitable<void> &awaitable : awaitables) {
-		co_await std::move(awaitable);
-	}
-
-	co_return result_image;
 }
 
 std::set<QRgb> get_rgbs(const QImage &image)
