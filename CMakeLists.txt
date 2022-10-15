@@ -158,6 +158,7 @@ set(util_HDRS
 	src/util/image_util.h
 	src/util/list_util.h
 	src/util/locale_util.h
+	src/util/log_output_handler.h
 	src/util/log_util.h
 	src/util/map_util.h
 	src/util/number_util.h
