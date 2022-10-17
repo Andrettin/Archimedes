@@ -3,6 +3,7 @@
 #include "util/image_provider_base.h"
 
 #include "util/assert_util.h"
+#include "util/exception_util.h"
 
 namespace archimedes {
 
@@ -10,17 +11,22 @@ QImage image_provider_base::requestImage(const QString &id, QSize *size, const Q
 {
 	Q_UNUSED(requested_size);
 
-	const std::string id_str = id.toStdString();
+	try {
+		const std::string id_str = id.toStdString();
 
-	const QImage &image = this->get_image(id_str);
+		const QImage &image = this->get_image(id_str);
 
-	assert_throw(!image.isNull());
+		assert_throw(!image.isNull());
 
-	if (size != nullptr) {
-		*size = image.size();
+		if (size != nullptr) {
+			*size = image.size();
+		}
+
+		return image;
+	} catch (const std::exception &exception) {
+		exception::report(exception);
+		std::terminate();
 	}
-
-	return image;
 }
 
 const QImage &image_provider_base::get_image(const std::string &id)
