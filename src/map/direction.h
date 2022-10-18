@@ -10,7 +10,9 @@ enum class direction {
 	south,
 	southwest,
 	west,
-	northwest
+	northwest,
+
+	count
 };
 
 inline direction string_to_direction(const std::string &str)
