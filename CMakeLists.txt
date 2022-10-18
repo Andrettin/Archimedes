@@ -119,6 +119,7 @@ set(language_HDRS
 source_group(language FILES ${language_HDRS})
 
 set(map_HDRS
+	src/map/direction.h
 	src/map/equirectangular_map_projection.h
 	src/map/map_projection.h
 	src/map/mercator_map_projection.h
