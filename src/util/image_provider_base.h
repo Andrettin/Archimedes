@@ -16,7 +16,9 @@ public:
 	virtual QImage requestImage(const QString &id, QSize *size, const QSize &requested_size) override;
 
 	const QImage &get_image(const std::string &id);
-	virtual void load_image(const std::string &id) = 0;
+
+	[[nodiscard]]
+	virtual boost::asio::awaitable<void> load_image(const std::string &id) = 0;
 
 	void set_image(const std::string &id, QImage &&image)
 	{

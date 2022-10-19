@@ -4,6 +4,7 @@
 
 #include "util/assert_util.h"
 #include "util/exception_util.h"
+#include "util/thread_pool.h"
 
 namespace archimedes {
 
@@ -37,7 +38,9 @@ const QImage &image_provider_base::get_image(const std::string &id)
 		return find_iterator->second;
 	}
 
-	this->load_image(id);
+	thread_pool::get()->co_spawn_sync([this, &id]() -> boost::asio::awaitable<void> {
+		co_await this->load_image(id);
+	});
 
 	find_iterator = this->image_map.find(id);
 	assert_throw(find_iterator != this->image_map.end());
