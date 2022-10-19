@@ -45,11 +45,12 @@ inline void copy_frame_data(const uint32_t *src_frame_data, uint32_t *dst_data, 
 
 template <QImage::Format image_format, typename function_type>
 [[nodiscard]]
-inline QImage scale(const QImage &src_image, const centesimal_int &scale_factor, const function_type &scaling_function)
+inline boost::asio::awaitable<QImage> scale(const QImage &src_image, const centesimal_int &scale_factor, const function_type &scaling_function)
 {
 	if (src_image.format() != image_format) {
 		const QImage reformatted_src_image = src_image.convertToFormat(image_format);
-		return image::scale<image_format>(reformatted_src_image, scale_factor, scaling_function);
+		QImage scaled_image = co_await image::scale<image_format>(reformatted_src_image, scale_factor, scaling_function);
+		co_return scaled_image;
 	}
 
 	int scale_multiplier = scale_factor.to_int();
@@ -78,16 +79,17 @@ inline QImage scale(const QImage &src_image, const centesimal_int &scale_factor,
 		result_image = result_image.scaled(scaled_size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation).convertToFormat(image_format);
 	}
 
-	return result_image;
+	co_return result_image;
 }
 
 template <QImage::Format image_format, typename function_type>
 [[nodiscard]]
-inline QImage scale_frame(const QImage &image, const int frame_x, const int frame_y, const centesimal_int &scale_factor, const QSize &old_frame_size, const function_type &scaling_function)
+inline boost::asio::awaitable<QImage> scale_frame(const QImage &image, const int frame_x, const int frame_y, const centesimal_int &scale_factor, const QSize &old_frame_size, const function_type &scaling_function)
 {
 	const QImage frame_image = image::get_frame(image, frame_x, frame_y, old_frame_size);
 
-	return image::scale<image_format>(frame_image, scale_factor, scaling_function);
+	QImage scaled_frame_image = co_await image::scale<image_format>(frame_image, scale_factor, scaling_function);
+	co_return scaled_frame_image;
 }
 
 template <QImage::Format image_format, typename function_type>
@@ -102,7 +104,8 @@ inline boost::asio::awaitable<QImage> scale(const QImage &src_image, const cente
 	}
 
 	if (src_image.size() == old_frame_size) {
-		co_return image::scale<image_format>(src_image, scale_factor, scaling_function); //image has only one frame
+		QImage scaled_image = co_await image::scale<image_format>(src_image, scale_factor, scaling_function); //image has only one frame
+		co_return scaled_image;
 	}
 
 	//scale an image with xBRZ
@@ -134,7 +137,7 @@ inline boost::asio::awaitable<QImage> scale(const QImage &src_image, const cente
 	for (int frame_x = 0; frame_x < horizontal_frame_count; ++frame_x) {
 		for (int frame_y = 0; frame_y < vertical_frame_count; ++frame_y) {
 			boost::asio::awaitable<void> awaitable = thread_pool::get()->co_spawn_awaitable([frame_x, frame_y, &src_image, &scale_factor, &old_frame_size, &new_frame_size, dst_data, result_width, scaling_function]() -> boost::asio::awaitable<void> {
-				const QImage result_frame_image = image::scale_frame<image_format>(src_image, frame_x, frame_y, scale_factor, old_frame_size, scaling_function);
+				const QImage result_frame_image = co_await image::scale_frame<image_format>(src_image, frame_x, frame_y, scale_factor, old_frame_size, scaling_function);
 
 				const uint32_t *frame_data = reinterpret_cast<const uint32_t *>(result_frame_image.constBits());
 				co_return image::copy_frame_data(frame_data, dst_data, new_frame_size, frame_x, frame_y, result_width);
