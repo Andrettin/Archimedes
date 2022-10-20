@@ -57,6 +57,7 @@ set(util_SRCS
 	src/util/enum_converter.cpp
 	src/util/event_loop.cpp
 	src/util/exception_util.cpp
+	src/util/gender.cpp
 	src/util/geocircle_util.cpp
 	src/util/geocoordinate.cpp
 	src/util/geojson_util.cpp
@@ -149,6 +150,7 @@ set(util_HDRS
 	src/util/event_loop.h
 	src/util/exception_util.h
 	src/util/fractional_int.h
+	src/util/gender.h
 	src/util/geocircle_util.h
 	src/util/geocoordinate.h
 	src/util/geojson_util.h
