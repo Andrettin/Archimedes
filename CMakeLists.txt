@@ -34,6 +34,7 @@ source_group(language FILES ${language_SRCS})
 set_source_files_properties(${language_SRCS} PROPERTIES UNITY_GROUP "language")
 
 set(map_SRCS
+	src/map/direction.cpp
 	src/map/map_projection.cpp
 	src/map/mercator_map_projection.cpp
 )

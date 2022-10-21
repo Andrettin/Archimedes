@@ -90,6 +90,8 @@ inline QPoint direction_to_offset(const direction direction)
 	throw std::runtime_error("Invalid direction: \"" + std::to_string(static_cast<int>(direction)) + "\".");
 }
 
+extern direction offset_to_direction(const QPoint &offset);
+
 }
 
 Q_DECLARE_METATYPE(archimedes::direction)
