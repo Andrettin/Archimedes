@@ -6,7 +6,11 @@ struct qobject_deleter final
 {
 	void operator()(QObject *object)
 	{
-		object->deleteLater();
+		if (!object->thread()->isFinished()) {
+			object->deleteLater();
+		} else {
+			delete object;
+		}
 	}
 };
 
