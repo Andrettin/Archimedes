@@ -80,7 +80,7 @@ inline QVariantMap to_qvariant_map(const T &map)
 		if constexpr (std::is_same_v<typename T::key_type, std::string>) {
 			key_qstr = QString::fromStdString(key);
 		} else if constexpr (std::is_pointer_v<typename T::key_type>) {
-			key_qstr = key->get_identifier();
+			key_qstr = key->get_identifier_qstring();
 		} else {
 			key_qstr = key;
 		}
