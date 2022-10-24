@@ -146,6 +146,7 @@ set(util_HDRS
 	src/util/container_random_util.h
 	src/util/container_util.h
 	src/util/date_util.h
+	src/util/empty_image_provider.h
 	src/util/enum_converter.h
 	src/util/enum_util.h
 	src/util/event_loop.h
