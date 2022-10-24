@@ -7,6 +7,6 @@ namespace archimedes {
 
 namespace archimedes::geopath {
 
-extern void write_to_image(const QGeoPath &geopath, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection);
+extern void write_to_image(const QGeoPath &geopath, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection, const int x_offset);
 
 }

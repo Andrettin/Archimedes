@@ -13,7 +13,7 @@
 
 namespace archimedes::geoshape {
 
-void write_image(const std::filesystem::path &filepath, color_map<std::vector<std::unique_ptr<QGeoShape>>> &geodata_map, const georectangle &georectangle, const QSize &image_size, const map_projection *map_projection, const QImage &base_image)
+void write_image(const std::filesystem::path &filepath, color_map<std::vector<std::unique_ptr<QGeoShape>>> &geodata_map, const georectangle &georectangle, const QSize &image_size, const map_projection *map_projection, const QImage &base_image, const int geocoordinate_x_offset)
 {
 	QImage image = base_image;
 	if (image.isNull()) {
@@ -27,14 +27,14 @@ void write_image(const std::filesystem::path &filepath, color_map<std::vector<st
 		assert_throw(color.isValid());
 
 		for (const auto &geoshape : geoshapes) {
-			geoshape::write_to_image(*geoshape, image, color, georectangle, map_projection, filepath);
+			geoshape::write_to_image(*geoshape, image, color, georectangle, map_projection, filepath, geocoordinate_x_offset);
 		}
 	}
 
 	image.save(path::to_qstring(filepath));
 }
 
-void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection, const std::filesystem::path &image_checkpoint_save_filepath)
+void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection, const std::filesystem::path &image_checkpoint_save_filepath, const int geocoordinate_x_offset)
 {
 	const QGeoRectangle qgeorectangle = georectangle.to_qgeorectangle();
 	QGeoRectangle bounding_qgeorectangle = geoshape.boundingGeoRectangle();
@@ -46,7 +46,7 @@ void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &colo
 	switch (geoshape.type()) {
 		case QGeoShape::PathType: {
 			const QGeoPath &geopath = static_cast<const QGeoPath &>(geoshape);
-			geopath::write_to_image(geopath, image, color, georectangle, map_projection);
+			geopath::write_to_image(geopath, image, color, georectangle, map_projection, geocoordinate_x_offset);
 
 			//if the geopath's width is 0, there is nothing further to do here, but otherwise, use the normal method of geoshape writing as well
 			if (geopath.width() == 0) {
@@ -66,7 +66,7 @@ void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &colo
 		}
 		case QGeoShape::CircleType: {
 			const QGeoCircle &geocircle = static_cast<const QGeoCircle &>(geoshape);
-			geocircle::write_to_image(geocircle, image, color, georectangle, map_projection);
+			geocircle::write_to_image(geocircle, image, color, georectangle, map_projection, geocoordinate_x_offset);
 
 			if (geocircle.radius() == -1) {
 				return;
@@ -102,7 +102,7 @@ void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &colo
 	const geocoordinate start_geocoordinate(start_lon, start_lat);
 	const geocoordinate end_geocoordinate(end_lon, end_lat);
 
-	QPoint start_pos = map_projection->geocoordinate_to_point(start_geocoordinate, georectangle, image.size());
+	QPoint start_pos = map_projection->geocoordinate_to_point(start_geocoordinate, georectangle, image.size(), geocoordinate_x_offset);
 	if (start_pos.x() < 0) {
 		start_pos.setX(0);
 	}
@@ -110,12 +110,18 @@ void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &colo
 		start_pos.setY(0);
 	}
 
-	QPoint end_pos = map_projection->geocoordinate_to_point(end_geocoordinate, georectangle, image.size());
+	QPoint end_pos = map_projection->geocoordinate_to_point(end_geocoordinate, georectangle, image.size(), geocoordinate_x_offset);
 	if (end_pos.x() > (image.width() - 1)) {
 		end_pos.setX(image.width() - 1);
 	}
 	if (end_pos.y() > (image.height() - 1)) {
 		end_pos.setY(image.height() - 1);
+	}
+
+	if (end_pos.x() < start_pos.x()) {
+		//the geoshape is on the border between the start and end of the map, and we have a geocoordinate X offset in place; this means we have to go through the entire map
+		start_pos.setX(0);
+		end_pos.setX(image.width() - 1);
 	}
 
 	int pixel_checkpoint_count = 0;
@@ -129,7 +135,7 @@ void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &colo
 				continue; //ignore already-written pixels
 			}
 
-			const geocoordinate geocoordinate = map_projection->point_to_geocoordinate(pixel_pos, georectangle, image.size());
+			const geocoordinate geocoordinate = map_projection->point_to_geocoordinate(pixel_pos, georectangle, image.size(), geocoordinate_x_offset);
 			const QGeoCoordinate qgeocoordinate = geocoordinate.to_qgeocoordinate();
 
 			if (!geoshape.contains(qgeocoordinate)) {

@@ -7,6 +7,6 @@ namespace archimedes {
 
 namespace archimedes::geocircle {
 
-extern void write_to_image(const QGeoCircle &geocircle, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection);
+extern void write_to_image(const QGeoCircle &geocircle, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection, const int x_offset);
 
 }

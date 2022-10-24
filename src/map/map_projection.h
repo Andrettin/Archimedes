@@ -34,10 +34,10 @@ public:
 	number_type y_to_latitude(const int y, const number_type &lat_per_pixel) const;
 
 	QPoint geocoordinate_to_point(const geocoordinate &geocoordinate, const number_type &lon_per_pixel, const number_type &lat_per_pixel) const;
-	QPoint geocoordinate_to_point(const geocoordinate &geocoordinate, const georectangle &georectangle, const QSize &area_size) const;
+	QPoint geocoordinate_to_point(const geocoordinate &geocoordinate, const georectangle &georectangle, const QSize &area_size, const int x_offset = 0) const;
 
 	geocoordinate point_to_geocoordinate(const QPoint &point, const number_type &lon_per_pixel, const number_type &lat_per_pixel) const;
-	geocoordinate point_to_geocoordinate(const QPoint &point, const georectangle &georectangle, const QSize &area_size) const;
+	geocoordinate point_to_geocoordinate(const QPoint &point, const georectangle &georectangle, const QSize &area_size, const int x_offset = 0) const;
 
 	virtual void validate_area(const georectangle &georectangle, const QSize &area_size) const
 	{

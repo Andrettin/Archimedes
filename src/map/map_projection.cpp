@@ -100,7 +100,7 @@ QPoint map_projection::geocoordinate_to_point(const geocoordinate &geocoordinate
 	return QPoint(x, y);
 }
 
-QPoint map_projection::geocoordinate_to_point(const geocoordinate &geocoordinate, const georectangle &georectangle, const QSize &area_size) const
+QPoint map_projection::geocoordinate_to_point(const geocoordinate &geocoordinate, const georectangle &georectangle, const QSize &area_size, const int x_offset) const
 {
 	const longitude lon_per_pixel = this->longitude_per_pixel(georectangle, area_size);
 	const latitude lat_per_pixel = this->latitude_per_pixel(georectangle, area_size);
@@ -110,7 +110,19 @@ QPoint map_projection::geocoordinate_to_point(const geocoordinate &geocoordinate
 	const QPoint geocoordinate_offset = this->geocoordinate_to_point(scaled_origin_geocoordinate, lon_per_pixel, lat_per_pixel);
 
 	const archimedes::geocoordinate scaled_geocoordinate = this->geocoordinate_to_scaled_geocoordinate(geocoordinate);
-	return this->geocoordinate_to_point(scaled_geocoordinate, lon_per_pixel, lat_per_pixel) - geocoordinate_offset;
+
+	QPoint point = this->geocoordinate_to_point(scaled_geocoordinate, lon_per_pixel, lat_per_pixel) - geocoordinate_offset;
+
+	if (x_offset != 0) {
+		point.setX(point.x() + x_offset);
+		if (point.x() < 0) {
+			point.setX(point.x() + area_size.width());
+		} else if (point.x() >= area_size.width()) {
+			point.setX(point.x() % area_size.width());
+		}
+	}
+
+	return point;
 }
 
 geocoordinate map_projection::point_to_geocoordinate(const QPoint &point, const number_type &lon_per_pixel, const number_type &lat_per_pixel) const
@@ -120,7 +132,7 @@ geocoordinate map_projection::point_to_geocoordinate(const QPoint &point, const 
 	return geocoordinate(std::move(lon), std::move(lat));
 }
 
-geocoordinate map_projection::point_to_geocoordinate(const QPoint &point, const georectangle &georectangle, const QSize &area_size) const
+geocoordinate map_projection::point_to_geocoordinate(const QPoint &point, const georectangle &georectangle, const QSize &area_size, const int x_offset) const
 {
 	const longitude lon_per_pixel = this->longitude_per_pixel(georectangle, area_size);
 	const latitude lat_per_pixel = this->latitude_per_pixel(georectangle, area_size);
@@ -129,7 +141,17 @@ geocoordinate map_projection::point_to_geocoordinate(const QPoint &point, const 
 	const geocoordinate scaled_origin_geocoordinate = this->geocoordinate_to_scaled_geocoordinate(origin_geocoordinate);
 	const QPoint geocoordinate_offset = this->geocoordinate_to_point(scaled_origin_geocoordinate, lon_per_pixel, lat_per_pixel);
 
-	const geocoordinate scaled_geocoordinate = this->point_to_geocoordinate(point + geocoordinate_offset, lon_per_pixel, lat_per_pixel);
+	QPoint point_with_offset = point;
+	if (x_offset != 0) {
+		point_with_offset.setX(point_with_offset.x() - x_offset);
+		if (point_with_offset.x() < 0) {
+			point_with_offset.setX(point_with_offset.x() + area_size.width());
+		} else if (point_with_offset.x() >= area_size.width()) {
+			point_with_offset.setX(point_with_offset.x() % area_size.width());
+		}
+	}
+
+	const geocoordinate scaled_geocoordinate = this->point_to_geocoordinate(point_with_offset + geocoordinate_offset, lon_per_pixel, lat_per_pixel);
 	return this->scaled_geocoordinate_to_geocoordinate(scaled_geocoordinate);
 }
 
