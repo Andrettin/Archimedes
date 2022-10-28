@@ -215,4 +215,6 @@ inline void for_each_pixel_pos(const QImage &image, const function_type &functio
 
 extern std::pair<std::filesystem::path, centesimal_int> get_scale_suffixed_filepath(const std::filesystem::path &filepath, const centesimal_int &scale_factor);
 
+extern void set_outline_color(QImage &image, const QColor &color);
+
 }

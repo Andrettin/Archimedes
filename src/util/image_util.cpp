@@ -466,4 +466,33 @@ std::pair<std::filesystem::path, centesimal_int> get_scale_suffixed_filepath(con
 	return {};
 }
 
+void set_outline_color(QImage &image, const QColor &color)
+{
+	const QRect image_rect = image.rect();
+
+	for (int x = 0; x < image.width(); ++x) {
+		for (int y = 0; y < image.height(); ++y) {
+			const QPoint pixel_pos = QPoint(x, y);
+
+			if (image.pixelColor(pixel_pos).alpha() == 0) {
+				continue;
+			}
+
+			if (pixel_pos.x() == 0 || pixel_pos.y() == 0 || pixel_pos.x() == (image.width() - 1) || pixel_pos.y() == (image.height() - 1)) {
+				image.setPixelColor(pixel_pos, color);
+				continue;
+			}
+
+			point::for_each_adjacent_until(pixel_pos, [&pixel_pos, &image, &color, &image_rect](const QPoint &adjacent_pos) {
+				if (image.pixelColor(adjacent_pos).alpha() != 0) {
+					return false;
+				}
+
+				image.setPixelColor(pixel_pos, color);
+				return true;
+			});
+		}
+	}
+}
+
 }
