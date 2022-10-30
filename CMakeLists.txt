@@ -37,6 +37,7 @@ set(map_SRCS
 	src/map/direction.cpp
 	src/map/map_projection.cpp
 	src/map/mercator_map_projection.cpp
+	src/map/miller_map_projection.cpp
 )
 source_group(map FILES ${map_SRCS})
 set_source_files_properties(${map_SRCS} PROPERTIES UNITY_GROUP "map")
@@ -125,6 +126,7 @@ set(map_HDRS
 	src/map/equirectangular_map_projection.h
 	src/map/map_projection.h
 	src/map/mercator_map_projection.h
+	src/map/miller_map_projection.h
 )
 source_group(map FILES ${map_HDRS})
 
