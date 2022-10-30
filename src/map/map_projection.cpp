@@ -4,6 +4,7 @@
 
 #include "map/equirectangular_map_projection.h"
 #include "map/mercator_map_projection.h"
+#include "map/miller_map_projection.h"
 
 #include "util/geocoordinate.h"
 #include "util/georectangle.h"
@@ -16,6 +17,8 @@ map_projection *map_projection::from_string(const std::string &str)
 		return equirectangular_map_projection::get();
 	} else if (str == "mercator") {
 		return mercator_map_projection::get();
+	} else if (str == "miller") {
+		return miller_map_projection::get();
 	} else {
 		throw std::runtime_error("Invalid map projection: \"" + str + "\".");
 	}
@@ -153,6 +156,16 @@ geocoordinate map_projection::point_to_geocoordinate(const QPoint &point, const 
 
 	const geocoordinate scaled_geocoordinate = this->point_to_geocoordinate(point_with_offset + geocoordinate_offset, lon_per_pixel, lat_per_pixel);
 	return this->scaled_geocoordinate_to_geocoordinate(scaled_geocoordinate);
+}
+
+void map_projection::validate_area(const georectangle &georectangle, const QSize &area_size) const
+{
+	const longitude lon_per_pixel = this->longitude_per_pixel(georectangle, area_size);
+	const latitude lat_per_pixel = this->latitude_per_pixel(georectangle, area_size);
+
+	if (lon_per_pixel != lat_per_pixel) {
+		throw std::runtime_error("The scaled longitude per pixel (" + lon_per_pixel.to_string() + ") is different than the scaled latitude per pixel (" + lat_per_pixel.to_string() + ").");
+	}
 }
 
 }

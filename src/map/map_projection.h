@@ -39,11 +39,7 @@ public:
 	geocoordinate point_to_geocoordinate(const QPoint &point, const number_type &lon_per_pixel, const number_type &lat_per_pixel) const;
 	geocoordinate point_to_geocoordinate(const QPoint &point, const georectangle &georectangle, const QSize &area_size, const int x_offset = 0) const;
 
-	virtual void validate_area(const georectangle &georectangle, const QSize &area_size) const
-	{
-		Q_UNUSED(georectangle)
-		Q_UNUSED(area_size)
-	}
+	void validate_area(const georectangle &georectangle, const QSize &area_size) const;
 };
 
 }
