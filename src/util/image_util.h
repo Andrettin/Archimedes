@@ -217,4 +217,27 @@ extern std::pair<std::filesystem::path, centesimal_int> get_scale_suffixed_filep
 
 extern void set_outline_color(QImage &image, const QColor &color);
 
+inline void apply_grayscale(QImage &image)
+{
+	if (image.format() != QImage::Format_RGBA8888) {
+		image = image.convertToFormat(QImage::Format_RGBA8888);
+	}
+
+	const QRect image_rect = image.rect();
+
+	for (int x = 0; x < image.width(); ++x) {
+		for (int y = 0; y < image.height(); ++y) {
+			const QPoint pixel_pos = QPoint(x, y);
+			const QColor pixel_color = image.pixelColor(pixel_pos);
+
+			if (pixel_color.alpha() == 0) {
+				continue;
+			}
+
+			const int gray = qGray(pixel_color.red(), pixel_color.green(), pixel_color.blue());
+			image.setPixelColor(pixel_pos, QColor(gray, gray, gray, pixel_color.alpha()));
+		}
+	}
+}
+
 }
