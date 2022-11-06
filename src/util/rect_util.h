@@ -6,6 +6,16 @@ namespace archimedes::rect {
 
 extern int distance_to(const QRect &rect, const QRect &other_rect);
 
+inline int distance_to(const QRect &rect, const QPoint &point)
+{
+	return rect::distance_to(rect, QRect(point, QSize(1, 1)));
+}
+
+inline bool is_adjacent_to(const QRect &rect, const QRect &other_rect)
+{
+	return distance_to(rect, other_rect) <= 1;
+}
+
 template <typename function_type>
 inline void for_each_point(const QRect &rect, const function_type &function)
 {
