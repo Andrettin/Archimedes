@@ -198,6 +198,16 @@ inline void for_each_diagonally_adjacent_until(const QPoint &point, const functi
 }
 
 template <typename function_type>
+inline void for_each_offset_pos_until(const QPoint &point, const std::vector<QPoint> &offsets, const function_type &function)
+{
+	for (const QPoint &offset : offsets) {
+		if (function(point + offset)) {
+			return;
+		}
+	}
+}
+
+template <typename function_type>
 inline std::optional<QPoint> find_adjacent_if(const QPoint &point, const function_type &function)
 {
 	std::optional<QPoint> result;
