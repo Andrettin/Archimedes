@@ -94,12 +94,12 @@ void data_entry::load_history(const QDateTime &start_date, const timeline *curre
 
 				if (timeline == nullptr) {
 					calendar = calendar::try_get(history_entry.get_tag());
-				}
 
-				if (calendar == nullptr) {
-					//treat the scope as a property to be applied immediately
-					this->process_gsml_dated_scope(history_entry, QDateTime());
-					return;
+					if (calendar == nullptr) {
+						//treat the scope as a property to be applied immediately
+						this->process_gsml_dated_scope(history_entry, QDateTime());
+						return;
+					}
 				}
 			}
 
