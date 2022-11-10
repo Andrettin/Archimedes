@@ -27,7 +27,7 @@ bool contains_date(const QDateTime &date, const timeline *timeline, const QDateT
 		return false;
 	}
 
-	return timeline->contains_timeline_date(timeline, date);
+	return timeline->contains_timeline_date(other_timeline, other_date);
 }
 
 }
