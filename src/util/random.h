@@ -41,6 +41,11 @@ public:
 		}
 	}
 
+	std::mt19937 &get_engine()
+	{
+		return this->engine;
+	}
+
 	template <typename int_type>
 	int_type generate(const int_type modulo)
 	{
