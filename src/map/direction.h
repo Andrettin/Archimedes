@@ -15,6 +15,18 @@ enum class direction {
 	count
 };
 
+enum direction_flag : uint8_t {
+	none = 0,
+	north = 1 << 0,
+	south = 1 << 1,
+	west = 1 << 2,
+	east = 1 << 3,
+	northwest = 1 << 4,
+	northeast = 1 << 5,
+	southwest = 1 << 6,
+	southeast = 1 << 7
+};
+
 inline direction string_to_direction(const std::string &str)
 {
 	if (str == "north") {
