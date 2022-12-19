@@ -104,6 +104,32 @@ inline QPoint direction_to_offset(const direction direction)
 
 extern direction offset_to_direction(const QPoint &offset);
 
+inline direction_flag direction_to_flag(const direction direction)
+{
+	switch (direction) {
+		case direction::north:
+			return direction_flag::north;
+		case direction::northeast:
+			return direction_flag::northeast;
+		case direction::east:
+			return direction_flag::east;
+		case direction::southeast:
+			return direction_flag::southeast;
+		case direction::south:
+			return direction_flag::south;
+		case direction::southwest:
+			return direction_flag::southwest;
+		case direction::west:
+			return direction_flag::west;
+		case direction::northwest:
+			return direction_flag::northwest;
+		default:
+			break;
+	}
+
+	throw std::runtime_error("Invalid direction: \"" + std::to_string(static_cast<int>(direction)) + "\".");
+}
+
 }
 
 Q_DECLARE_METATYPE(archimedes::direction)
