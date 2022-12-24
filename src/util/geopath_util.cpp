@@ -49,7 +49,12 @@ void write_edges_to_image(const QGeoPath &geopath, QImage &image, const georecta
 			continue;
 		}
 
-		uint8_t direction_flags = static_cast<uint8_t>(image.pixelColor(pixel_pos).blue());
+		uint8_t direction_flags = 0;
+
+		const QColor old_pixel_color = image.pixelColor(pixel_pos);
+		if (old_pixel_color.alpha() != 0) {
+			direction_flags = static_cast<uint8_t>(old_pixel_color.blue());
+		}
 
 		uint8_t new_direction_flags = direction_flags;
 
