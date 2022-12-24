@@ -66,8 +66,6 @@ void write_edges_to_image(const QGeoPath &geopath, QImage &image, const georecta
 
 			const archimedes::geocoordinate tile_center_geocoordinate = map_projection->point_to_geocoordinate(previous_pixel_pos.value(), georectangle, image.size(), x_offset);
 
-			log::log_error("Start Geocoordinate: (" + start_geocoordinate.get_longitude().to_string() + ", " + start_geocoordinate.get_latitude().to_string() + "), End Geocoordinate: (" + end_geocoordinate.get_longitude().to_string() + ", " + end_geocoordinate.get_latitude().to_string() + ")");
-
 			const QPoint start_reference_pos = map_projection->geocoordinate_to_point(start_geocoordinate, georectangle, image.size() * 100, x_offset * 100);
 			const QPoint end_reference_pos = map_projection->geocoordinate_to_point(end_geocoordinate, georectangle, image.size() * 100, x_offset * 100);
 			const int longitude_distance = std::abs(start_reference_pos.x() - end_reference_pos.x());
