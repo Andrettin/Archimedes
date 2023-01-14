@@ -44,6 +44,11 @@ public:
 		throw std::runtime_error("Invalid enum value: " + std::to_string(static_cast<std::underlying_type_t<enum_type>>(enum_value)) + ".");
 	}
 
+	static bool has_value(const std::string &str)
+	{
+		return enum_converter::string_to_enum_map.contains(str);
+	}
+
 private:
 	static bool initialize()
 	{
