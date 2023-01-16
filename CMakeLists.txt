@@ -26,6 +26,7 @@ set_source_files_properties(${database_SRCS} PROPERTIES UNITY_GROUP "database")
 set(language_SRCS
 	src/language/grammatical_gender.cpp
 	src/language/language.cpp
+	src/language/name_generator.cpp
 	src/language/name_variant.cpp
 	src/language/word.cpp
 	src/language/word_type.cpp
@@ -115,6 +116,7 @@ set(language_HDRS
 	src/language/grammatical_gender.h
 	src/language/language.h
 	src/language/language_family.h
+	src/language/name_generator.h
 	src/language/name_variant.h
 	src/language/word.h
 	src/language/word_type.h
