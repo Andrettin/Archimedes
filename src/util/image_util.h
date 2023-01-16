@@ -223,8 +223,6 @@ inline void apply_grayscale(QImage &image)
 		image = image.convertToFormat(QImage::Format_RGBA8888);
 	}
 
-	const QRect image_rect = image.rect();
-
 	for (int x = 0; x < image.width(); ++x) {
 		for (int y = 0; y < image.height(); ++y) {
 			const QPoint pixel_pos = QPoint(x, y);
