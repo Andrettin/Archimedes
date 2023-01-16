@@ -1,6 +1,6 @@
 #include "archimedes.h"
 
-#include "name_generator.h"
+#include "language/name_generator.h"
 
 #include "util/gender.h"
 #include "util/vector_random_util.h"
