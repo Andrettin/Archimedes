@@ -238,4 +238,25 @@ inline void apply_grayscale(QImage &image)
 	}
 }
 
+inline void apply_greenscale(QImage &image)
+{
+	if (image.format() != QImage::Format_RGBA8888) {
+		image = image.convertToFormat(QImage::Format_RGBA8888);
+	}
+
+	for (int x = 0; x < image.width(); ++x) {
+		for (int y = 0; y < image.height(); ++y) {
+			const QPoint pixel_pos = QPoint(x, y);
+			const QColor pixel_color = image.pixelColor(pixel_pos);
+
+			if (pixel_color.alpha() == 0) {
+				continue;
+			}
+
+			const int green = std::max(0, std::max(std::max(pixel_color.red(), pixel_color.green()), pixel_color.blue()) - 32);
+			image.setPixelColor(pixel_pos, QColor(0, green, 0, pixel_color.alpha()));
+		}
+	}
+}
+
 }
