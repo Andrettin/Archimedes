@@ -187,7 +187,12 @@ public:
 
 	std::string to_string() const
 	{
-		std::string number_str = std::to_string(this->value / fractional_int::divisor);
+		const int64_t integer_value = this->to_int64();
+		std::string number_str;
+		if (integer_value == 0 && this->value < 0) {
+			number_str = "-";
+		}
+		number_str += std::to_string(integer_value);
 		number_str += fractional_int::to_rest_string(this->get_fractional_value());
 		return number_str;
 	}
@@ -199,6 +204,16 @@ public:
 		const int percent_value = this->value * 100;
 		std::string number_str = std::to_string(percent_value / fractional_int<N2>::divisor);
 		number_str += fractional_int<N2>::to_rest_string(percent_value % fractional_int<N2>::divisor);
+		return number_str;
+	}
+
+	std::string to_signed_string() const
+	{
+		std::string number_str;
+		if (this->get_value() >= 0) {
+			number_str += "+";
+		}
+		number_str += this->to_string();
 		return number_str;
 	}
 
