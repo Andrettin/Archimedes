@@ -14,6 +14,22 @@ enum class gender {
 
 extern template class enum_converter<gender>;
 
+inline std::string get_gender_name(const gender gender)
+{
+	switch (gender) {
+		case gender::none:
+			return "None";
+		case gender::male:
+			return "Male";
+		case gender::female:
+			return "Female";
+		default:
+			break;
+	}
+
+	throw std::runtime_error("Invalid gender: \"" + std::to_string(static_cast<int>(gender)) + "\".");
+}
+
 inline std::string get_gender_personal_pronoun(const gender gender)
 {
 	switch (gender) {
