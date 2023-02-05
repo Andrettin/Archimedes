@@ -217,6 +217,11 @@ public:
 		return number_str;
 	}
 
+	constexpr fractional_int<N> operator -() const
+	{
+		return (*this) * -1;
+	}
+
 	constexpr bool operator ==(const fractional_int<N> &other) const
 	{
 		return this->value == other.value;
