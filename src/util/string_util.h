@@ -79,6 +79,18 @@ inline void replace(std::string &str, const char find, const char replace)
 	}
 }
 
+inline void remove_start(std::string &str, const char find)
+{
+	size_t pos = str.find_first_not_of(find);
+	if (pos != std::string::npos) {
+		if (pos > 0) {
+			str.erase(0, pos);
+		}
+	} else {
+		str.clear();
+	}
+}
+
 inline void to_lower(std::string &str)
 {
 	std::transform(str.begin(), str.end(), str.begin(), [](const char c) {
