@@ -2,7 +2,7 @@
 
 namespace archimedes::log {
 
-constexpr const char *date_string_format = "yyyy.MM.dd hh:mm:ss";
+constexpr const char date_string_format[] = "yyyy.MM.dd hh:mm:ss";
 constexpr uintmax_t max_size = 1000000; //1 MB
 
 inline void log(const std::string_view &message)

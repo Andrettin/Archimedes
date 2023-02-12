@@ -16,16 +16,16 @@ class timeline;
 class database final : public singleton<database>
 {
 public:
-	static constexpr const char *campaign_folder = "campaign";
-	static constexpr const char *campaign_map_filename = "campaign.smp";
-	static constexpr const char *data_folder = "data";
-	static constexpr const char *graphics_folder = "graphics";
-	static constexpr const char *maps_folder = "maps";
-	static constexpr const char *music_folder = "music";
-	static constexpr const char *save_folder = "save";
-	static constexpr const char *shaders_folder = "shaders";
-	static constexpr const char *sounds_folder = "sounds";
-	static constexpr const char *translations_folder = "translations";
+	static constexpr const char campaign_folder[] = "campaign";
+	static constexpr const char campaign_map_filename[] = "campaign.smp";
+	static constexpr const char data_folder[] = "data";
+	static constexpr const char graphics_folder[] = "graphics";
+	static constexpr const char maps_folder[] = "maps";
+	static constexpr const char music_folder[] = "music";
+	static constexpr const char save_folder[] = "save";
+	static constexpr const char shaders_folder[] = "shaders";
+	static constexpr const char sounds_folder[] = "sounds";
+	static constexpr const char translations_folder[] = "translations";
 
 	template <typename T>
 	static void process_gsml_data(T *instance, const gsml_data &data)
