@@ -103,6 +103,11 @@ public:
 
 	virtual std::unique_ptr<text_processor_base> create_text_processor() const;
 
+	virtual std::string get_scope_name() const
+	{
+		return this->get_name();
+	}
+
 	virtual std::string get_link_name() const override
 	{
 		return this->get_name();
