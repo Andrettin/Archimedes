@@ -239,13 +239,13 @@ public:
 		}
 	}
 
-	static void load_history_database(const QDateTime &start_date, const timeline *timeline)
+	static void load_history_database(const QDateTime &start_date, const timeline *timeline, const QObject *game_rules)
 	{
 		if constexpr (T::history_enabled) {
 			try {
 				for (T *instance : T::get_all()) {
 					try {
-						instance->load_history(start_date, timeline);
+						instance->load_history(start_date, timeline, game_rules);
 					} catch (...) {
 						std::throw_with_nested(std::runtime_error("Error loading history for the " + std::string(T::class_identifier) + " instance \"" + instance->get_identifier() + "\"."));
 					}

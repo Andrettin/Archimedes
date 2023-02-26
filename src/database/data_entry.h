@@ -90,7 +90,8 @@ public:
 		return nullptr;
 	}
 
-	void load_history(const QDateTime &start_date, const timeline *current_timeline);
+	void load_history(const QDateTime &start_date, const timeline *current_timeline, const QObject *game_rules);
+	void load_history_scope(const gsml_data &history_scope, const QDateTime &start_date, const timeline *current_timeline, const QObject *game_rules, std::map<QDateTime, std::vector<const gsml_data *>> &history_entries);
 	void load_date_scope(const gsml_data &date_scope, const QDateTime &date);
 
 	virtual void reset_history()

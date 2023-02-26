@@ -535,7 +535,7 @@ void database::load_defines()
 	}
 }
 
-void database::load_history(const QDateTime &start_date, const timeline *timeline)
+void database::load_history(const QDateTime &start_date, const timeline *timeline, const QObject *game_rules)
 {
 	try {
 		std::vector<const data_type_metadata *> metadata_list;
@@ -558,7 +558,7 @@ void database::load_history(const QDateTime &start_date, const timeline *timelin
 		});
 
 		for (const data_type_metadata *metadata : metadata_list) {
-			metadata->get_history_loading_function()(start_date, timeline);
+			metadata->get_history_loading_function()(start_date, timeline, game_rules);
 		}
 	} catch (...) {
 		std::throw_with_nested(std::runtime_error("Error loading history."));

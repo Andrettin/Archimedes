@@ -105,7 +105,7 @@ public:
 
 	void load_predefines();
 	void load_defines();
-	void load_history(const QDateTime &start_date, const timeline *timeline);
+	void load_history(const QDateTime &start_date, const timeline *timeline, const QObject *game_rules = nullptr);
 
 	bool is_initialized() const
 	{

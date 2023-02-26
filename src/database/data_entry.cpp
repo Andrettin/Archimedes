@@ -6,6 +6,7 @@
 #include "database/database.h"
 #include "time/calendar.h"
 #include "time/timeline.h"
+#include "util/assert_util.h"
 #include "util/date_util.h"
 #include "util/string_conversion_util.h"
 
@@ -74,7 +75,7 @@ void data_entry::initialize()
 	this->initialized = true;
 }
 
-void data_entry::load_history(const QDateTime &start_date, const timeline *current_timeline)
+void data_entry::load_history(const QDateTime &start_date, const timeline *current_timeline, const QObject *game_rules)
 {
 	this->reset_history();
 
@@ -86,50 +87,7 @@ void data_entry::load_history(const QDateTime &start_date, const timeline *curre
 		});
 
 		data.for_each_child([&](const gsml_data &history_entry) {
-			const timeline *timeline = nullptr;
-			const calendar *calendar = nullptr;
-
-			if (!std::isdigit(history_entry.get_tag().front()) && history_entry.get_tag().front() != '-') {
-				timeline = timeline::try_get(history_entry.get_tag());
-
-				if (timeline == nullptr) {
-					calendar = calendar::try_get(history_entry.get_tag());
-
-					if (calendar == nullptr) {
-						//treat the scope as a property to be applied immediately
-						this->process_gsml_dated_scope(history_entry, QDateTime());
-						return;
-					}
-				}
-			}
-
-			if (timeline != nullptr) {
-				if (current_timeline == nullptr || (current_timeline != timeline && !current_timeline->derives_from_timeline(timeline))) {
-					return;
-				}
-
-				history_entry.for_each_child([&](const gsml_data &timeline_entry) {
-					QDateTime date = string::to_date(timeline_entry.get_tag());
-					if (date::contains_date(start_date, current_timeline, date, timeline)) {
-						history_entries[date].push_back(&timeline_entry);
-					}
-				});
-			} else if (calendar != nullptr) {
-				history_entry.for_each_child([&](const gsml_data &calendar_entry) {
-					QDateTime date = string::to_date(calendar_entry.get_tag());
-					date = date.addYears(calendar->get_year_offset());
-
-					if (date::contains_date(start_date, current_timeline, date)) {
-						history_entries[date].push_back(&calendar_entry);
-					}
-				});
-			} else {
-				QDateTime date = string::to_date(history_entry.get_tag());
-
-				if (date::contains_date(start_date, current_timeline, date)) {
-					history_entries[date].push_back(&history_entry);
-				}
-			}
+			this->load_history_scope(history_entry, start_date, current_timeline, game_rules, history_entries);
 		});
 	}
 
@@ -139,6 +97,71 @@ void data_entry::load_history(const QDateTime &start_date, const timeline *curre
 
 		for (const gsml_data *history_entry : date_history_entries) {
 			this->load_date_scope(*history_entry, date);
+		}
+	}
+}
+
+void data_entry::load_history_scope(const gsml_data &history_scope, const QDateTime &start_date, const timeline *current_timeline, const QObject *game_rules, std::map<QDateTime, std::vector<const gsml_data *>> &history_entries)
+{
+	const timeline *timeline = nullptr;
+	const calendar *calendar = nullptr;
+	QVariant game_rule_variant;
+
+	if (!std::isdigit(history_scope.get_tag().front()) && history_scope.get_tag().front() != '-') {
+		timeline = timeline::try_get(history_scope.get_tag());
+
+		if (timeline == nullptr) {
+			calendar = calendar::try_get(history_scope.get_tag());
+
+			if (calendar == nullptr) {
+				if (game_rules != nullptr) {
+					game_rule_variant = game_rules->property(history_scope.get_tag().c_str());
+				}
+
+				if (game_rule_variant.isValid()) {
+					assert_throw(game_rule_variant.type() == QVariant::Bool);
+
+					if (!game_rule_variant.toBool()) {
+						//if the game rule is disabled, ignore what is contained in the scope
+						return;
+					}
+				} else {
+					//treat the scope as a property to be applied immediately
+					this->process_gsml_dated_scope(history_scope, QDateTime());
+					return;
+				}
+			}
+		}
+	}
+
+	if (timeline != nullptr) {
+		if (current_timeline == nullptr || (current_timeline != timeline && !current_timeline->derives_from_timeline(timeline))) {
+			return;
+		}
+
+		history_scope.for_each_child([&](const gsml_data &timeline_entry) {
+			QDateTime date = string::to_date(timeline_entry.get_tag());
+			if (date::contains_date(start_date, current_timeline, date, timeline)) {
+				history_entries[date].push_back(&timeline_entry);
+			}
+		});
+	} else if (calendar != nullptr || game_rule_variant.isValid()) {
+		history_scope.for_each_child([&](const gsml_data &history_subentry) {
+			QDateTime date = string::to_date(history_subentry.get_tag());
+
+			if (calendar != nullptr) {
+				date = date.addYears(calendar->get_year_offset());
+			}
+
+			if (date::contains_date(start_date, current_timeline, date)) {
+				history_entries[date].push_back(&history_subentry);
+			}
+		});
+	} else {
+		QDateTime date = string::to_date(history_scope.get_tag());
+
+		if (date::contains_date(start_date, current_timeline, date)) {
+			history_entries[date].push_back(&history_scope);
 		}
 	}
 }
