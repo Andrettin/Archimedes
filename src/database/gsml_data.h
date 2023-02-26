@@ -137,6 +137,12 @@ public:
 		return std::get<gsml_data>(this->elements.back());
 	}
 
+	gsml_data &add_child(std::string &&tag, gsml_data &&child)
+	{
+		child.tag = std::move(tag);
+		return this->add_child(std::move(child));
+	}
+
 	gsml_data &add_child()
 	{
 		return this->add_child(gsml_data());
