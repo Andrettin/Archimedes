@@ -335,7 +335,7 @@ public:
 	constexpr const fractional_int<N> &operator /=(const fractional_int<N2> &other)
 	{
 		this->value *= fractional_int<N2>::divisor;
-		this->value /= other.value;
+		this->value /= other.get_value();
 		return *this;
 	}
 
