@@ -107,22 +107,33 @@ void data_entry::load_history_scope(const gsml_data &history_scope, const QDateT
 	const calendar *calendar = nullptr;
 	QVariant game_rule_variant;
 
-	if (!std::isdigit(history_scope.get_tag().front()) && history_scope.get_tag().front() != '-') {
-		timeline = timeline::try_get(history_scope.get_tag());
+	const std::string &tag = history_scope.get_tag();
+	assert_throw(!tag.empty());
+
+	if (!std::isdigit(tag.front()) && tag.front() != '-') {
+		timeline = timeline::try_get(tag);
 
 		if (timeline == nullptr) {
-			calendar = calendar::try_get(history_scope.get_tag());
+			calendar = calendar::try_get(tag);
 
 			if (calendar == nullptr) {
+				bool game_rule_value = true;
+
 				if (game_rules != nullptr) {
-					game_rule_variant = game_rules->property(history_scope.get_tag().c_str());
+					if (tag.front() == '!') {
+						//"!" is used for negation before game rules
+						game_rule_variant = game_rules->property(tag.substr(1, tag.size() - 1).c_str());
+						game_rule_value = false;
+					} else {
+						game_rule_variant = game_rules->property(tag.c_str());
+					}
 				}
 
 				if (game_rule_variant.isValid()) {
 					assert_throw(game_rule_variant.type() == QVariant::Bool);
 
-					if (!game_rule_variant.toBool()) {
-						//if the game rule is disabled, ignore what is contained in the scope
+					if (game_rule_variant.toBool() != game_rule_value) {
+						//if the game rule scope is disabled, ignore what is contained in it
 						return;
 					}
 				} else {
@@ -158,7 +169,7 @@ void data_entry::load_history_scope(const gsml_data &history_scope, const QDateT
 			}
 		});
 	} else {
-		QDateTime date = string::to_date(history_scope.get_tag());
+		QDateTime date = string::to_date(tag);
 
 		if (date::contains_date(start_date, current_timeline, date)) {
 			history_entries[date].push_back(&history_scope);
