@@ -17,9 +17,9 @@ inline std::vector<typename T::key_type> get_keys(const T &map)
 }
 
 template <typename T>
-inline std::vector<typename T::value_type> get_values(const T &map)
+inline std::vector<typename T::mapped_type> get_values(const T &map)
 {
-	std::vector<typename T::value_type> values;
+	std::vector<typename T::mapped_type> values;
 
 	for (const auto &kv_pair : map) {
 		values.push_back(kv_pair.second);
