@@ -39,7 +39,12 @@ const QImage &image_provider_base::get_image(const std::string &id)
 	}
 
 	thread_pool::get()->co_spawn_sync([this, &id]() -> boost::asio::awaitable<void> {
-		co_await this->load_image(id);
+		try {
+			co_await this->load_image(id);
+		} catch (const std::exception &exception) {
+			exception::report(exception);
+			std::terminate();
+		}
 	});
 
 	find_iterator = this->image_map.find(id);
