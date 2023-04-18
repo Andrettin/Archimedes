@@ -1,9 +1,17 @@
 #pragma once
 
+#include "util/container_util.h"
 #include "util/path_util.h"
 #include "util/type_traits.h"
 
-namespace archimedes::qvariant {
+namespace archimedes {
+
+namespace container {
+	template <typename T>
+	static QVariantList to_qvariant_list(const T &container);
+}
+	
+namespace qvariant {
 
 template <typename T>
 static QVariant from_value(const T &value)
@@ -22,6 +30,8 @@ static QVariant from_value(const T &value)
 		}
 	} else if constexpr (is_specialization_of_v<T, std::unique_ptr>) {
 		return QVariant::fromValue(value.get());
+	} else if constexpr (is_specialization_of_v<T, std::vector>) {
+		return container::to_qvariant_list(value);
 	} else {
 		return QVariant::fromValue(value);
 	}
@@ -32,6 +42,8 @@ static T *to_object(const QVariant &variant)
 {
 	QObject *object = qvariant_cast<QObject *>(variant);
 	return qobject_cast<T *>(object);
+}
+
 }
 
 }

@@ -1,8 +1,16 @@
 #pragma once
 
+#include "util/path_util.h"
 #include "util/qvariant_util.h"
 
-namespace archimedes::container {
+namespace archimedes {
+
+namespace qvariant {
+	template <typename T>
+	static QVariant from_value(const T &value);
+}
+	
+namespace container {
 
 template <typename T, typename U>
 inline bool intersects_with(const T &container, const U &other_container)
@@ -19,7 +27,7 @@ inline bool intersects_with(const T &container, const U &other_container)
 }
 
 template <typename T>
-inline QVariantList to_qvariant_list(const T &container)
+static QVariantList to_qvariant_list(const T &container)
 {
 	QVariantList list;
 
@@ -85,6 +93,8 @@ inline std::vector<typename T::value_type> to_vector(const T &container)
 	}
 
 	return vector;
+}
+
 }
 
 }
