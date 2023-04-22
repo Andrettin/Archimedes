@@ -111,4 +111,18 @@ inline constexpr number_type cbrt(number_type n)
 	return ret;
 }
 
+template <typename number_type>
+inline constexpr number_type square_distance_between(const number_type x1, const number_type y1, const number_type x2, const number_type y2)
+{
+	const number_type dx = x1 - x2;
+	const number_type dy = y1 - y2;
+	return dx * dx + dy * dy;
+}
+
+template <typename number_type>
+inline constexpr number_type distance_between(const number_type x1, const number_type y1, const number_type x2, const number_type y2)
+{
+	return number::sqrt(number::square_distance_between(x1, y1, x2, y2));
+}
+
 }

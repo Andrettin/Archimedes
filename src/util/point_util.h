@@ -56,13 +56,7 @@ inline void clamp(QPoint &point, const QPoint &min, const QPoint &max)
 	}
 }
 
-inline int square_distance_to(const QPoint &point, const QPoint &other_point)
-{
-	const int dx = point.x() - other_point.x();
-	const int dy = point.y() - other_point.y();
-	return dx * dx + dy * dy;
-}
-
+extern int square_distance_to(const QPoint &point, const QPoint &other_point);
 extern int distance_to(const QPoint &point, const QPoint &other_point);
 extern int distance_to(const QPoint &point, const QRect &rect);
 
