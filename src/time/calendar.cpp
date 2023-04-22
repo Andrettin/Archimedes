@@ -58,7 +58,7 @@ void calendar::initialize()
 		this->base_calendar = nullptr;
 	}
 
-	data_entry::initialize();
+	named_data_entry::initialize();
 }
 
 }
