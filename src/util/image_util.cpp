@@ -483,6 +483,12 @@ void set_outline_color(QImage &image, const QColor &color)
 				continue;
 			}
 
+			if (image.pixelColor(pixel_pos).alpha() != 255) {
+				//set semi-transparent pixels to the outline color
+				image.setPixelColor(pixel_pos, color);
+				continue;
+			}
+
 			point::for_each_adjacent_until(pixel_pos, [&pixel_pos, &image, &color, &image_rect](const QPoint &adjacent_pos) {
 				if (image.pixelColor(adjacent_pos).alpha() != 0) {
 					return false;
