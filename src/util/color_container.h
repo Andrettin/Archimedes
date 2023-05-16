@@ -1,10 +1,23 @@
 #pragma once
 
+namespace std {
+	template <> struct hash<QColor>
+	{
+		size_t operator()(const QColor &color) const
+		{
+			return std::hash<unsigned>()(color.rgba());
+		}
+	};
+}
+
 namespace archimedes {
 
-struct color_compare
+struct color_compare final
 {
-	bool operator()(const QColor &color, const QColor &other_color) const;
+	bool operator()(const QColor &color, const QColor &other_color) const
+	{
+		return color.rgba() < other_color.rgba();
+	}
 };
 
 using color_set = std::set<QColor, color_compare>;
