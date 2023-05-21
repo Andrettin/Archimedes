@@ -118,8 +118,8 @@ void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &colo
 		end_pos.setY(image.height() - 1);
 	}
 
-	if (end_pos.x() < start_pos.x()) {
-		//the geoshape is on the border between the start and end of the map, and we have a geocoordinate X offset in place; this means we have to go through the entire map
+	if (end_pos.x() < start_pos.x() || bounding_qgeorectangle.width() == 360.0) {
+		//the geoshape is on the border between the start and end of the map, and we have a geocoordinate X offset in place (or the bounding rectangle encompasses the entire map); this means we have to go through the entire map
 		start_pos.setX(0);
 		end_pos.setX(image.width() - 1);
 	}
