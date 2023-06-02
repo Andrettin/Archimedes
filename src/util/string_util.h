@@ -316,6 +316,11 @@ inline std::string dehighlight(const std::string &str)
 	return result;
 }
 
+inline std::string colored(const std::string &str, const std::string &color_identifier)
+{
+	return std::format("<font color=\"{}\">{}</font>", color_identifier, str);
+}
+
 }
 
 Q_DECLARE_METATYPE(std::string)
