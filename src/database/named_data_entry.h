@@ -125,7 +125,7 @@ public:
 
 	int get_tree_x() const;
 	int get_tree_relative_x(const std::vector<const named_data_entry *> &siblings) const;
-	int get_tree_y() const;
+	virtual int get_tree_y() const;
 	int get_tree_width() const;
 
 	virtual std::vector<const named_data_entry *> get_top_tree_elements() const
