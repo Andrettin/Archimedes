@@ -45,8 +45,8 @@ void event_loop::post(const std::function<void()> &function)
 	boost::asio::post(*this->io_context, [this, function]() {
 		try {
 			function();
-		} catch (const std::exception &exception) {
-			exception::report(exception);
+		} catch (...) {
+			exception::report(std::current_exception());
 			std::terminate();
 		}
 	});
@@ -57,8 +57,8 @@ void event_loop::co_spawn(const std::function<boost::asio::awaitable<void>()> &f
 	boost::asio::co_spawn(this->io_context->get_executor(), [this, function]() -> boost::asio::awaitable<void> {
 		try {
 			co_await function();
-		} catch (const std::exception &exception) {
-			exception::report(exception);
+		} catch (...) {
+			exception::report(std::current_exception());
 			std::terminate();
 		}
 	}, boost::asio::detached);

@@ -142,6 +142,7 @@ set(time_HDRS
 source_group(time FILES ${time_HDRS})
 
 set(util_HDRS
+	src/util/aggregate_exception.h
 	src/util/angle_util.h
 	src/util/assert_util.h
 	src/util/astronomy_util.h

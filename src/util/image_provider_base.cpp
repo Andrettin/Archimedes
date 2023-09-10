@@ -24,8 +24,8 @@ QImage image_provider_base::requestImage(const QString &id, QSize *size, const Q
 		}
 
 		return image;
-	} catch (const std::exception &exception) {
-		exception::report(exception);
+	} catch (...) {
+		exception::report(std::current_exception());
 		std::terminate();
 	}
 }
@@ -41,8 +41,8 @@ const QImage &image_provider_base::get_image(const std::string &id)
 	thread_pool::get()->co_spawn_sync([this, &id]() -> boost::asio::awaitable<void> {
 		try {
 			co_await this->load_image(id);
-		} catch (const std::exception &exception) {
-			exception::report(exception);
+		} catch (...) {
+			exception::report(std::current_exception());
 			std::terminate();
 		}
 	});
