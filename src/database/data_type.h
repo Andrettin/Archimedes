@@ -5,6 +5,7 @@
 #include "database/database.h"
 #include "database/gsml_data.h"
 #include "database/gsml_operator.h"
+#include "util/aggregate_exception.h"
 #include "util/qunique_ptr.h"
 
 namespace archimedes {
@@ -288,12 +289,22 @@ public:
 
 	static void check_all()
 	{
+		std::vector<std::exception_ptr> exceptions;
+
 		for (const T *instance : T::get_all()) {
 			try {
-				instance->check();
+				try {
+					instance->check();
+				} catch (...) {
+					std::throw_with_nested(std::runtime_error(std::format("The validity check for the {} instance \"{}\" failed.", T::class_identifier, instance->get_identifier())));
+				}
 			} catch (...) {
-				std::throw_with_nested(std::runtime_error("The validity check for the " + std::string(T::class_identifier) + " instance \"" + instance->get_identifier() + "\" failed."));
+				exceptions.push_back(std::current_exception());
 			}
+		}
+
+		if (!exceptions.empty()) {
+			throw aggregate_exception(std::format("The validity check for {} instances failed.", T::class_identifier), std::move(exceptions));
 		}
 	}
 
