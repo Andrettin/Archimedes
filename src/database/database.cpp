@@ -470,7 +470,6 @@ boost::asio::awaitable<void> database::parse()
 	}
 }
 
-[[nodiscard]]
 boost::asio::awaitable<void> database::load(const bool initial_definition)
 {
 	if (initial_definition) {
