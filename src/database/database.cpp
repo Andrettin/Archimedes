@@ -161,17 +161,17 @@ QVariant database::process_gsml_property_value(const gsml_property &property, co
 			throw std::runtime_error("Only the assignment operator is available for object reference properties.");
 		}
 
-		if (property_class_name == "std::string") {
+		if (property_class_name == "std::string" || property_class_name == "std::basic_string<char,std::char_traits<char>,std::allocator<char>>") {
 			new_property_value = QVariant::fromValue(property.get_value());
 		} else if (property_class_name == "std::filesystem::path") {
 			new_property_value = QVariant::fromValue(std::filesystem::path(property.get_value()));
-		} else if (property_class_name == "archimedes::centesimal_int") {
+		} else if (property_class_name == "archimedes::centesimal_int" || property_class_name == "archimedes::fractional_int<2>") {
 			new_property_value = QVariant::fromValue(centesimal_int(property.get_value()));
 		} else if (property_class_name == "archimedes::data_module*") {
 			new_property_value = QVariant::fromValue(database::get()->get_module(property.get_value()));
-		} else if (property_class_name == "archimedes::decimal_int") {
+		} else if (property_class_name == "archimedes::decimal_int" || property_class_name == "archimedes::fractional_int<1>") {
 			new_property_value = QVariant::fromValue(decimal_int(property.get_value()));
-		} else if (property_class_name == "archimedes::decimillesimal_int") {
+		} else if (property_class_name == "archimedes::decimillesimal_int" || property_class_name == "archimedes::fractional_int<4>") {
 			new_property_value = QVariant::fromValue(decimillesimal_int(property.get_value()));
 		} else if (property_class_name == "archimedes::map_projection*") {
 			new_property_value = QVariant::fromValue(map_projection::from_string(property.get_value()));
@@ -315,7 +315,7 @@ void database::modify_list_property_for_object(QObject *object, const std::strin
 		if (find_iterator != this->list_property_function_map.end()) {
 			success = find_iterator->second(object, method_name, value);
 		} else {
-			throw std::runtime_error("Unknown type for list property \"" + property_name + "\" (in class \"" + class_name + "\").");
+			throw std::runtime_error(std::format("Unknown type for list property \"{}\" (\"{}\", in class \"{}\").", property_name, property_class_name, class_name));
 		}
 	}
 
