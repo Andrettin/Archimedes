@@ -3,6 +3,8 @@
 #include "database/data_entry.h"
 #include "language/name_variant.h"
 
+Q_MOC_INCLUDE("language/word.h")
+
 namespace archimedes {
 
 class text_processor_base;

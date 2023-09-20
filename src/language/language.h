@@ -3,6 +3,8 @@
 #include "database/data_type.h"
 #include "database/named_data_entry.h"
 
+Q_MOC_INCLUDE("language/language_family.h")
+
 struct lua_State;
 
 extern int CclDefineLanguage(lua_State *l);

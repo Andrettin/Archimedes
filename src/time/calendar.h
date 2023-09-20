@@ -3,6 +3,8 @@
 #include "database/data_type.h"
 #include "database/named_data_entry.h"
 
+Q_MOC_INCLUDE("time/calendar.h")
+
 namespace archimedes {
 
 enum class day_of_the_week;
