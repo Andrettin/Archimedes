@@ -12,6 +12,8 @@ public:
 	{
 	}
 
+	static std::queue<std::string> get_subtokens(const std::string &token);
+
 	std::string process_text(std::string &&text, const bool process_in_game_data) const;
 	std::string process_text(const std::string &text, const bool process_in_game_data) const;
 	virtual std::string process_tokens(std::queue<std::string> &&tokens, const bool process_in_game_data, bool &processed) const = 0;

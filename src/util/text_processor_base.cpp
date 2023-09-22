@@ -9,6 +9,17 @@
 
 namespace archimedes {
 
+std::queue<std::string> text_processor_base::get_subtokens(const std::string &token)
+{
+	std::queue<std::string> subtokens = string::split_to_queue(token, ':');
+
+	if (subtokens.size() > 2) {
+		throw std::runtime_error("There can only be at most 2 subtokens.");
+	}
+
+	return subtokens;
+}
+
 std::string text_processor_base::process_text(std::string &&text, const bool process_in_game_data) const
 {
 	size_t find_pos = 0;
@@ -73,7 +84,7 @@ std::string text_processor_base::process_named_data_entry_token(const named_data
 		return data_entry->get_name();
 	}
 
-	throw std::runtime_error("Failed to process named data entry token \"" + token + "\".");
+	throw std::runtime_error(std::format("Failed to process named data entry token \"{}\".", token));
 }
 
 std::string text_processor_base::process_named_data_entry_tokens(const named_data_entry *data_entry, std::queue<std::string> &tokens) const
