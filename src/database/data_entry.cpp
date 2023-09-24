@@ -130,7 +130,7 @@ void data_entry::load_history_scope(const gsml_data &history_scope, const QDateT
 				}
 
 				if (game_rule_variant.isValid()) {
-					assert_throw(game_rule_variant.type() == QVariant::Bool);
+					assert_throw(game_rule_variant.typeId() == QMetaType::Type::Bool);
 
 					if (game_rule_variant.toBool() != game_rule_value) {
 						//if the game rule scope is disabled, ignore what is contained in it

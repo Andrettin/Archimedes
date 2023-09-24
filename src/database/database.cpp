@@ -38,13 +38,13 @@ void database::process_gsml_property_for_object(QObject *object, const gsml_prop
 			continue;
 		}
 
-		const QVariant::Type property_type = meta_property.type();
+		const QMetaType::Type property_type = static_cast<QMetaType::Type>(meta_property.typeId());
 		const std::string property_class_name = meta_property.typeName();
 
-		if (property_type == QVariant::Type::List || property_type == QVariant::Type::StringList || (property_class_name.starts_with("std::vector<") && property_class_name.ends_with(">"))) {
+		if (property_type == QMetaType::Type::QVariantList || property_type == QMetaType::Type::QStringList || (property_class_name.starts_with("std::vector<") && property_class_name.ends_with(">"))) {
 			database::modify_list_property_for_object(object, property_name, property.get_operator(), property.get_value());
 			return;
-		} else if (property_type == QVariant::String) {
+		} else if (property_type == QMetaType::Type::QString) {
 			if (property.get_operator() != gsml_operator::assignment) {
 				throw std::runtime_error("Only the assignment operator is available for string properties.");
 			}
@@ -75,10 +75,10 @@ QVariant database::process_gsml_property_value(const gsml_property &property, co
 	const std::string class_name = meta_property.enclosingMetaObject()->className();
 	const char *property_name = meta_property.name();
 	const std::string property_class_name = meta_property.typeName();
-	const QVariant::Type property_type = meta_property.type();
+	const QMetaType::Type property_type = static_cast<QMetaType::Type>(meta_property.typeId());
 
 	QVariant new_property_value;
-	if (property_type == QVariant::Bool) {
+	if (property_type == QMetaType::Type::Bool) {
 		if (property.get_operator() != gsml_operator::assignment) {
 			throw std::runtime_error("Only the assignment operator is available for boolean properties.");
 		}
@@ -94,7 +94,7 @@ QVariant database::process_gsml_property_value(const gsml_property &property, co
 		}
 
 		new_property_value = static_cast<unsigned char>(value);
-	} else if (property_type == QVariant::Int) {
+	} else if (property_type == QMetaType::Type::Int) {
 		int value = std::stoi(property.get_value());
 
 		if (property.get_operator() == gsml_operator::addition) {
@@ -104,7 +104,7 @@ QVariant database::process_gsml_property_value(const gsml_property &property, co
 		}
 
 		new_property_value = value;
-	} else if (property_type == QVariant::LongLong) {
+	} else if (property_type == QMetaType::Type::LongLong) {
 		long long value = std::stoll(property.get_value());
 
 		if (property.get_operator() == gsml_operator::addition) {
@@ -114,7 +114,7 @@ QVariant database::process_gsml_property_value(const gsml_property &property, co
 		}
 
 		new_property_value = value;
-	} else if (property_type == QVariant::UInt) {
+	} else if (property_type == QMetaType::Type::UInt) {
 		unsigned value = std::stoul(property.get_value());
 
 		if (property.get_operator() == gsml_operator::addition) {
@@ -124,7 +124,7 @@ QVariant database::process_gsml_property_value(const gsml_property &property, co
 		}
 
 		new_property_value = value;
-	} else if (property_type == QVariant::ULongLong) {
+	} else if (property_type == QMetaType::Type::ULongLong) {
 		unsigned long long value = std::stoull(property.get_value());
 
 		if (property.get_operator() == gsml_operator::addition) {
@@ -134,7 +134,7 @@ QVariant database::process_gsml_property_value(const gsml_property &property, co
 		}
 
 		new_property_value = value;
-	} else if (property_type == QVariant::Double) {
+	} else if (property_type == QMetaType::Type::Double) {
 		double value = std::stod(property.get_value());
 
 		if (property.get_operator() == gsml_operator::addition) {
@@ -144,19 +144,19 @@ QVariant database::process_gsml_property_value(const gsml_property &property, co
 		}
 
 		new_property_value = value;
-	} else if (property_type == QVariant::DateTime) {
+	} else if (property_type == QMetaType::Type::QDateTime) {
 		if (property.get_operator() != gsml_operator::assignment) {
 			throw std::runtime_error("Only the assignment operator is available for date-time properties.");
 		}
 
 		new_property_value = string::to_date(property.get_value());
-	} else if (property_type == QVariant::Time) {
+	} else if (property_type == QMetaType::Type::QTime) {
 		if (property.get_operator() != gsml_operator::assignment) {
 			throw std::runtime_error("Only the assignment operator is available for date-time properties.");
 		}
 
 		new_property_value = string::to_time(property.get_value());
-	} else if (property_type == QVariant::Type::UserType) {
+	} else {
 		if (property.get_operator() != gsml_operator::assignment) {
 			throw std::runtime_error("Only the assignment operator is available for object reference properties.");
 		}
@@ -183,8 +183,6 @@ QVariant database::process_gsml_property_value(const gsml_property &property, co
 				throw std::runtime_error("Unknown type (\"" + property_class_name + "\") for object reference property \"" + std::string(property_name) + "\" (\"" + property_class_name + "\").");
 			}
 		}
-	} else {
-	throw std::runtime_error("Invalid type for property \"" + std::string(property_name) + "\": \"" + std::string(meta_property.typeName()) + "\".");
 	}
 
 	return new_property_value;
@@ -203,23 +201,23 @@ void database::process_gsml_scope_for_object(QObject *object, const gsml_data &s
 			continue;
 		}
 
-		const QVariant::Type property_type = meta_property.type();
+		const QMetaType::Type property_type = static_cast<QMetaType::Type>(meta_property.typeId());
 		const std::string property_class_name = meta_property.typeName();
 
 		if (scope.get_operator() == gsml_operator::assignment) {
-			if ((property_type == QVariant::Type::List || property_type == QVariant::Type::StringList || (property_class_name.starts_with("std::vector<") && property_class_name.ends_with(">"))) && !scope.get_values().empty()) {
+			if ((property_type == QMetaType::Type::QVariantList || property_type == QMetaType::Type::QStringList || (property_class_name.starts_with("std::vector<") && property_class_name.ends_with(">"))) && !scope.get_values().empty()) {
 				for (const std::string &value : scope.get_values()) {
 					this->modify_list_property_for_object(object, property_name, gsml_operator::addition, value);
 				}
 				return;
-			} else if (property_type == QVariant::Type::List && scope.has_children()) {
+			} else if (property_type == QMetaType::Type::QVariantList && scope.has_children()) {
 				scope.for_each_child([&](const gsml_data &child_scope) {
 					database::modify_list_property_for_object(object, property_name, gsml_operator::addition, child_scope);
 				});
 				return;
 			}
 		} else {
-			if (property_type == QVariant::Type::List) {
+			if (property_type == QMetaType::Type::QVariantList) {
 				database::modify_list_property_for_object(object, property_name, scope.get_operator(), scope);
 				return;
 			}
@@ -241,28 +239,28 @@ QVariant database::process_gsml_scope_value(const gsml_data &scope, const QMetaP
 	const std::string class_name = meta_property.enclosingMetaObject()->className();
 	const char *property_name = meta_property.name();
 	const std::string property_type_name = meta_property.typeName();
-	const QVariant::Type property_type = meta_property.type();
+	const QMetaType::Type property_type = static_cast<QMetaType::Type>(meta_property.typeId());
 
 	QVariant new_property_value;
-	if (property_type == QVariant::Color) {
+	if (property_type == QMetaType::Type::QColor) {
 		if (scope.get_operator() != gsml_operator::assignment) {
 			throw std::runtime_error("Only the assignment operator is available for color properties.");
 		}
 
 		new_property_value = scope.to_color();
-	} else if (property_type == QVariant::Point) {
+	} else if (property_type == QMetaType::Type::QPoint) {
 		if (scope.get_operator() != gsml_operator::assignment) {
 			throw std::runtime_error("Only the assignment operator is available for point properties.");
 		}
 
 		new_property_value = scope.to_point();
-	} else if (property_type == QVariant::PointF) {
+	} else if (property_type == QMetaType::Type::QPointF) {
 		if (scope.get_operator() != gsml_operator::assignment) {
 			throw std::runtime_error("Only the assignment operator is available for point properties.");
 		}
 
 		new_property_value = scope.to_pointf();
-	} else if (property_type == QVariant::Size) {
+	} else if (property_type == QMetaType::Type::QSize) {
 		if (scope.get_operator() != gsml_operator::assignment) {
 			throw std::runtime_error("Only the assignment operator is available for size properties.");
 		}
@@ -287,7 +285,7 @@ void database::modify_list_property_for_object(QObject *object, const std::strin
 	const std::string class_name = meta_object->className();
 	const int property_index = meta_object->indexOfProperty(property_name.c_str());
 	QMetaProperty meta_property = meta_object->property(property_index);
-	const QVariant::Type property_type = meta_property.type();
+	const QMetaType::Type property_type = static_cast<QMetaType::Type>(meta_property.typeId());
 	const std::string property_class_name = meta_property.typeName();
 
 	if (gsml_operator == gsml_operator::assignment) {
@@ -308,7 +306,7 @@ void database::modify_list_property_for_object(QObject *object, const std::strin
 	if (property_name == "files") {
 		const std::filesystem::path filepath(value);
 		success = QMetaObject::invokeMethod(object, method_name.c_str(), Qt::ConnectionType::DirectConnection, Q_ARG(const std::filesystem::path &, filepath));
-	} else if (property_type == QVariant::Type::StringList) {
+	} else if (property_type == QMetaType::Type::QStringList) {
 		success = QMetaObject::invokeMethod(object, method_name.c_str(), Qt::ConnectionType::DirectConnection, Q_ARG(const std::string &, value));
 	} else {
 		const auto find_iterator = this->list_property_function_map.find(property_class_name);
