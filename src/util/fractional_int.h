@@ -287,6 +287,11 @@ public:
 		return this->value >= other.value;
 	}
 
+	constexpr bool operator >=(const int other) const
+	{
+		return *this > other || *this == other;
+	}
+
 	constexpr const fractional_int<N> &operator +=(const fractional_int<N> &other)
 	{
 		this->value += other.value;
