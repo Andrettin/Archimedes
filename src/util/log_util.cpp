@@ -4,7 +4,7 @@
 
 namespace archimedes::log {
 
-const log_level min_log_level = log_level::trace;
+log_level min_log_level = log_level::warning;
 
 void log(const log_level level, const std::string_view &message)
 {
@@ -69,6 +69,11 @@ void log_qt_message(QtMsgType type, const QMessageLogContext &context, const QSt
 			log::log_error(log_message);
 			break;
 	}
+}
+
+void set_min_log_level(const log_level level)
+{
+	min_log_level = level;
 }
 
 }
