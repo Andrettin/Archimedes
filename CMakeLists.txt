@@ -68,6 +68,8 @@ set(util_SRCS
 	src/util/geoshape_util.cpp
 	src/util/image_provider_base.cpp
 	src/util/image_util.cpp
+	src/util/log_level.cpp
+	src/util/log_util.cpp
 	src/util/number_util.cpp
 	src/util/point_container.cpp
 	src/util/point_util.cpp
@@ -169,6 +171,7 @@ set(util_HDRS
 	src/util/image_util.h
 	src/util/list_util.h
 	src/util/locale_util.h
+	src/util/log_level.h
 	src/util/log_output_handler.h
 	src/util/log_util.h
 	src/util/map_util.h
