@@ -161,7 +161,7 @@ public:
 	}
 
 	[[nodiscard]]
-	static boost::asio::awaitable<void> parse_database(const std::filesystem::path &data_path, const data_module *data_module)
+	static QCoro::Task<void> parse_database(const std::filesystem::path &data_path, const data_module *data_module)
 	{
 		if (std::string(T::database_folder).empty()) {
 			co_return;

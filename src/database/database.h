@@ -91,17 +91,17 @@ public:
 	static void ensure_path_exists(const std::filesystem::path &path);
 
 	[[nodiscard]]
-	static boost::asio::awaitable<void> parse_folder(const std::filesystem::path &path, std::vector<gsml_data> &gsml_data_list);
+	static QCoro::Task<void> parse_folder(const std::filesystem::path &path, std::vector<gsml_data> &gsml_data_list);
 
 public:
 	database();
 	~database();
 
 	[[nodiscard]]
-	boost::asio::awaitable<void> parse();
+	QCoro::Task<void> parse();
 
 	[[nodiscard]]
-	boost::asio::awaitable<void> load(const bool initial_definition);
+	QCoro::Task<void> load(const bool initial_definition);
 
 	void load_predefines();
 	void load_defines();

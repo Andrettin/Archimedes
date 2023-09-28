@@ -405,7 +405,7 @@ const std::filesystem::path &database::get_base_path(const data_module *data_mod
 	return this->get_root_path();
 }
 
-boost::asio::awaitable<void> database::parse_folder(const std::filesystem::path &path, std::vector<gsml_data> &gsml_data_list)
+QCoro::Task<void> database::parse_folder(const std::filesystem::path &path, std::vector<gsml_data> &gsml_data_list)
 {
 	std::filesystem::recursive_directory_iterator dir_iterator(path);
 
@@ -420,21 +420,21 @@ boost::asio::awaitable<void> database::parse_folder(const std::filesystem::path 
 		filepaths_by_depth[dir_iterator.depth()].insert(dir_entry.path());
 	}
 
-	std::vector<boost::asio::awaitable<gsml_data>> awaitables;
+	std::vector<QFuture<gsml_data>> futures;
 
 	for (const auto &kv_pair : filepaths_by_depth) {
 		for (const std::filesystem::path &filepath : kv_pair.second) {
-			boost::asio::awaitable<gsml_data> awaitable = thread_pool::get()->co_spawn_awaitable([&filepath]() -> boost::asio::awaitable<gsml_data> {
+			QFuture<gsml_data> future = thread_pool::get()->co_spawn_future([&filepath]() -> boost::asio::awaitable<gsml_data> {
 				gsml_parser parser;
 				co_return parser.parse(filepath);
 			});
 
-			awaitables.push_back(std::move(awaitable));
+			futures.push_back(std::move(future));
 		}
 	}
 
-	for (boost::asio::awaitable<gsml_data> &awaitable : awaitables) {
-		gsml_data_list.push_back(co_await std::move(awaitable));
+	for (QFuture<gsml_data> &future : futures) {
+		gsml_data_list.push_back(co_await std::move(future));
 	}
 }
 
@@ -446,29 +446,29 @@ database::~database()
 {
 }
 
-boost::asio::awaitable<void> database::parse()
+QCoro::Task<void> database::parse()
 {
 	const auto data_paths_with_module = this->get_data_paths_with_module();
 	for (const auto &kv_pair : data_paths_with_module) {
 		const std::filesystem::path &path = kv_pair.first;
 		const data_module *data_module = kv_pair.second;
 
-		std::vector<boost::asio::awaitable<void>> awaitables;
+		std::vector<QCoro::Task<void>> tasks;
 
 		//parse the files in each data type's folder
 		for (const std::unique_ptr<data_type_metadata> &metadata : this->metadata) {
-			boost::asio::awaitable<void> awaitable = metadata->get_parsing_function()(path, data_module);
-			awaitables.push_back(std::move(awaitable));
+			QCoro::Task<void> task = metadata->get_parsing_function()(path, data_module);
+			tasks.push_back(std::move(task));
 		}
 
-		//we need to wait for the awaitables per module, so that this remains lock-free, as each data type has its own parsed GSML data list
-		for (boost::asio::awaitable<void> &awaitable : awaitables) {
-			co_await std::move(awaitable);
+		//we need to wait for the tasks per module, so that this remains lock-free, as each data type has its own parsed GSML data list
+		for (QCoro::Task<void> &task : tasks) {
+			co_await std::move(task);
 		}
 	}
 }
 
-boost::asio::awaitable<void> database::load(const bool initial_definition)
+QCoro::Task<void> database::load(const bool initial_definition)
 {
 	if (initial_definition) {
 		//sort the metadata instances so they are placed after their class' dependencies' metadata
