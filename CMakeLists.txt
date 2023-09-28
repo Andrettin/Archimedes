@@ -4,6 +4,7 @@ set(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo" CACHE STRING "" FORCE)
 
 include_directories(
 	src
+	src/third_party/qcoro
 )
 
 set(database_SRCS
@@ -250,6 +251,8 @@ find_package(Qt6 6.5 COMPONENTS Location REQUIRED) #licensed under the GPL 2.0, 
 find_package(Qt6 6.5 COMPONENTS Qml REQUIRED) #licensed under the GPL 2.0, as well as the LGPL 3.0
 find_package(Qt6 6.5 COMPONENTS Quick REQUIRED) #licensed under the GPL 2.0, as well as the LGPL 3.0
 
+add_subdirectory(src/third_party/qcoro)
+
 set(QT_LIBRARIES
 	Qt6::Core
 	Qt6::Gui
@@ -302,7 +305,7 @@ set_target_properties(archimedes PROPERTIES UNITY_BUILD_MODE GROUP)
 set_target_properties(archimedes_test PROPERTIES UNITY_BUILD_MODE GROUP)
 set_source_files_properties(${util_test_SRCS} PROPERTIES UNITY_GROUP "util_test")
 
-target_link_libraries(archimedes ${archimedes_LIBS})
+target_link_libraries(archimedes ${archimedes_LIBS} QCoro6Core QCoro6Qml)
 
 target_precompile_headers(archimedes_test REUSE_FROM archimedes)
 
