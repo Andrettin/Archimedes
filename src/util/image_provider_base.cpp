@@ -40,6 +40,7 @@ const QImage &image_provider_base::get_image(const std::string &id)
 
 	thread_pool::get()->co_spawn_sync([this, &id]() -> boost::asio::awaitable<void> {
 		try {
+			log_trace(std::format("Loading image for identifier \"{}\".", id));
 			co_await this->load_image(id);
 		} catch (...) {
 			exception::report(std::current_exception());
