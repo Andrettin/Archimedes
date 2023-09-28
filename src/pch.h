@@ -79,6 +79,7 @@
 #include <qcoro/core/qcorofuture.h>
 #include <qcoro/qcorotask.h>
 #include <qcoro/qml/qcoroqmltask.h>
+#include <qcoro/quick/qcoroimageprovider.h>
 #pragma warning(pop)
 
 #include "util/point_operators.h" //to ensure the / operator with an int as RHS is used instead of the Qt one with qreal (which uses rounding)
