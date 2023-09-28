@@ -424,9 +424,9 @@ QCoro::Task<void> database::parse_folder(const std::filesystem::path &path, std:
 
 	for (const auto &kv_pair : filepaths_by_depth) {
 		for (const std::filesystem::path &filepath : kv_pair.second) {
-			QFuture<gsml_data> future = thread_pool::get()->co_spawn_future([&filepath]() -> boost::asio::awaitable<gsml_data> {
+			QFuture<gsml_data> future = QtConcurrent::run([&filepath]() {
 				gsml_parser parser;
-				co_return parser.parse(filepath);
+				return parser.parse(filepath);
 			});
 
 			futures.push_back(std::move(future));
