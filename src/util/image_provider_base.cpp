@@ -4,6 +4,7 @@
 
 #include "util/assert_util.h"
 #include "util/exception_util.h"
+#include "util/log_util.h"
 #include "util/thread_pool.h"
 
 namespace archimedes {
