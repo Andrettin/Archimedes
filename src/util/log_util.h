@@ -18,3 +18,18 @@ extern void log_qt_message(QtMsgType type, const QMessageLogContext &context, co
 	if (log::min_log_level <= log_level::trace) { \
 		log::log(log_level::trace, message); \
 	}
+
+#define log_debug(message) \
+	if (log::min_log_level <= log_level::debug) { \
+		log::log(log_level::debug, message); \
+	}
+
+#define log_info(message) \
+	if (log::min_log_level <= log_level::info) { \
+		log::log(log_level::info, message); \
+	}
+
+#define log_warning(message) \
+	if (log::min_log_level <= log_level::warning) { \
+		log::log(log_level::warning, message); \
+	}
