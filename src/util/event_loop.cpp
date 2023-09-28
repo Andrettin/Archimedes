@@ -64,13 +64,6 @@ void event_loop::co_spawn(const std::function<boost::asio::awaitable<void>()> &f
 	}, boost::asio::detached);
 }
 
-boost::asio::awaitable<void> event_loop::await_ms(const uint64_t ms)
-{
-	boost::asio::steady_timer timer(*this->io_context);
-	timer.expires_from_now(std::chrono::milliseconds(ms));
-	co_await timer.async_wait(boost::asio::use_awaitable);
-}
-
 void event_loop::run_io_context()
 {
 	//restart the IO context, in case it was placed in the stopped state due to running out of work

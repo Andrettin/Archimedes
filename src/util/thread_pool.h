@@ -33,12 +33,6 @@ public:
 		return boost::asio::co_spawn(this->pool->get_executor(), std::move(function), boost::asio::use_awaitable);
 	}
 
-	[[nodiscard]]
-	boost::asio::awaitable<void> await_ms(const uint64_t ms);
-
-	[[nodiscard]]
-	boost::asio::awaitable<void> await_future(std::future<void> &&future);
-
 private:
 	std::unique_ptr<boost::asio::thread_pool> pool;
 };
