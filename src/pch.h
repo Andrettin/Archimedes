@@ -69,6 +69,7 @@
 #include <QQuickFramebufferObject>
 #include <QStandardPaths>
 #include <QString>
+#include <QtConcurrent/QtConcurrentRun>
 #include <QThread>
 #include <QTime>
 #include <QTimer>
