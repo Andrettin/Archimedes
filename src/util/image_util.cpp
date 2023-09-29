@@ -12,11 +12,11 @@
 
 namespace archimedes::image {
 
-boost::asio::awaitable<QImage> load(const std::filesystem::path &filepath)
+QCoro::Task<QImage> load(const std::filesystem::path &filepath)
 {
-	co_return co_await thread_pool::get()->co_spawn_awaitable([&filepath]() -> boost::asio::awaitable<QImage> {
+	co_return co_await QtConcurrent::run([&filepath]() {
 		QImage image(path::to_qstring(filepath));
-		co_return image;
+		return image;
 	});
 }
 

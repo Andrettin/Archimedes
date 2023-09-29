@@ -39,7 +39,7 @@ const QImage &image_provider_base::get_image(const std::string &id)
 		return find_iterator->second;
 	}
 
-	thread_pool::get()->co_spawn_sync([this, &id]() -> boost::asio::awaitable<void> {
+	QtConcurrent::run([this, &id]() -> QCoro::Task<void> {
 		try {
 			log_trace(std::format("Loading image for identifier \"{}\".", id));
 			co_await this->load_image(id);
@@ -47,7 +47,7 @@ const QImage &image_provider_base::get_image(const std::string &id)
 			exception::report(std::current_exception());
 			std::terminate();
 		}
-	});
+	}).waitForFinished();
 
 	find_iterator = this->image_map.find(id);
 	assert_throw(find_iterator != this->image_map.end());

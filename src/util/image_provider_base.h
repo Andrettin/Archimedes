@@ -18,7 +18,7 @@ public:
 	const QImage &get_image(const std::string &id);
 
 	[[nodiscard]]
-	virtual boost::asio::awaitable<void> load_image(const std::string &id) = 0;
+	virtual QCoro::Task<void> load_image(const std::string &id) = 0;
 
 	void set_image(const std::string &id, QImage &&image)
 	{
