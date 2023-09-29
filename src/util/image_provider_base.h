@@ -1,36 +1,32 @@
 #pragma once
 
 #pragma warning(push, 0)
-#include <QQuickImageProvider>
+#include <QQuickAsyncImageProvider>
 #pragma warning(pop)
 
 namespace archimedes {
 
-class image_provider_base : public QQuickImageProvider
+class image_provider_base : public QQuickAsyncImageProvider
 {
 public:
-	image_provider_base() : QQuickImageProvider(QQuickImageProvider::Image)
-	{
-	}
-
-	virtual QImage requestImage(const QString &id, QSize *size, const QSize &requested_size) override;
-
-	const QImage &get_image(const std::string &id);
+	virtual QQuickImageResponse *requestImageResponse(const QString &id, const QSize &requested_size) override;
 
 	[[nodiscard]]
-	virtual QCoro::Task<void> load_image(const std::string &id) = 0;
+	QCoro::Task<const QImage *> get_image(const std::string &id);
 
-	void set_image(const std::string &id, QImage &&image)
-	{
-		this->image_map[id] = std::move(image);
-	}
+	[[nodiscard]]
+	virtual QCoro::Task<void> load_image(const std::string id) = 0;
+
+	void set_image(const std::string &id, QImage &&image);
 
 	void clear_images()
 	{
+		std::lock_guard lock(this->mutex);
 		this->image_map.clear();
 	}
 
 private:
+	std::mutex mutex;
 	std::map<std::string, QImage> image_map;
 };
 
