@@ -339,6 +339,10 @@ private:
 			return QVariant::fromValue(T::get(value));
 		});
 
+		database::get()->register_string_to_qvariant_conversion(std::format("const {}", T::property_class_identifier), [](const std::string &value) {
+			return QVariant::fromValue(T::get(value));
+		});
+
 		const auto list_property_function = [](QObject *object, const std::string &method_name, const std::string &value_str) {
 			T *value = T::get(value_str);
 			return QMetaObject::invokeMethod(object, method_name.c_str(), Qt::ConnectionType::DirectConnection, QArgument<T *>((std::string(T::class_identifier) + " *").c_str(), value));
