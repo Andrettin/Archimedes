@@ -21,13 +21,7 @@ static QVariant from_value(const T &value)
 	} else if constexpr (std::is_same_v<T, std::string>) {
 		return QVariant::fromValue(QString::fromStdString(value));
 	} else if constexpr (std::is_pointer_v<T>) {
-		using mutable_type = std::add_pointer_t<std::remove_const_t<std::remove_pointer_t<T>>>;
-
-		if constexpr (std::is_same_v<T, mutable_type>) {
-			return QVariant::fromValue(value);
-		} else {
-			return QVariant::fromValue(const_cast<mutable_type>(value));
-		}
+		return QVariant::fromValue(value);
 	} else if constexpr (is_specialization_of_v<T, std::unique_ptr>) {
 		return QVariant::fromValue(value.get());
 	} else if constexpr (is_specialization_of_v<T, std::vector>) {
