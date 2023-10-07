@@ -48,7 +48,8 @@ QQuickImageResponse *image_provider_base::requestImageResponse(const QString &id
 		return response;
 	} catch (...) {
 		exception::report(std::current_exception());
-		std::terminate();
+		QApplication::exit(EXIT_FAILURE);
+		return nullptr;
 	}
 }
 

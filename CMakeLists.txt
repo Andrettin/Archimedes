@@ -103,6 +103,7 @@ set(database_HDRS
 	src/database/data_type_metadata.h
 	src/database/database.h
 	src/database/defines_base.h
+	src/database/enum_data_type.h
 	src/database/gsml_data.h
 	src/database/gsml_data_visitor.h
 	src/database/gsml_element_visitor.h
