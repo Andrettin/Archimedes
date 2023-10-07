@@ -1,6 +1,7 @@
 #pragma once
 
 #include "util/container_util.h"
+#include "util/fractional_int.h"
 #include "util/path_util.h"
 #include "util/type_traits.h"
 
@@ -26,6 +27,8 @@ static QVariant from_value(const T &value)
 		return QVariant::fromValue(value.get());
 	} else if constexpr (is_specialization_of_v<T, std::vector>) {
 		return container::to_qvariant_list(value);
+	} else if constexpr (std::is_same_v<T, centesimal_int>) {
+		return value.to_int();
 	} else {
 		return QVariant::fromValue(value);
 	}
