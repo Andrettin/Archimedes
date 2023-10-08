@@ -2,6 +2,7 @@
 
 #include "util/image_util.h"
 
+#include "util/assert_util.h"
 #include "util/colorization_type.h"
 #include "util/container_util.h"
 #include "util/fractional_int.h"
@@ -18,6 +19,28 @@ QCoro::Task<QImage> load(const std::filesystem::path &filepath)
 		QImage image(path::to_qstring(filepath));
 		return image;
 	});
+}
+
+void copy_frame(const QImage &frame_image, const QPoint &frame_offset, QImage &dst_image, const QSize &dst_frame_size, const int dst_frame_index)
+{
+	assert_throw(frame_image.format() == dst_image.format());
+
+	assert_throw(dst_frame_size.width() % frame_image.width() == 0);
+	assert_throw(dst_frame_size.height() % frame_image.height() == 0);
+
+	const int frame_width_multiplier = dst_frame_size.width() / frame_image.width();
+	const int frame_height_multiplier = dst_frame_size.height() / frame_image.height();
+
+	assert_throw(frame_offset.x() <= frame_width_multiplier);
+	assert_throw(frame_offset.y() <= frame_height_multiplier);
+
+	const QPoint dst_frame_pos = image::get_frame_pos(dst_image, dst_frame_size, dst_frame_index);
+	const QPoint frame_pos = dst_frame_pos * QPoint(frame_width_multiplier, frame_height_multiplier) + frame_offset;
+
+	const uint32_t *frame_data = reinterpret_cast<const uint32_t *>(frame_image.constBits());
+	uint32_t *dst_data = reinterpret_cast<uint32_t *>(dst_image.bits());
+
+	image::copy_frame_data(frame_data, dst_data, frame_image.size(), frame_pos.x(), frame_pos.y(), dst_image.width());
 }
 
 std::set<QRgb> get_rgbs(const QImage &image)

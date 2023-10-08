@@ -25,6 +25,8 @@ inline QImage get_frame(const QImage &image, const int frame_x, const int frame_
 	return image.copy(pixel_x, pixel_y, frame_size.width(), frame_size.height());
 }
 
+extern void copy_frame(const QImage &frame_image, const QPoint &frame_offset, QImage &dst_image, const QSize &dst_frame_size, const int dst_frame_index);
+
 inline void copy_frame_data(const uint32_t *src_frame_data, uint32_t *dst_data, const QSize &frame_size, const int frame_x, const int frame_y, const int dst_width)
 {
 	//BPP is assumed to be 4, hence why uint32_t buffers are used
