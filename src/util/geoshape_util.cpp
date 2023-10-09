@@ -34,6 +34,17 @@ void write_image(const std::filesystem::path &filepath, color_map<std::vector<st
 	image.save(path::to_qstring(filepath));
 }
 
+void write_to_image(QImage &image, color_map<std::vector<std::unique_ptr<QGeoShape>>> &geodata_map, const georectangle &georectangle, const map_projection *map_projection, const int geocoordinate_x_offset)
+{
+	for (const auto &[color, geoshapes] : geodata_map) {
+		assert_throw(color.isValid());
+
+		for (const auto &geoshape : geoshapes) {
+			geoshape::write_to_image(*geoshape, image, color, georectangle, map_projection, std::filesystem::path(), geocoordinate_x_offset);
+		}
+	}
+}
+
 void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection, const std::filesystem::path &image_checkpoint_save_filepath, const int geocoordinate_x_offset)
 {
 	const QGeoRectangle qgeorectangle = georectangle.to_qgeorectangle();
@@ -146,7 +157,9 @@ void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &colo
 			++pixel_checkpoint_count;
 
 			if (pixel_checkpoint_count >= pixel_checkpoint_threshold) {
-				image.save(path::to_qstring(image_checkpoint_save_filepath));
+				if (!image_checkpoint_save_filepath.empty()) {
+					image.save(path::to_qstring(image_checkpoint_save_filepath));
+				}
 				pixel_checkpoint_count = 0;
 			}
 		}
