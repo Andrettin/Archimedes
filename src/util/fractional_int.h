@@ -42,6 +42,15 @@ public:
 		return rest_str;
 	}
 
+	static const fractional_int &min(const fractional_int &lhs, const fractional_int &rhs)
+	{
+		if (rhs < lhs) {
+			return rhs;
+		} else {
+			return lhs;
+		}
+	}
+
 	static const fractional_int &max(const fractional_int &lhs, const fractional_int &rhs)
 	{
 		if (rhs > lhs) {
