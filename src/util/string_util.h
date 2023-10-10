@@ -234,15 +234,15 @@ inline bool is_number(const std::string &str)
 
 inline std::string get_singular_form(const std::string &str)
 {
-	if (str.substr(str.size() - 4, 4) == "sses") {
+	if (str.ends_with("sses")) {
 		return str.substr(0, str.size() - 2); //e.g. "classes"
-	} else if (str.substr(str.size() - 2, 2) == "ys") {
+	} else if (str.ends_with("ys")) {
 		return str.substr(0, str.size() - 2);
-	} else if (str.substr(str.size() - 3, 3) == "ies") {
+	} else if (str.ends_with("ies")) {
 		if (str != "species") {
 			return str.substr(0, str.size() - 3) + "y";
 		}
-	} else if (str.substr(str.size() - 1, 1) == "s") {
+	} else if (str.ends_with('s')) {
 		return str.substr(0, str.size() - 1);
 	}
 
