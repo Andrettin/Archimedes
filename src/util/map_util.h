@@ -70,6 +70,21 @@ inline QVariantList to_qvariant_list(const T &map)
 }
 
 template <typename T>
+inline QVariantList to_value_sorted_qvariant_list(const T &map)
+{
+	QVariantList qvariant_list = map::to_qvariant_list(map);
+
+	std::sort(qvariant_list.begin(), qvariant_list.end(), [](const QVariant &lhs, const QVariant &rhs) {
+		const QVariant lhs_value_variant = lhs.toMap()["value"];
+		const QVariant rhs_value_variant = rhs.toMap()["value"];
+
+		return lhs_value_variant.value<typename T::mapped_type>() > rhs_value_variant.value<typename T::mapped_type>();
+	});
+
+	return qvariant_list;
+}
+
+template <typename T>
 inline QVariantMap to_qvariant_map(const T &map)
 {
 	QVariantMap qvariant_map;
