@@ -59,7 +59,6 @@ set(util_SRCS
 	src/util/colorization_type.cpp
 	src/util/date_util.cpp
 	src/util/enum_converter.cpp
-	src/util/event_loop.cpp
 	src/util/exception_util.cpp
 	src/util/gender.cpp
 	src/util/geocircle_util.cpp
@@ -79,7 +78,6 @@ set(util_SRCS
 	src/util/string_conversion_util.cpp
 	src/util/string_util.cpp
 	src/util/text_processor_base.cpp
-	src/util/thread_pool.cpp
 	src/util/time_util.cpp
 )
 source_group(util FILES ${util_SRCS})
@@ -159,7 +157,6 @@ set(util_HDRS
 	src/util/empty_image_provider.h
 	src/util/enum_converter.h
 	src/util/enum_util.h
-	src/util/event_loop.h
 	src/util/exception_util.h
 	src/util/fractional_int.h
 	src/util/gender.h
@@ -195,7 +192,6 @@ set(util_HDRS
 	src/util/string_util.h
 	src/util/string_view_util.h
 	src/util/text_processor_base.h
-	src/util/thread_pool.h
 	src/util/time_util.h
 	src/util/type_traits.h
 	src/util/vector_random_util.h

@@ -48,8 +48,6 @@
 #include <SDKDDKVer.h>
 #endif
 
-#include <boost/asio/awaitable.hpp>
-
 #include <QApplication>
 #include <QColor>
 #include <QDateTime>

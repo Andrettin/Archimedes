@@ -9,7 +9,6 @@
 #include "util/path_util.h"
 #include "util/point_util.h"
 #include "util/size_util.h"
-#include "util/thread_pool.h"
 
 namespace archimedes::image {
 

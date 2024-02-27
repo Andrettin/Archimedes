@@ -2,7 +2,6 @@
 
 #include "util/color_container.h"
 #include "util/fractional_int.h"
-#include "util/thread_pool.h"
 
 namespace archimedes {
 	enum class colorization_type;
