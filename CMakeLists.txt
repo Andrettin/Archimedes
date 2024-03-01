@@ -302,7 +302,7 @@ set_target_properties(archimedes PROPERTIES UNITY_BUILD_MODE GROUP)
 set_target_properties(archimedes_test PROPERTIES UNITY_BUILD_MODE GROUP)
 set_source_files_properties(${util_test_SRCS} PROPERTIES UNITY_GROUP "util_test")
 
-target_link_libraries(archimedes ${archimedes_LIBS} QCoro6Core QCoro6Qml)
+target_link_libraries(archimedes ${archimedes_LIBS} QCoro6Core QCoro6Network QCoro6Qml)
 
 target_precompile_headers(archimedes_test REUSE_FROM archimedes)
 
