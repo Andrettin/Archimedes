@@ -24,10 +24,15 @@ public:
 
 	QCoro::Task<void> run()
 	{
-		this->image = co_await this->provider->get_image(id);
-		assert_throw(image != nullptr);
-		assert_throw(!image->isNull());
-		emit finished();
+		try {
+			this->image = co_await this->provider->get_image(id);
+			assert_throw(image != nullptr);
+			assert_throw(!image->isNull());
+			emit finished();
+		} catch (...) {
+			exception::report(std::current_exception());
+			QApplication::exit(EXIT_FAILURE);
+		}
 	}
 
 private:
