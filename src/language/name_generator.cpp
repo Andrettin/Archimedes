@@ -35,4 +35,23 @@ std::string name_generator::generate_name() const
 	return get_name_variant_string(name_variant);
 }
 
+std::string name_generator::generate_name(const std::set<std::string> &used_names) const
+{
+	std::vector<name_variant> available_names = this->names;
+	std::erase_if(available_names, [&used_names](const name_variant &name_variant) {
+		if (used_names.contains(get_name_variant_string(name_variant))) {
+			return true;
+		}
+
+		return false;
+	});
+
+	if (available_names.empty()) {
+		return std::string();
+	}
+
+	const name_variant &name_variant = vector::get_random(available_names);
+	return get_name_variant_string(name_variant);
+}
+
 }
