@@ -28,6 +28,24 @@ inline std::string to_signed_string(const int number)
 	return number_str;
 }
 
+inline std::string_view get_ordinal_number_suffix(const int number)
+{
+	if (number > 12) {
+		return number::get_ordinal_number_suffix(number % 10);
+	}
+
+	switch (number) {
+		case 1:
+			return "st";
+		case 2:
+			return "nd";
+		case 3:
+			return "rd";
+		default:
+			return "th";
+	}
+}
+
 inline int fast_abs(const int value)
 {
 	const int temp = value >> 31;
