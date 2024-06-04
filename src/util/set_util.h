@@ -2,6 +2,8 @@
 
 namespace archimedes::set {
 
+static inline const std::set<std::string> empty_string_set;
+
 template <typename T, typename U>
 void merge(T &set, const U &other_container)
 {
