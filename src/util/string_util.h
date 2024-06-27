@@ -104,7 +104,7 @@ inline std::string lowered(std::string &&str)
 	return str;
 }
 
-inline std::string lowered(const std::string &str)
+inline std::string lowered(const std::string_view &str)
 {
 	std::string result(str);
 	return string::lowered(std::move(result));
@@ -303,9 +303,9 @@ inline std::string snake_case_to_pascal_case(const std::string &str)
 	return result;
 }
 
-inline std::string highlight(const std::string &str)
+inline std::string highlight(const std::string_view &str)
 {
-	return "~<" + str + "~>";
+	return std::format("~<{}~>", str);
 }
 
 inline std::string dehighlight(const std::string &str)
