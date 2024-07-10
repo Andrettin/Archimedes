@@ -267,7 +267,8 @@ public:
 
 	constexpr bool operator <(const int other) const
 	{
-		return this->to_int() < other;
+		const int int_value = this->to_int();
+		return int_value < other || (int_value == other && this->get_fractional_value() < 0);
 	}
 
 	constexpr bool operator <=(const fractional_int<N> &other) const
