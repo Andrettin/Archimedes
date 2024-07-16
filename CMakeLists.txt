@@ -65,6 +65,7 @@ set(util_SRCS
 	src/util/geocoordinate.cpp
 	src/util/geojson_util.cpp
 	src/util/geopath_util.cpp
+	src/util/geopolygon_util.cpp
 	src/util/geoshape_util.cpp
 	src/util/image_provider_base.cpp
 	src/util/image_util.cpp
@@ -73,6 +74,7 @@ set(util_SRCS
 	src/util/number_util.cpp
 	src/util/point_container.cpp
 	src/util/point_util.cpp
+	src/util/qgeocoordinate_util.cpp
 	src/util/random.cpp
 	src/util/rect_util.cpp
 	src/util/string_conversion_util.cpp
@@ -164,6 +166,7 @@ set(util_HDRS
 	src/util/geocoordinate.h
 	src/util/geojson_util.h
 	src/util/geopath_util.h
+	src/util/geopolygon_util.h
 	src/util/georectangle.h
 	src/util/geoshape_util.h
 	src/util/image_provider_base.h
@@ -179,6 +182,7 @@ set(util_HDRS
 	src/util/point_container.h
 	src/util/point_operators.h
 	src/util/point_util.h
+	src/util/qgeocoordinate_util.h
 	src/util/queue_util.h
 	src/util/qunique_ptr.h
 	src/util/qvariant_util.h
