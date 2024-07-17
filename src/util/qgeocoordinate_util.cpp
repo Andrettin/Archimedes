@@ -6,10 +6,10 @@
 
 namespace archimedes::qgeocoordinate {
 
-void simplify(QGeoCoordinate &qgeocoordinate)
+void simplify(QGeoCoordinate &geocoordinate)
 {
-	qgeocoordinate.setLongitude(centesimal_int(qgeocoordinate.longitude()).to_double());
-	qgeocoordinate.setLatitude(centesimal_int(qgeocoordinate.latitude()).to_double());
+	geocoordinate.setLongitude(centesimal_int(geocoordinate.longitude()).to_double());
+	geocoordinate.setLatitude(centesimal_int(geocoordinate.latitude()).to_double());
 }
 
 }
