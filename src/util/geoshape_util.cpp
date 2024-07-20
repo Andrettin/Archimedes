@@ -27,7 +27,7 @@ void write_image(const std::filesystem::path &filepath, color_map<std::vector<st
 		assert_throw(color.isValid());
 
 		for (const auto &geoshape : geoshapes) {
-			geoshape::write_to_image(*geoshape, image, color, georectangle, map_projection, filepath, geocoordinate_x_offset);
+			geoshape::write_to_image(*geoshape, image, color, georectangle, map_projection, geocoordinate_x_offset);
 		}
 	}
 
@@ -40,12 +40,12 @@ void write_to_image(QImage &image, color_map<std::vector<std::unique_ptr<QGeoSha
 		assert_throw(color.isValid());
 
 		for (const auto &geoshape : geoshapes) {
-			geoshape::write_to_image(*geoshape, image, color, georectangle, map_projection, std::filesystem::path(), geocoordinate_x_offset);
+			geoshape::write_to_image(*geoshape, image, color, georectangle, map_projection, geocoordinate_x_offset);
 		}
 	}
 }
 
-void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection, const std::filesystem::path &image_checkpoint_save_filepath, const int geocoordinate_x_offset)
+void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection, const int geocoordinate_x_offset)
 {
 	const QGeoRectangle qgeorectangle = georectangle.to_qgeorectangle();
 	QGeoRectangle bounding_qgeorectangle = geoshape.boundingGeoRectangle();
@@ -137,9 +137,6 @@ void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &colo
 		end_pos.setX(image.width() - 1);
 	}
 
-	int pixel_checkpoint_count = 0;
-	static constexpr int pixel_checkpoint_threshold = 32 * 32;
-
 	for (int x = start_pos.x(); x <= end_pos.x(); ++x) {
 		for (int y = start_pos.y(); y <= end_pos.y(); ++y) {
 			const QPoint pixel_pos(x, y);
@@ -156,14 +153,6 @@ void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &colo
 			}
 
 			image.setPixelColor(pixel_pos, color);
-			++pixel_checkpoint_count;
-
-			if (pixel_checkpoint_count >= pixel_checkpoint_threshold) {
-				if (!image_checkpoint_save_filepath.empty()) {
-					image.save(path::to_qstring(image_checkpoint_save_filepath));
-				}
-				pixel_checkpoint_count = 0;
-			}
 		}
 	}
 }

@@ -13,7 +13,7 @@ extern void write_image(const std::filesystem::path &filepath, color_map<std::ve
 
 extern void write_to_image(QImage &image, color_map<std::vector<std::unique_ptr<QGeoShape>>> &geodata_map, const georectangle &georectangle, const map_projection *map_projection, const int geocoordinate_x_offset);
 
-extern void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection, const std::filesystem::path &image_checkpoint_save_filepath = "", const int geocoordinate_x_offset = 0);
+extern void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection, const int geocoordinate_x_offset = 0);
 
 inline void write_pixel_to_image(const QPoint &pixel_pos, const QColor &color, QImage &image)
 {
