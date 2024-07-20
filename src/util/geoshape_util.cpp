@@ -50,7 +50,9 @@ void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &colo
 	const QGeoRectangle qgeorectangle = georectangle.to_qgeorectangle();
 	QGeoRectangle bounding_qgeorectangle = geoshape.boundingGeoRectangle();
 
-	if (!bounding_qgeorectangle.intersects(qgeorectangle)) {
+	static constexpr archimedes::georectangle global_georectangle = georectangle::get_global_georectangle();
+
+	if (georectangle != global_georectangle && !bounding_qgeorectangle.intersects(qgeorectangle)) {
 		return;
 	}
 
