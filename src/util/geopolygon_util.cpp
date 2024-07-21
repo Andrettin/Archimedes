@@ -23,7 +23,7 @@ void simplify(QGeoPolygon &geopolygon)
 		const QList<QGeoCoordinate> hole_geocoordinates = geopolygon.holePath(i);
 		QList<QGeoCoordinate> simplified_hole_geocoordinates;
 
-		for (int j = 0; j < hole_geocoordinates.size(); ++i) {
+		for (int j = 0; j < hole_geocoordinates.size(); ++j) {
 			const QGeoCoordinate &geocoordinate = hole_geocoordinates.at(j);
 			QGeoCoordinate simplified_geocoordinate = qgeocoordinate::simplified(geocoordinate);
 			if (simplified_hole_geocoordinates.empty() || simplified_hole_geocoordinates.back() != simplified_geocoordinate) {
