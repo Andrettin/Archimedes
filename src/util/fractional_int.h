@@ -51,6 +51,11 @@ public:
 		}
 	}
 
+	static const fractional_int &min(const fractional_int &lhs, const int rhs)
+	{
+		return fractional_int::min(lhs, fractional_int(rhs));
+	}
+
 	static const fractional_int &max(const fractional_int &lhs, const fractional_int &rhs)
 	{
 		if (rhs > lhs) {
@@ -58,6 +63,11 @@ public:
 		} else {
 			return lhs;
 		}
+	}
+
+	static const fractional_int &max(const fractional_int &lhs, const int rhs)
+	{
+		return fractional_int::max(lhs, fractional_int(rhs));
 	}
 
 	constexpr fractional_int()
