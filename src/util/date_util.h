@@ -14,12 +14,10 @@ extern std::string year_to_string(const int year);
 
 inline std::string year_to_labeled_string(const int year)
 {
-	std::string str = date::year_to_string(year) + " ";
+	std::string str = date::year_to_string(year);
 
 	if (year < 0) {
-		str += "BC";
-	} else {
-		str += "AD";
+		str += " BC";
 	}
 
 	return str;
@@ -52,5 +50,23 @@ inline int get_days_in_month(const int month, const int year)
 }
 
 extern bool contains_date(const QDate &date, const timeline *timeline, const QDate &other_date, const archimedes::timeline *other_timeline = nullptr);
+
+inline std::string_view get_month_season_string(const int month)
+{
+	const int season = month / 3 + 1;
+
+	switch (season) {
+		case 1:
+			return "Winter";
+		case 2:
+			return "Spring";
+		case 3:
+			return "Summer";
+		case 4:
+			return "Autumn";
+	}
+
+	throw std::runtime_error(std::format("Could not get season string for month {}.", month));
+}
 
 }
