@@ -10,7 +10,7 @@ class timeline final : public named_data_entry, public data_type<timeline>
 	Q_OBJECT
 
 	Q_PROPERTY(archimedes::timeline* parent_timeline MEMBER parent_timeline READ get_parent_timeline)
-	Q_PROPERTY(QDateTime point_of_divergence MEMBER point_of_divergence READ get_point_of_divergence)
+	Q_PROPERTY(QDate point_of_divergence MEMBER point_of_divergence READ get_point_of_divergence)
 
 public:
 	static constexpr const char class_identifier[] = "timeline";
@@ -28,7 +28,7 @@ public:
 		return this->parent_timeline;
 	}
 
-	const QDateTime &get_point_of_divergence() const
+	const QDate &get_point_of_divergence() const
 	{
 		return this->point_of_divergence;
 	}
@@ -46,7 +46,7 @@ public:
 		return this->get_parent_timeline()->derives_from_timeline(timeline);
 	}
 
-	bool contains_timeline_date(const timeline *timeline, const QDateTime &date) const
+	bool contains_timeline_date(const timeline *timeline, const QDate &date) const
 	{
 		if (timeline == this) {
 			return true;
@@ -63,7 +63,7 @@ public:
 
 private:
 	timeline *parent_timeline = nullptr; //the timeline from which this one derives (null means the default timeline)
-	QDateTime point_of_divergence; //the point of divergence from the parent timeline
+	QDate point_of_divergence; //the point of divergence from the parent timeline
 };
 
 }

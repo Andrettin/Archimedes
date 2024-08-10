@@ -240,7 +240,7 @@ public:
 		}
 	}
 
-	static void load_history_database(const QDateTime &start_date, const timeline *timeline, const QObject *game_rules)
+	static void load_history_database(const QDate &start_date, const timeline *timeline, const QObject *game_rules)
 	{
 		if constexpr (T::history_enabled) {
 			try {

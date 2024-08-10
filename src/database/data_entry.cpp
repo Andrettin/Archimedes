@@ -38,7 +38,7 @@ void data_entry::process_gsml_scope(const gsml_data &scope)
 	}
 }
 
-void data_entry::process_gsml_dated_property(const gsml_property &property, const QDateTime &date)
+void data_entry::process_gsml_dated_property(const gsml_property &property, const QDate &date)
 {
 	Q_UNUSED(date)
 
@@ -49,7 +49,7 @@ void data_entry::process_gsml_dated_property(const gsml_property &property, cons
 	}
 }
 
-void data_entry::process_gsml_dated_scope(const gsml_data &scope, const QDateTime &date)
+void data_entry::process_gsml_dated_scope(const gsml_data &scope, const QDate &date)
 {
 	Q_UNUSED(date)
 
@@ -75,15 +75,15 @@ void data_entry::initialize()
 	this->initialized = true;
 }
 
-void data_entry::load_history(const QDateTime &start_date, const timeline *current_timeline, const QObject *game_rules)
+void data_entry::load_history(const QDate &start_date, const timeline *current_timeline, const QObject *game_rules)
 {
 	this->reset_history();
 
-	std::map<QDateTime, std::vector<const gsml_data *>> history_entries;
+	std::map<QDate, std::vector<const gsml_data *>> history_entries;
 
 	for (const gsml_data &data : this->history_data) {
 		data.for_each_property([&](const gsml_property &property) {
-			this->process_gsml_dated_property(property, QDateTime()); //properties outside of a date scope, to be applied regardless of start date
+			this->process_gsml_dated_property(property, QDate()); //properties outside of a date scope, to be applied regardless of start date
 		});
 
 		data.for_each_child([&](const gsml_data &history_entry) {
@@ -92,7 +92,7 @@ void data_entry::load_history(const QDateTime &start_date, const timeline *curre
 	}
 
 	for (const auto &kv_pair : history_entries) {
-		const QDateTime &date = kv_pair.first;
+		const QDate &date = kv_pair.first;
 		const std::vector<const gsml_data *> &date_history_entries = kv_pair.second;
 
 		for (const gsml_data *history_entry : date_history_entries) {
@@ -101,7 +101,7 @@ void data_entry::load_history(const QDateTime &start_date, const timeline *curre
 	}
 }
 
-void data_entry::load_history_scope(const gsml_data &history_scope, const QDateTime &start_date, const timeline *current_timeline, const QObject *game_rules, std::map<QDateTime, std::vector<const gsml_data *>> &history_entries)
+void data_entry::load_history_scope(const gsml_data &history_scope, const QDate &start_date, const timeline *current_timeline, const QObject *game_rules, std::map<QDate, std::vector<const gsml_data *>> &history_entries)
 {
 	const timeline *timeline = nullptr;
 	const calendar *calendar = nullptr;
@@ -138,7 +138,7 @@ void data_entry::load_history_scope(const gsml_data &history_scope, const QDateT
 					}
 				} else {
 					//treat the scope as a property to be applied immediately
-					this->process_gsml_dated_scope(history_scope, QDateTime());
+					this->process_gsml_dated_scope(history_scope, QDate());
 					return;
 				}
 			}
@@ -151,14 +151,14 @@ void data_entry::load_history_scope(const gsml_data &history_scope, const QDateT
 		}
 
 		history_scope.for_each_child([&](const gsml_data &timeline_entry) {
-			QDateTime date = string::to_date(timeline_entry.get_tag());
+			QDate date = string::to_date(timeline_entry.get_tag());
 			if (date::contains_date(start_date, current_timeline, date, timeline)) {
 				history_entries[date].push_back(&timeline_entry);
 			}
 		});
 	} else if (calendar != nullptr || game_rule_variant.isValid()) {
 		history_scope.for_each_child([&](const gsml_data &history_subentry) {
-			QDateTime date = string::to_date(history_subentry.get_tag());
+			QDate date = string::to_date(history_subentry.get_tag());
 
 			if (calendar != nullptr) {
 				date = date.addYears(calendar->get_year_offset());
@@ -169,7 +169,7 @@ void data_entry::load_history_scope(const gsml_data &history_scope, const QDateT
 			}
 		});
 	} else {
-		QDateTime date = string::to_date(tag);
+		QDate date = string::to_date(tag);
 
 		if (date::contains_date(start_date, current_timeline, date)) {
 			history_entries[date].push_back(&history_scope);
@@ -177,7 +177,7 @@ void data_entry::load_history_scope(const gsml_data &history_scope, const QDateT
 	}
 }
 
-void data_entry::load_date_scope(const gsml_data &date_scope, const QDateTime &date)
+void data_entry::load_date_scope(const gsml_data &date_scope, const QDate &date)
 {
 	try {
 		date_scope.for_each_element([&](const gsml_property &property) {

@@ -43,8 +43,8 @@ public:
 
 	virtual void process_gsml_property(const gsml_property &property) override;
 	virtual void process_gsml_scope(const gsml_data &scope) override;
-	virtual void process_gsml_dated_property(const gsml_property &property, const QDateTime &date);
-	virtual void process_gsml_dated_scope(const gsml_data &scope, const QDateTime &date);
+	virtual void process_gsml_dated_property(const gsml_property &property, const QDate &date);
+	virtual void process_gsml_dated_scope(const gsml_data &scope, const QDate &date);
 
 	bool is_defined() const
 	{
@@ -90,9 +90,9 @@ public:
 		return nullptr;
 	}
 
-	void load_history(const QDateTime &start_date, const timeline *current_timeline, const QObject *game_rules);
-	void load_history_scope(const gsml_data &history_scope, const QDateTime &start_date, const timeline *current_timeline, const QObject *game_rules, std::map<QDateTime, std::vector<const gsml_data *>> &history_entries);
-	void load_date_scope(const gsml_data &date_scope, const QDateTime &date);
+	void load_history(const QDate &start_date, const timeline *current_timeline, const QObject *game_rules);
+	void load_history_scope(const gsml_data &history_scope, const QDate &start_date, const timeline *current_timeline, const QObject *game_rules, std::map<QDate, std::vector<const gsml_data *>> &history_entries);
+	void load_date_scope(const gsml_data &date_scope, const QDate &date);
 
 	virtual void reset_history()
 	{

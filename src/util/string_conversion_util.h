@@ -31,7 +31,8 @@ inline char to_character(const std::string &str)
 	return str.front();
 }
 
-extern QDateTime to_date(const std::string &date_str);
+extern QDateTime to_date_time(const std::string &date_str);
+extern QDate to_date(const std::string &date_str);
 extern QTime to_time(const std::string &time_str);
 
 }

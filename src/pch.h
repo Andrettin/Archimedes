@@ -50,6 +50,7 @@
 
 #include <QApplication>
 #include <QColor>
+#include <QDate>
 #include <QDateTime>
 #include <QDebug>
 #include <QEvent>

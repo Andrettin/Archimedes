@@ -51,6 +51,6 @@ inline int get_days_in_month(const int month, const int year)
 	return QDate(year, month, 1).daysInMonth();
 }
 
-extern bool contains_date(const QDateTime &date, const timeline *timeline, const QDateTime &other_date, const archimedes::timeline *other_timeline = nullptr);
+extern bool contains_date(const QDate &date, const timeline *timeline, const QDate &other_date, const archimedes::timeline *other_timeline = nullptr);
 
 }

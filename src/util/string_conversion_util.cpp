@@ -6,7 +6,7 @@
 
 namespace archimedes::string {
 
-QDateTime to_date(const std::string &date_str)
+QDateTime to_date_time(const std::string &date_str)
 {
 	const std::vector<std::string> date_string_list = string::split(date_str, '.');
 
@@ -34,7 +34,36 @@ QDateTime to_date(const std::string &date_str)
 	QDateTime date(QDate(years, months, days), QTime(hours, 0), Qt::UTC);
 
 	if (!date.isValid()) {
-		throw std::runtime_error("Date \"" + date_str + "\" is not a valid date.");
+		throw std::runtime_error(std::format("Date \"{}\" is not a valid date.", date_str));
+	}
+
+	return date;
+}
+
+QDate to_date(const std::string &date_str)
+{
+	const std::vector<std::string> date_string_list = string::split(date_str, '.');
+
+	int years = 0;
+	int months = 1;
+	int days = 1;
+
+	if (date_string_list.size() >= 1) {
+		years = std::stoi(date_string_list[0]);
+
+		if (date_string_list.size() >= 2) {
+			months = std::stoi(date_string_list[1]);
+
+			if (date_string_list.size() >= 3) {
+				days = std::stoi(date_string_list[2]);
+			}
+		}
+	}
+
+	QDate date(years, months, days);
+
+	if (!date.isValid()) {
+		throw std::runtime_error(std::format("Date \"{}\" is not a valid date.", date_str));
 	}
 
 	return date;
@@ -68,7 +97,7 @@ QTime to_time(const std::string &time_str)
 	QTime time(hours, minutes, seconds, milliseconds);
 
 	if (!time.isValid()) {
-		throw std::runtime_error("Time \"" + time_str + "\" is not a valid time.");
+		throw std::runtime_error(std::format("Time \"{}\" is not a valid time.", time_str));
 	}
 
 	return time;

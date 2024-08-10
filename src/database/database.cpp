@@ -148,6 +148,12 @@ QVariant database::process_gsml_property_value(const gsml_property &property, co
 			throw std::runtime_error("Only the assignment operator is available for date-time properties.");
 		}
 
+		new_property_value = string::to_date_time(property.get_value());
+	} else if (property_type == QMetaType::Type::QDate) {
+		if (property.get_operator() != gsml_operator::assignment) {
+			throw std::runtime_error("Only the assignment operator is available for date properties.");
+		}
+
 		new_property_value = string::to_date(property.get_value());
 	} else if (property_type == QMetaType::Type::QTime) {
 		if (property.get_operator() != gsml_operator::assignment) {
@@ -531,7 +537,7 @@ void database::load_defines()
 	}
 }
 
-void database::load_history(const QDateTime &start_date, const timeline *timeline, const QObject *game_rules)
+void database::load_history(const QDate &start_date, const timeline *timeline, const QObject *game_rules)
 {
 	try {
 		std::vector<const data_type_metadata *> metadata_list;

@@ -19,7 +19,7 @@ std::string year_to_string(const int year)
 	return number::to_formatted_string(abs_year);
 }
 
-bool contains_date(const QDateTime &date, const timeline *timeline, const QDateTime &other_date, const archimedes::timeline *other_timeline)
+bool contains_date(const QDate &date, const timeline *timeline, const QDate &other_date, const archimedes::timeline *other_timeline)
 {
 	if (timeline == other_timeline) {
 		return other_date <= date;
