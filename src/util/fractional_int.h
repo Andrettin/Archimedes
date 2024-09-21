@@ -339,7 +339,7 @@ public:
 	template <int N2>
 	constexpr const fractional_int<N> &operator *=(const fractional_int<N2> &other)
 	{
-		this->value *= other.value;
+		this->value *= other.get_value();
 		this->value /= fractional_int<N2>::divisor;
 		return *this;
 	}
