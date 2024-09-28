@@ -2,6 +2,7 @@
 
 #include "util/random.h"
 
+#include "util/dice.h"
 #include "util/geocoordinate.h"
 
 #include <boost/random.hpp>
@@ -26,6 +27,11 @@ template int32_t random::generate_in_range<int32_t>(std::mt19937 &, const int32_
 template uint32_t random::generate_in_range<uint32_t>(std::mt19937 &, const uint32_t, const uint32_t);
 template int64_t random::generate_in_range<int64_t>(std::mt19937 &, const int64_t, const int64_t);
 template uint64_t random::generate_in_range<uint64_t>(std::mt19937 &, const uint64_t, const uint64_t);
+
+int random::roll_dice(const dice &dice)
+{
+	return this->roll_dice(dice.get_count(), dice.get_sides());
+}
 
 geocoordinate random::generate_geocoordinate()
 {

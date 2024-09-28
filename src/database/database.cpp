@@ -13,6 +13,7 @@
 #include "database/gsml_property.h"
 #include "map/map_projection.h"
 #include "util/assert_util.h"
+#include "util/dice.h"
 #include "util/geocoordinate.h"
 #include "util/path_util.h"
 #include "util/qunique_ptr.h"
@@ -178,6 +179,8 @@ QVariant database::process_gsml_property_value(const gsml_property &property, co
 			new_property_value = QVariant::fromValue(decimal_int(property.get_value()));
 		} else if (property_class_name == "archimedes::decimillesimal_int" || property_class_name == "archimedes::fractional_int<4>") {
 			new_property_value = QVariant::fromValue(decimillesimal_int(property.get_value()));
+		} else if (property_class_name == "archimedes::dice") {
+			new_property_value = QVariant::fromValue(dice(property.get_value()));
 		} else if (property_class_name == "archimedes::map_projection*") {
 			new_property_value = QVariant::fromValue(map_projection::from_string(property.get_value()));
 		} else {

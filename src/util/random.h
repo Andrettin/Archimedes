@@ -4,6 +4,7 @@
 
 namespace archimedes {
 
+class dice;
 class geocoordinate;
 
 class random final : public singleton<random>
@@ -60,22 +61,24 @@ public:
 	}
 
 	template <typename int_type>
-	int_type dice(const int_type side_count)
+	int_type roll_dice(const int_type side_count)
 	{
 		return this->generate_in_range<int_type>(1, side_count);
 	}
 
 	template <typename int_type>
-	int_type dice(const int_type roll_count, const int_type side_count)
+	int_type roll_dice(const int_type roll_count, const int_type side_count)
 	{
 		int_type sum = 0;
 
 		for (int_type i = 0; i < roll_count; ++i) {
-			sum += this->dice(side_count);
+			sum += this->roll_dice(side_count);
 		}
 
 		return sum;
 	}
+
+	int roll_dice(const dice &dice);
 
 	QPoint generate_circle_point()
 	{
