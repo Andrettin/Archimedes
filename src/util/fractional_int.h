@@ -213,13 +213,20 @@ public:
 		return QTime(hours, minutes, seconds, milliseconds);
 	}
 
-	std::string to_string() const
+	std::string to_string(const bool show_as_fraction = false) const
 	{
 		const int64_t integer_value = this->to_int64();
 		std::string number_str;
 		if (integer_value == 0 && this->value < 0) {
 			number_str = "-";
 		}
+
+		if (show_as_fraction) {
+			if (integer_value == 0) {
+				return number_str + std::format("1/{}", (centesimal_int(1) / *this).abs().to_string());
+			}
+		}
+
 		number_str += std::to_string(integer_value);
 		number_str += fractional_int::to_rest_string(this->get_fractional_value());
 		return number_str;
@@ -235,13 +242,13 @@ public:
 		return number_str;
 	}
 
-	std::string to_signed_string() const
+	std::string to_signed_string(const bool show_as_fraction = false) const
 	{
 		std::string number_str;
 		if (this->get_value() >= 0) {
 			number_str += "+";
 		}
-		number_str += this->to_string();
+		number_str += this->to_string(show_as_fraction);
 		return number_str;
 	}
 
