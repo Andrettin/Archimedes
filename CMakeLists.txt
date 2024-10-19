@@ -4,6 +4,7 @@ set(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo" CACHE STRING "" FORCE)
 
 include_directories(
 	src
+	src/third_party/maskedmousearea
 	src/third_party/qcoro
 )
 
@@ -85,12 +86,19 @@ set(util_SRCS
 source_group(util FILES ${util_SRCS})
 set_source_files_properties(${util_SRCS} PROPERTIES UNITY_GROUP "util")
 
+set(maskedmousearea_SRCS
+	src/third_party/maskedmousearea/maskedmousearea.cpp
+)
+source_group(maskedmousearea FILES ${maskedmousearea_SRCS})
+set_source_files_properties(${maskedmousearea_SRCS} PROPERTIES UNITY_GROUP "maskedmousearea")
+
 set(archimedes_SRCS
 	${database_SRCS}
 	${language_SRCS}
 	${map_SRCS}
 	${time_SRCS}
 	${util_SRCS}
+	${maskedmousearea_SRCS}
 )
 
 set(database_HDRS
@@ -204,12 +212,18 @@ set(util_HDRS
 )
 source_group(util FILES ${util_HDRS})
 
+set(maskedmousearea_HDRS
+	src/third_party/maskedmousearea/maskedmousearea.h
+)
+source_group(maskedmousearea FILES ${maskedmousearea_HDRS})
+
 set(archimedes_HDRS
 	${database_HDRS}
 	${language_HDRS}
 	${map_HDRS}
 	${time_HDRS}
 	${util_HDRS}
+	${maskedmousearea_HDRS}
 	src/archimedes.h
 	src/pch.h
 )
