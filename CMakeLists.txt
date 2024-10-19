@@ -47,6 +47,7 @@ source_group(map FILES ${map_SRCS})
 set_source_files_properties(${map_SRCS} PROPERTIES UNITY_GROUP "map")
 
 set(script_SRCS
+	src/script/special_target_type.cpp
 )
 source_group(script FILES ${script_SRCS})
 set_source_files_properties(${script_SRCS} PROPERTIES UNITY_GROUP "script")
@@ -153,6 +154,9 @@ source_group(map FILES ${map_HDRS})
 
 set(script_HDRS
 	src/script/condition_base.h
+	src/script/effect_base.h
+	src/script/special_target_type.h
+	src/script/target_variant.h
 )
 source_group(script FILES ${script_HDRS})
 
