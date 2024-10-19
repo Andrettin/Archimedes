@@ -46,6 +46,11 @@ set(map_SRCS
 source_group(map FILES ${map_SRCS})
 set_source_files_properties(${map_SRCS} PROPERTIES UNITY_GROUP "map")
 
+set(script_SRCS
+)
+source_group(script FILES ${script_SRCS})
+set_source_files_properties(${script_SRCS} PROPERTIES UNITY_GROUP "script")
+
 set(time_SRCS
 	src/time/calendar.cpp
 	src/time/timeline.cpp
@@ -96,6 +101,7 @@ set(archimedes_SRCS
 	${database_SRCS}
 	${language_SRCS}
 	${map_SRCS}
+	${script_SRCS}
 	${time_SRCS}
 	${util_SRCS}
 	${maskedmousearea_SRCS}
@@ -144,6 +150,11 @@ set(map_HDRS
 	src/map/miller_map_projection.h
 )
 source_group(map FILES ${map_HDRS})
+
+set(script_HDRS
+	src/script/condition_base.h
+)
+source_group(script FILES ${script_HDRS})
 
 set(time_HDRS
 	src/time/calendar.h
@@ -221,6 +232,7 @@ set(archimedes_HDRS
 	${database_HDRS}
 	${language_HDRS}
 	${map_HDRS}
+	${script_HDRS}
 	${time_HDRS}
 	${util_HDRS}
 	${maskedmousearea_HDRS}
