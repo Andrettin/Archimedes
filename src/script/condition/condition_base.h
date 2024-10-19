@@ -4,7 +4,6 @@
 #include "database/gsml_operator.h"
 #include "database/gsml_property.h"
 #include "database/named_data_entry.h"
-#include "util/string_util.h"
 
 namespace archimedes {
 
@@ -19,13 +18,44 @@ public:
 		return condition_base<scope_type, context_type>::get_object_highlighted_name(object, name_string);
 	}
 
-	static std::string get_object_highlighted_name(const named_data_entry *object, const std::string &name_string)
+	static std::string get_object_highlighted_name(const named_data_entry *object, const std::string &name_string);
+
+	static std::unique_ptr<const condition_base<scope_type, context_type>> from_gsml_property(const gsml_property &property)
 	{
-		if (!name_string.empty()) {
-			return string::highlight(name_string);
-		} else {
-			return string::highlight(object->get_name());
+		const std::string &key = property.get_key();
+
+		throw std::runtime_error(std::format("Invalid condition property: \"{}\".", key));
+	}
+
+	static std::unique_ptr<const condition_base<scope_type, context_type>> from_gsml_scope(const gsml_data &scope);
+
+	static std::string get_conditions_string(const std::vector<std::unique_ptr<const condition_base<scope_type, context_type>>> &conditions, const size_t indent)
+	{
+		std::string conditions_string;
+		bool first = true;
+		for (const std::unique_ptr<const condition_base<scope_type, context_type>> &condition : conditions) {
+			if (condition->is_hidden()) {
+				continue;
+			}
+
+			const std::string condition_string = condition->get_string(indent);
+			if (condition_string.empty()) {
+				continue;
+			}
+
+			if (first) {
+				first = false;
+			} else {
+				conditions_string += "\n";
+			}
+
+			if (indent > 0) {
+				conditions_string += std::string(indent, '\t');
+			}
+
+			conditions_string += condition_string;
 		}
+		return conditions_string;
 	}
 
 	explicit condition_base(const gsml_operator condition_operator) : condition_operator(condition_operator)

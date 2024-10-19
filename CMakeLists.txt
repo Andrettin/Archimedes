@@ -153,12 +153,26 @@ set(map_HDRS
 source_group(map FILES ${map_HDRS})
 
 set(script_HDRS
-	src/script/condition_base.h
 	src/script/effect_base.h
 	src/script/special_target_type.h
 	src/script/target_variant.h
 )
 source_group(script FILES ${script_HDRS})
+
+set(script_condition_HDRS
+	src/script/condition/and_condition_base.h
+	src/script/condition/condition_base.h
+	src/script/condition/condition_base.ipp
+	src/script/condition/not_condition.h
+	src/script/condition/numerical_condition.h
+	src/script/condition/or_condition.h
+	src/script/condition/saved_scope_condition.h
+	src/script/condition/scope_condition.h
+	src/script/condition/scope_condition_base.h
+	src/script/condition/scripted_condition_base.h
+	src/script/condition/tooltip_condition.h
+)
+source_group(script\\condition FILES ${script_condition_HDRS})
 
 set(time_HDRS
 	src/time/calendar.h
@@ -237,6 +251,7 @@ set(archimedes_HDRS
 	${language_HDRS}
 	${map_HDRS}
 	${script_HDRS}
+	${script_condition_HDRS}
 	${time_HDRS}
 	${util_HDRS}
 	${maskedmousearea_HDRS}
