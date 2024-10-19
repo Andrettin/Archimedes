@@ -5,7 +5,7 @@
 
 namespace archimedes {
 
-template <typename scope_type, typename context_type>
+template <typename scope_type, typename context_type, typename main_condition_type>
 class tooltip_condition final : public condition_base<scope_type, context_type>
 {
 public:
@@ -48,7 +48,7 @@ public:
 
 private:
 	std::string text;
-	and_condition_base<scope_type, context_type> conditions;
+	and_condition_base<scope_type, context_type, main_condition_type> conditions;
 };
 
 }

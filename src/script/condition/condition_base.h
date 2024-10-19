@@ -27,6 +27,7 @@ public:
 		throw std::runtime_error(std::format("Invalid condition property: \"{}\".", key));
 	}
 
+	template <typename main_condition_type>
 	static std::unique_ptr<const condition_base<scope_type, context_type>> from_gsml_scope(const gsml_data &scope);
 
 	static std::string get_conditions_string(const std::vector<std::unique_ptr<const condition_base<scope_type, context_type>>> &conditions, const size_t indent)

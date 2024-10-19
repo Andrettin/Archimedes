@@ -5,13 +5,13 @@
 namespace archimedes {
 
 //the class for a predefined, reusable scripted condition
-template <typename scope_type, typename context_type>
+template <typename scope_type, typename context_type, typename main_condition_type>
 class scripted_condition_base
 {
 public:
 	explicit scripted_condition_base()
 	{
-		this->conditions = std::make_unique<and_condition_base<scope_type, context_type>>();
+		this->conditions = std::make_unique<and_condition_base<scope_type, context_type, main_condition_type>>();
 	}
 
 	void process_gsml_property(const gsml_property &property)
@@ -29,13 +29,13 @@ public:
 		this->get_conditions()->check_validity();
 	}
 
-	const and_condition_base<scope_type, context_type> *get_conditions() const
+	const and_condition_base<scope_type, context_type, main_condition_type> *get_conditions() const
 	{
 		return this->conditions.get();
 	}
 
 private:
-	std::unique_ptr<and_condition_base<scope_type, context_type>> conditions;
+	std::unique_ptr<and_condition_base<scope_type, context_type, main_condition_type>> conditions;
 };
 
 }

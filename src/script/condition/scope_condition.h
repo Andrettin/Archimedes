@@ -4,12 +4,12 @@
 
 namespace archimedes {
 
-template <typename upper_scope_type, typename scope_type, typename context_type>
-class scope_condition : public scope_condition_base<upper_scope_type, scope_type, context_type>
+template <typename upper_scope_type, typename scope_type, typename context_type, typename main_condition_type>
+class scope_condition : public scope_condition_base<upper_scope_type, scope_type, context_type, main_condition_type>
 {
 public:
 	explicit scope_condition(const gsml_operator condition_operator)
-		: scope_condition_base<upper_scope_type, scope_type, context_type>(condition_operator)
+		: scope_condition_base<upper_scope_type, scope_type, context_type, main_condition_type>(condition_operator)
 	{
 	}
 

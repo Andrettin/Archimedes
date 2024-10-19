@@ -4,7 +4,7 @@
 
 namespace archimedes {
 
-template <typename scope_type, typename context_type>
+template <typename scope_type, typename context_type, typename main_condition_type>
 class not_condition final : public condition_base<scope_type, context_type>
 {
 public:
@@ -33,12 +33,12 @@ public:
 
 	virtual void process_gsml_property(const gsml_property &property) override
 	{
-		this->conditions.push_back(condition_base<scope_type, context_type>::from_gsml_property(property));
+		this->conditions.push_back(main_condition_type::from_gsml_property(property));
 	}
 
 	virtual void process_gsml_scope(const gsml_data &scope) override
 	{
-		this->conditions.push_back(condition_base<scope_type, context_type>::from_gsml_scope(scope));
+		this->conditions.push_back(main_condition_type::from_gsml_scope(scope));
 	}
 
 	virtual void check_validity() const override
