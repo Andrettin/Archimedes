@@ -35,6 +35,11 @@ public:
 		return this->sides;
 	}
 
+	int get_maximum_result() const
+	{
+		return this->get_count() * this->get_sides();
+	}
+
 	bool is_null() const
 	{
 		return this->get_count() == 0 && this->get_sides() == 0;
