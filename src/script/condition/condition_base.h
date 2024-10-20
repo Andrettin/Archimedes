@@ -20,13 +20,7 @@ public:
 
 	static std::string get_object_highlighted_name(const named_data_entry *object, const std::string &name_string);
 
-	static std::unique_ptr<const condition_base<scope_type, context_type>> from_gsml_property(const gsml_property &property)
-	{
-		const std::string &key = property.get_key();
-
-		throw std::runtime_error(std::format("Invalid condition property: \"{}\".", key));
-	}
-
+	static std::unique_ptr<const condition_base<scope_type, context_type>> from_gsml_property(const gsml_property &property);
 	template <typename main_condition_type>
 	static std::unique_ptr<const condition_base<scope_type, context_type>> from_gsml_scope(const gsml_data &scope);
 

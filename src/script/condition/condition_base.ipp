@@ -2,10 +2,13 @@
 
 #include "database/database.h"
 #include "script/condition/and_condition_base.h"
+#include "script/condition/birth_year_condition.h"
+#include "script/condition/gender_condition.h"
 #include "script/condition/not_condition.h"
 #include "script/condition/or_condition.h"
 #include "script/condition/tooltip_condition.h"
 #include "util/string_util.h"
+#include "util/type_traits.h"
 
 namespace archimedes {
 
@@ -17,6 +20,24 @@ std::string condition_base<scope_type, context_type>::get_object_highlighted_nam
 	} else {
 		return string::highlight(object->get_name());
 	}
+}
+
+template <typename scope_type, typename context_type>
+std::unique_ptr<const condition_base<scope_type, context_type>> condition_base<scope_type, context_type>::from_gsml_property(const gsml_property &property)
+{
+	const std::string &key = property.get_key();
+	const gsml_operator condition_operator = property.get_operator();
+	const std::string &value = property.get_value();
+
+	if constexpr (std::is_base_of_v<character_base, scope_type>) {
+		if (key == "birth_year") {
+			return std::make_unique<birth_year_condition<scope_type, context_type>>(value, condition_operator);
+		} else if (key == "gender") {
+			return std::make_unique<gender_condition<scope_type, context_type>>(value, condition_operator);
+		}
+	}
+
+	throw std::runtime_error(std::format("Invalid condition property: \"{}\".", key));
 }
 
 template <typename scope_type, typename context_type>

@@ -8,6 +8,12 @@ include_directories(
 	src/third_party/qcoro
 )
 
+set(character_SRCS
+	src/character/character_base.cpp
+)
+source_group(character FILES ${character_SRCS})
+set_source_files_properties(${character_SRCS} PROPERTIES UNITY_GROUP "character")
+
 set(database_SRCS
 	src/database/basic_data_entry.cpp
 	src/database/data_entry.cpp
@@ -99,6 +105,7 @@ source_group(maskedmousearea FILES ${maskedmousearea_SRCS})
 set_source_files_properties(${maskedmousearea_SRCS} PROPERTIES UNITY_GROUP "maskedmousearea")
 
 set(archimedes_SRCS
+	${character_SRCS}
 	${database_SRCS}
 	${language_SRCS}
 	${map_SRCS}
@@ -107,6 +114,11 @@ set(archimedes_SRCS
 	${util_SRCS}
 	${maskedmousearea_SRCS}
 )
+
+set(character_HDRS
+	src/character/character_base.h
+)
+source_group(character FILES ${character_HDRS})
 
 set(database_HDRS
 	src/database/basic_data_entry.h
@@ -160,8 +172,10 @@ source_group(script FILES ${script_HDRS})
 
 set(script_condition_HDRS
 	src/script/condition/and_condition_base.h
+	src/script/condition/birth_year_condition.h
 	src/script/condition/condition_base.h
 	src/script/condition/condition_base.ipp
+	src/script/condition/gender_condition.h
 	src/script/condition/not_condition.h
 	src/script/condition/numerical_condition.h
 	src/script/condition/or_condition.h
@@ -251,6 +265,7 @@ set(maskedmousearea_HDRS
 source_group(maskedmousearea FILES ${maskedmousearea_HDRS})
 
 set(archimedes_HDRS
+	${character_HDRS}
 	${database_HDRS}
 	${language_HDRS}
 	${map_HDRS}
