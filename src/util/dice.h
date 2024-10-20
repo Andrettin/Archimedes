@@ -5,6 +5,14 @@ namespace archimedes {
 class dice final
 {
 public:
+	dice()
+	{
+	}
+
+	explicit dice(const dice &rhs) : count(rhs.count), sides(rhs.sides)
+	{
+	}
+
 	explicit dice(const std::string &str)
 	{
 		const size_t d_pos = str.find('d');
@@ -26,6 +34,18 @@ public:
 	{
 		return this->sides;
 	}
+
+	bool is_null() const
+	{
+		return this->get_count() == 0 && this->get_sides() == 0;
+	}
+
+	bool operator ==(const dice &rhs) const
+	{
+		return this->get_count() == rhs.get_count() && this->get_sides() == rhs.get_sides();
+	}
+
+	bool operator !=(const dice &rhs) const = default;
 
 private:
 	int count = 0;
