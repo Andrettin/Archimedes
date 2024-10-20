@@ -32,6 +32,10 @@ void character_base::initialize()
 			this->death_date = this->death_date.addYears(this->vital_date_calendar->get_year_offset());
 		}
 
+		if (this->start_date.isValid()) {
+			this->start_date = this->start_date.addYears(this->vital_date_calendar->get_year_offset());
+		}
+
 		this->vital_date_calendar = nullptr;
 	}
 
@@ -39,8 +43,19 @@ void character_base::initialize()
 	while (date_changed) {
 		date_changed = false;
 
+		if (!this->get_start_date().isValid()) {
+			if (this->get_birth_date().isValid()) {
+				//if we have the birth date but not the start date, set the start date to when the character would become 30 years old
+				this->start_date = this->get_birth_date().addYears(30);
+				date_changed = true;
+			}
+		}
+
 		if (!this->get_birth_date().isValid()) {
-			if (this->get_death_date().isValid()) {
+			if (this->get_start_date().isValid()) {
+				this->birth_date = this->get_start_date().addYears(-30);
+				date_changed = true;
+			} else if (this->get_death_date().isValid()) {
 				this->birth_date = this->get_death_date().addYears(-60);
 				date_changed = true;
 			}
@@ -79,6 +94,8 @@ void character_base::check() const
 		throw std::runtime_error(std::format("Character \"{}\" has no birth date.", this->get_identifier()));
 	}
 
+	assert_throw(this->get_start_date() >= this->get_birth_date());
+	assert_throw(this->get_start_date() <= this->get_death_date());
 	assert_throw(this->get_birth_date() <= this->get_death_date());
 }
 

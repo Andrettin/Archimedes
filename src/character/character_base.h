@@ -20,10 +20,9 @@ class character_base : public named_data_entry
 	Q_PROPERTY(QString full_name READ get_full_name_qstring NOTIFY changed)
 	Q_PROPERTY(QString description READ get_description_qstring NOTIFY changed)
 	Q_PROPERTY(archimedes::gender gender MEMBER gender NOTIFY changed)
-	Q_PROPERTY(const archimedes::character_base* father MEMBER father READ get_father NOTIFY changed)
-	Q_PROPERTY(const archimedes::character_base* mother MEMBER mother READ get_mother NOTIFY changed)
 	Q_PROPERTY(QDate birth_date MEMBER birth_date READ get_birth_date NOTIFY changed)
 	Q_PROPERTY(QDate death_date MEMBER death_date READ get_death_date NOTIFY changed)
+	Q_PROPERTY(QDate start_date MEMBER start_date READ get_start_date NOTIFY changed)
 	Q_PROPERTY(archimedes::calendar* vital_date_calendar MEMBER vital_date_calendar)
 
 public:
@@ -98,9 +97,19 @@ public:
 		return this->father;
 	}
 
+	void set_father(const character_base *father)
+	{
+		this->father = father;
+	}
+
 	const character_base *get_mother() const
 	{
 		return this->mother;
+	}
+
+	void set_mother(const character_base *mother)
+	{
+		this->mother = mother;
 	}
 
 	const QDate &get_birth_date() const
@@ -111,6 +120,11 @@ public:
 	const QDate &get_death_date() const
 	{
 		return this->death_date;
+	}
+
+	const QDate &get_start_date() const
+	{
+		return this->start_date;
 	}
 
 signals:
@@ -126,6 +140,7 @@ private:
 	const character_base *mother = nullptr;
 	QDate birth_date;
 	QDate death_date;
+	QDate start_date;
 	calendar *vital_date_calendar = nullptr; //the calendar for the birth and death dates
 };
 
