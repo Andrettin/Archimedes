@@ -192,6 +192,11 @@ set(script_effect_HDRS
 )
 source_group(script\\effect FILES ${script_effect_HDRS})
 
+set(script_modifier_effect_HDRS
+	src/script/modifier_effect/modifier_effect_base.h
+)
+source_group(script\\modifier_effect FILES ${script_modifier_effect_HDRS})
+
 set(time_HDRS
 	src/time/calendar.h
 	src/time/day_of_the_week.h
@@ -272,6 +277,7 @@ set(archimedes_HDRS
 	${script_HDRS}
 	${script_condition_HDRS}
 	${script_effect_HDRS}
+	${script_modifier_effect_HDRS}
 	${time_HDRS}
 	${util_HDRS}
 	${maskedmousearea_HDRS}
