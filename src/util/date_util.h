@@ -51,6 +51,38 @@ inline int get_days_in_month(const int month, const int year)
 
 extern bool contains_date(const QDate &date, const timeline *timeline, const QDate &other_date, const archimedes::timeline *other_timeline = nullptr);
 
+inline std::string_view get_month_name(const int month)
+{
+	switch (month) {
+		case 1:
+			return "January";
+		case 2:
+			return "February";
+		case 3:
+			return "March";
+		case 4:
+			return "April";
+		case 5:
+			return "May";
+		case 6:
+			return "June";
+		case 7:
+			return "July";
+		case 8:
+			return "August";
+		case 9:
+			return "September";
+		case 10:
+			return "October";
+		case 11:
+			return "November";
+		case 12:
+			return "December";
+	}
+
+	throw std::runtime_error(std::format("Could not get name for month {}.", month));
+}
+
 inline std::string_view get_month_season_string(const int month)
 {
 	const int season = month / 3 + 1;
