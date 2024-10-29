@@ -39,35 +39,7 @@ void character_base::initialize()
 		this->vital_date_calendar = nullptr;
 	}
 
-	bool date_changed = true;
-	while (date_changed) {
-		date_changed = false;
-
-		if (!this->get_start_date().isValid()) {
-			if (this->get_birth_date().isValid()) {
-				//if we have the birth date but not the start date, set the start date to when the character would become 30 years old
-				this->start_date = this->get_birth_date().addYears(30);
-				date_changed = true;
-			}
-		}
-
-		if (!this->get_birth_date().isValid()) {
-			if (this->get_start_date().isValid()) {
-				this->birth_date = this->get_start_date().addYears(-30);
-				date_changed = true;
-			} else if (this->get_death_date().isValid()) {
-				this->birth_date = this->get_death_date().addYears(-60);
-				date_changed = true;
-			}
-		}
-
-		if (!this->get_death_date().isValid()) {
-			if (this->get_birth_date().isValid()) {
-				this->death_date = this->get_birth_date().addYears(60);
-				date_changed = true;
-			}
-		}
-	}
+	this->initialize_dates();
 
 	named_data_entry::initialize();
 }
@@ -123,6 +95,39 @@ std::string character_base::get_full_name() const
 	}
 
 	return full_name;
+}
+
+void character_base::initialize_dates()
+{
+	bool date_changed = true;
+	while (date_changed) {
+		date_changed = false;
+
+		if (!this->get_start_date().isValid()) {
+			if (this->get_birth_date().isValid()) {
+				//if we have the birth date but not the start date, set the start date to when the character would become 30 years old
+				this->start_date = this->get_birth_date().addYears(30);
+				date_changed = true;
+			}
+		}
+
+		if (!this->get_birth_date().isValid()) {
+			if (this->get_start_date().isValid()) {
+				this->birth_date = this->get_start_date().addYears(-30);
+				date_changed = true;
+			} else if (this->get_death_date().isValid()) {
+				this->birth_date = this->get_death_date().addYears(-60);
+				date_changed = true;
+			}
+		}
+
+		if (!this->get_death_date().isValid()) {
+			if (this->get_birth_date().isValid()) {
+				this->death_date = this->get_birth_date().addYears(60);
+				date_changed = true;
+			}
+		}
+	}
 }
 
 }

@@ -92,6 +92,11 @@ public:
 		return this->gender;
 	}
 
+	void set_gender(const gender gender)
+	{
+		this->gender = gender;
+	}
+
 	const character_base *get_father() const
 	{
 		return this->father;
@@ -117,6 +122,11 @@ public:
 		return this->birth_date;
 	}
 
+	void set_birth_date(const QDate &date)
+	{
+		this->birth_date = date;
+	}
+
 	const QDate &get_death_date() const
 	{
 		return this->death_date;
@@ -126,6 +136,13 @@ public:
 	{
 		return this->start_date;
 	}
+
+	void set_start_date(const QDate &date)
+	{
+		this->start_date = date;
+	}
+
+	void initialize_dates();
 
 signals:
 	void changed();
