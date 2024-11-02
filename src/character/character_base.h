@@ -132,6 +132,11 @@ public:
 		return this->death_date;
 	}
 
+	void set_death_date(const QDate &date)
+	{
+		this->death_date = date;
+	}
+
 	const QDate &get_start_date() const
 	{
 		return this->start_date;
@@ -142,7 +147,7 @@ public:
 		this->start_date = date;
 	}
 
-	void initialize_dates();
+	virtual void initialize_dates();
 
 signals:
 	void changed();
