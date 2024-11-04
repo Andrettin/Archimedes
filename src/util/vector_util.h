@@ -27,6 +27,16 @@ void merge(std::vector<T> &vector, U &&other_container)
 }
 
 template <typename T>
+std::vector<T> intersected(const std::vector<T> &vector, const std::vector<T> &other_vector)
+{
+	std::vector<T> copy = vector;
+	std::erase_if(copy, [&other_vector](const T &element) {
+		return !vector::contains(other_vector, element);
+	});
+	return copy;
+}
+
+template <typename T>
 inline void remove(std::vector<T> &vector, const typename std::vector<T>::value_type &element )
 {
 	vector.erase(std::remove(vector.begin(), vector.end(), element), vector.end());
