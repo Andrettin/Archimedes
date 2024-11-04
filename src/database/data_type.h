@@ -245,6 +245,10 @@ public:
 		if constexpr (T::history_enabled) {
 			try {
 				for (T *instance : T::get_all()) {
+					instance->reset_history();
+				}
+
+				for (T *instance : T::get_all()) {
 					try {
 						instance->load_history(start_date, timeline, game_rules);
 					} catch (...) {

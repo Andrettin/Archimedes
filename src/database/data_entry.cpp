@@ -77,8 +77,6 @@ void data_entry::initialize()
 
 void data_entry::load_history(const QDate &start_date, const timeline *current_timeline, const QObject *game_rules)
 {
-	this->reset_history();
-
 	std::map<QDate, std::vector<const gsml_data *>> history_entries;
 
 	for (const gsml_data &data : this->history_data) {
