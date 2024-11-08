@@ -14,14 +14,19 @@ gsml_data::gsml_data(std::string &&tag)
 {
 }
 
+void gsml_data::add_property(gsml_property &&property)
+{
+	this->elements.push_back(std::move(property));
+}
+
 void gsml_data::add_property(const std::string &key, const std::string &value)
 {
-	this->elements.push_back(gsml_property(key, gsml_operator::assignment, value));
+	this->add_property(gsml_property(key, gsml_operator::assignment, value));
 }
 
 void gsml_data::add_property(std::string &&key, const gsml_operator gsml_operator, std::string &&value)
 {
-	this->elements.push_back(gsml_property(std::move(key), gsml_operator, std::move(value)));
+	this->add_property(gsml_property(std::move(key), gsml_operator, std::move(value)));
 }
 
 geocoordinate gsml_data::to_geocoordinate() const

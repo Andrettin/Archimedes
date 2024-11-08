@@ -211,6 +211,7 @@ public:
 		throw std::runtime_error("No property with key \"" + key + "\" found for GSML data.");
 	}
 
+	void add_property(gsml_property &&property);
 	void add_property(const std::string &key, const std::string &value);
 	void add_property(std::string &&key, const gsml_operator gsml_operator, std::string &&value);
 
