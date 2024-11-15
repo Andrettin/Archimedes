@@ -128,7 +128,7 @@ public:
 			case gsml_operator::assignment:
 				return this->get_assignment_string(scope, ctx, indent, prefix);
 			case gsml_operator::addition:
-				return this->get_addition_string(scope, ctx);
+				return this->get_addition_string(scope, ctx, indent);
 			case gsml_operator::subtraction:
 				return this->get_subtraction_string(scope, ctx);
 			default:
@@ -156,10 +156,11 @@ public:
 		throw std::runtime_error("The addition operator is not supported for \"" + this->get_class_identifier() + "\" effects.");
 	}
 
-	virtual std::string get_addition_string(const scope_type *scope, const read_only_context_type &ctx) const
+	virtual std::string get_addition_string(const scope_type *scope, const read_only_context_type &ctx, const size_t indent) const
 	{
 		Q_UNUSED(scope);
 		Q_UNUSED(ctx);
+		Q_UNUSED(indent);
 
 		return this->get_addition_string();
 	}
