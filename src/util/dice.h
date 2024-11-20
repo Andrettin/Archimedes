@@ -13,7 +13,7 @@ public:
 	{
 	}
 
-	explicit dice(const dice &rhs) : dice(rhs.count, rhs.sides)
+	dice(const dice &rhs) : dice(rhs.count, rhs.sides)
 	{
 	}
 
