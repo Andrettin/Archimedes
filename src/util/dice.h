@@ -49,6 +49,11 @@ public:
 		return this->get_count() == 0 && this->get_sides() == 0;
 	}
 
+	std::string to_string() const
+	{
+		return std::format("{}d{}", this->get_count(), this->get_sides());
+	}
+
 	bool operator ==(const dice &rhs) const
 	{
 		return this->get_count() == rhs.get_count() && this->get_sides() == rhs.get_sides();
