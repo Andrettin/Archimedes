@@ -42,8 +42,8 @@ inline void remove(std::vector<T> &vector, const typename std::vector<T>::value_
 	vector.erase(std::remove(vector.begin(), vector.end(), element), vector.end());
 }
 
-template <typename T>
-inline void remove(std::vector<std::unique_ptr<T>> &vector, T *element)
+template <typename T, typename U>
+inline void remove(std::vector<std::unique_ptr<T, U>> &vector, T *element)
 {
 	//the element pointer parameter is not const so that those holding only a const pointer can't delete it this way
 
