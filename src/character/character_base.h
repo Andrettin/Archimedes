@@ -97,24 +97,36 @@ public:
 		this->gender = gender;
 	}
 
-	const character_base *get_father() const
+	character_base *get_father() const
 	{
 		return this->father;
 	}
 
-	void set_father(const character_base *father)
+	void set_father(character_base *father)
 	{
 		this->father = father;
+		father->add_child(this);
 	}
 
-	const character_base *get_mother() const
+	character_base *get_mother() const
 	{
 		return this->mother;
 	}
 
-	void set_mother(const character_base *mother)
+	void set_mother(character_base *mother)
 	{
 		this->mother = mother;
+		mother->add_child(this);
+	}
+
+	const std::vector<character_base *> &get_children() const
+	{
+		return this->children;
+	}
+
+	void add_child(character_base *child)
+	{
+		this->children.push_back(child);
 	}
 
 	const QDate &get_birth_date() const
@@ -158,8 +170,9 @@ private:
 	std::string epithet;
 	std::string description;
 	archimedes::gender gender;
-	const character_base *father = nullptr;
-	const character_base *mother = nullptr;
+	character_base *father = nullptr;
+	character_base *mother = nullptr;
+	std::vector<character_base *> children;
 	QDate birth_date;
 	QDate death_date;
 	QDate start_date;
