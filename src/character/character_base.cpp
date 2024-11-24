@@ -63,7 +63,11 @@ void character_base::check() const
 	}
 
 	if (!this->get_death_date().isValid()) {
-		throw std::runtime_error(std::format("Character \"{}\" has no birth date.", this->get_identifier()));
+		throw std::runtime_error(std::format("Character \"{}\" has no death date.", this->get_identifier()));
+	}
+
+	if (!this->get_start_date().isValid()) {
+		throw std::runtime_error(std::format("Character \"{}\" has no start date.", this->get_identifier()));
 	}
 
 	assert_throw(this->get_start_date() >= this->get_birth_date());
