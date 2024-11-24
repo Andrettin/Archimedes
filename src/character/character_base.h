@@ -129,6 +129,16 @@ public:
 		this->children.push_back(child);
 	}
 
+	character_base *get_contemporary_character() const
+	{
+		return this->contemporary_character;
+	}
+
+	void set_contemporary_character(character_base *contemporary_character)
+	{
+		this->contemporary_character = contemporary_character;
+	}
+
 	const QDate &get_birth_date() const
 	{
 		return this->birth_date;
@@ -173,6 +183,7 @@ private:
 	character_base *father = nullptr;
 	character_base *mother = nullptr;
 	std::vector<character_base *> children;
+	character_base *contemporary_character = nullptr;
 	QDate birth_date;
 	QDate death_date;
 	QDate start_date;
