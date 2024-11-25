@@ -171,6 +171,8 @@ public:
 
 	virtual void initialize_dates();
 
+	virtual bool is_immortal() const = 0;
+
 signals:
 	void changed();
 

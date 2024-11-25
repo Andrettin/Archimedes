@@ -62,8 +62,8 @@ void character_base::check() const
 		throw std::runtime_error(std::format("Character \"{}\" has no birth date.", this->get_identifier()));
 	}
 
-	if (!this->get_death_date().isValid()) {
-		throw std::runtime_error(std::format("Character \"{}\" has no death date.", this->get_identifier()));
+	if (!this->get_death_date().isValid() && !this->is_immortal()) {
+		throw std::runtime_error(std::format("Non-immortal character \"{}\" has no death date.", this->get_identifier()));
 	}
 
 	if (!this->get_start_date().isValid()) {
@@ -71,8 +71,11 @@ void character_base::check() const
 	}
 
 	assert_throw(this->get_start_date() >= this->get_birth_date());
-	assert_throw(this->get_start_date() <= this->get_death_date());
-	assert_throw(this->get_birth_date() <= this->get_death_date());
+
+	if (this->get_death_date().isValid()) {
+		assert_throw(this->get_start_date() <= this->get_death_date());
+		assert_throw(this->get_birth_date() <= this->get_death_date());
+	}
 }
 
 std::string character_base::get_full_name() const
@@ -125,7 +128,7 @@ void character_base::initialize_dates()
 			}
 		}
 
-		if (!this->get_death_date().isValid()) {
+		if (!this->get_death_date().isValid() && !this->is_immortal()) {
 			if (this->get_birth_date().isValid()) {
 				this->death_date = this->get_birth_date().addYears(60);
 				date_changed = true;
