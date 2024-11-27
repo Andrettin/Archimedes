@@ -139,6 +139,11 @@ public:
 		this->contemporary_character = contemporary_character;
 	}
 
+	bool has_vital_dates() const
+	{
+		return this->get_birth_date().isValid() && (this->get_death_date().isValid() || this->is_immortal()) && this->get_start_date().isValid();
+	}
+
 	const QDate &get_birth_date() const
 	{
 		return this->birth_date;
