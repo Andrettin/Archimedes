@@ -4,6 +4,7 @@ set(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo" CACHE STRING "" FORCE)
 
 include_directories(
 	src
+	src/third_party/magic_enum/include
 	src/third_party/maskedmousearea
 	src/third_party/qcoro
 )
