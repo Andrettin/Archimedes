@@ -5,15 +5,15 @@ namespace archimedes {
 class dice final
 {
 public:
-	dice()
+	constexpr dice()
 	{
 	}
 
-	explicit dice(const int count, const int sides) : count(count), sides(sides)
+	explicit constexpr dice(const int count, const int sides) : count(count), sides(sides)
 	{
 	}
 
-	dice(const dice &rhs) : dice(rhs.count, rhs.sides)
+	constexpr dice(const dice &rhs) : dice(rhs.count, rhs.sides)
 	{
 	}
 
@@ -29,22 +29,22 @@ public:
 		this->sides = std::stoi(str.substr(d_pos + 1, str.length() - d_pos - 1));
 	}
 
-	int get_count() const
+	constexpr int get_count() const
 	{
 		return this->count;
 	}
 
-	int get_sides() const
+	constexpr int get_sides() const
 	{
 		return this->sides;
 	}
 
-	int get_maximum_result() const
+	constexpr int get_maximum_result() const
 	{
 		return this->get_count() * this->get_sides();
 	}
 
-	bool is_null() const
+	constexpr bool is_null() const
 	{
 		return this->get_count() == 0 && this->get_sides() == 0;
 	}
@@ -54,12 +54,12 @@ public:
 		return std::format("{}d{}", this->get_count(), this->get_sides());
 	}
 
-	bool operator ==(const dice &rhs) const
+	constexpr bool operator ==(const dice &rhs) const
 	{
 		return this->get_count() == rhs.get_count() && this->get_sides() == rhs.get_sides();
 	}
 
-	bool operator !=(const dice &rhs) const = default;
+	constexpr bool operator !=(const dice &rhs) const = default;
 
 private:
 	int count = 0;
