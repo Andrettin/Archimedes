@@ -21,6 +21,7 @@ set(database_SRCS
 	src/database/data_entry_history.cpp
 	src/database/data_module.cpp
 	src/database/data_module_container.cpp
+	src/database/data_type_metadata.cpp
 	src/database/database.cpp
 	src/database/defines_base.cpp
 	src/database/gsml_data.cpp

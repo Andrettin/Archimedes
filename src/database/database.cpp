@@ -622,6 +622,7 @@ void database::clear()
 
 void database::register_metadata(std::unique_ptr<data_type_metadata> &&metadata)
 {
+	this->metadata_by_identifier[metadata->get_class_identifier()] = metadata.get();
 	this->metadata.push_back(std::move(metadata));
 }
 

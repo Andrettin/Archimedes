@@ -21,20 +21,8 @@ public:
 		return this->class_identifier;
 	}
 
-	bool has_database_dependency_on(const std::string &class_identifier) const
-	{
-		return this->database_dependencies.find(class_identifier) != this->database_dependencies.end();
-	}
-
-	bool has_database_dependency_on(const std::unique_ptr<data_type_metadata> &metadata) const
-	{
-		return this->has_database_dependency_on(metadata->get_class_identifier());
-	}
-
-	size_t get_database_dependency_count() const
-	{
-		return this->database_dependencies.size();
-	}
+	bool has_database_dependency_on(const std::unique_ptr<data_type_metadata> &metadata) const;
+	size_t get_database_dependency_count() const;
 
 	bool has_history_database_dependency_on(const std::string &class_identifier) const
 	{

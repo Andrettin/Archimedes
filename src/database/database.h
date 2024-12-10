@@ -119,6 +119,16 @@ public:
 	void clear();
 	void register_metadata(std::unique_ptr<data_type_metadata> &&metadata);
 
+	const data_type_metadata *get_metadata(const std::string &identifier) const
+	{
+		const auto find_iterator = this->metadata_by_identifier.find(identifier);
+		if (find_iterator != this->metadata_by_identifier.end()) {
+			return find_iterator->second;
+		}
+
+		throw std::runtime_error(std::format("No data type metadata found with identifier \"{}\".", identifier));
+	}
+
 	void process_modules();
 	void process_modules_at_dir(const std::filesystem::path &path, data_module *parent_module = nullptr);
 	std::vector<std::filesystem::path> get_module_paths() const;
@@ -136,7 +146,7 @@ public:
 			return find_iterator->second;
 		}
 
-		throw std::runtime_error("No module found with identifier \"" + identifier + "\".");
+		throw std::runtime_error(std::format("No module found with identifier \"{}\".", identifier));
 	}
 
 	bool has_module(const std::string &identifier) const
@@ -380,6 +390,7 @@ public:
 private:
 	std::filesystem::path root_path = std::filesystem::current_path();
 	std::vector<std::unique_ptr<data_type_metadata>> metadata;
+	std::map<std::string, const data_type_metadata *> metadata_by_identifier;
 	std::vector<qunique_ptr<data_module>> modules;
 	std::map<std::string, data_module *> modules_by_identifier;
 	const data_module *current_module = nullptr; //the module currently being processed
