@@ -5,6 +5,7 @@
 #include "database/data_entry_history.h"
 #include "database/database.h"
 #include "time/calendar.h"
+#include "time/era.h"
 #include "time/timeline.h"
 #include "util/assert_util.h"
 #include "util/date_util.h"
@@ -103,6 +104,7 @@ void data_entry::load_history_scope(const gsml_data &history_scope, const QDate 
 {
 	const timeline *timeline = nullptr;
 	const calendar *calendar = nullptr;
+	const era *era = nullptr;
 	QVariant game_rule_variant;
 
 	const std::string &tag = history_scope.get_tag();
@@ -115,29 +117,33 @@ void data_entry::load_history_scope(const gsml_data &history_scope, const QDate 
 			calendar = calendar::try_get(tag);
 
 			if (calendar == nullptr) {
-				bool game_rule_value = true;
+				era = era::try_get(tag);
 
-				if (game_rules != nullptr) {
-					if (tag.front() == '!') {
-						//"!" is used for negation before game rules
-						game_rule_variant = game_rules->property(tag.substr(1, tag.size() - 1).c_str());
-						game_rule_value = false;
-					} else {
-						game_rule_variant = game_rules->property(tag.c_str());
+				if (era == nullptr) {
+					bool game_rule_value = true;
+
+					if (game_rules != nullptr) {
+						if (tag.front() == '!') {
+							//"!" is used for negation before game rules
+							game_rule_variant = game_rules->property(tag.substr(1, tag.size() - 1).c_str());
+							game_rule_value = false;
+						} else {
+							game_rule_variant = game_rules->property(tag.c_str());
+						}
 					}
-				}
 
-				if (game_rule_variant.isValid()) {
-					assert_throw(game_rule_variant.typeId() == QMetaType::Type::Bool);
+					if (game_rule_variant.isValid()) {
+						assert_throw(game_rule_variant.typeId() == QMetaType::Type::Bool);
 
-					if (game_rule_variant.toBool() != game_rule_value) {
-						//if the game rule scope is disabled, ignore what is contained in it
+						if (game_rule_variant.toBool() != game_rule_value) {
+							//if the game rule scope is disabled, ignore what is contained in it
+							return;
+						}
+					} else {
+						//treat the scope as a property to be applied immediately
+						this->process_gsml_dated_scope(history_scope, QDate());
 						return;
 					}
-				} else {
-					//treat the scope as a property to be applied immediately
-					this->process_gsml_dated_scope(history_scope, QDate());
-					return;
 				}
 			}
 		}
@@ -167,7 +173,14 @@ void data_entry::load_history_scope(const gsml_data &history_scope, const QDate 
 			}
 		});
 	} else {
-		QDate date = string::to_date(tag);
+		QDate date;
+		if (era != nullptr) {
+			date = era->get_start_date();
+		} else {
+			date = string::to_date(tag);
+		}
+
+		assert_throw(date.isValid());
 
 		if (date::contains_date(start_date, current_timeline, date)) {
 			history_entries[date].push_back(&history_scope);

@@ -62,6 +62,7 @@ set_source_files_properties(${script_SRCS} PROPERTIES UNITY_GROUP "script")
 
 set(time_SRCS
 	src/time/calendar.cpp
+	src/time/era.cpp
 	src/time/timeline.cpp
 )
 source_group(time FILES ${time_SRCS})
@@ -202,6 +203,7 @@ source_group(script\\modifier_effect FILES ${script_modifier_effect_HDRS})
 set(time_HDRS
 	src/time/calendar.h
 	src/time/day_of_the_week.h
+	src/time/era.h
 	src/time/month.h
 	src/time/timeline.h
 )
