@@ -2,6 +2,7 @@
 
 #include "util/random.h"
 
+#include "util/assert_util.h"
 #include "util/dice.h"
 #include "util/geocoordinate.h"
 
@@ -13,6 +14,12 @@ template <typename int_type>
 int_type random::generate_in_range(std::mt19937 &engine, const int_type min_value, const int_type max_value)
 {
 	static_assert(std::is_integral_v<int_type>);
+
+	assert_throw(max_value >= min_value);
+
+	if (max_value == min_value) {
+		return min_value;
+	}
 
 	//we have to use the Boost number distribution here since it is portable (has the same result with different compilers), while the standard library's isn't
 	boost::random::uniform_int_distribution<int_type> distribution(min_value, max_value);
