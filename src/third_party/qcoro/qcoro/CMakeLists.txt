@@ -18,12 +18,22 @@ add_qcoro_library(
         QCoroAsyncGenerator
         QCoroFwd
         QCoroGenerator
+        QCoroLazyTask
         QCoroTask
     HEADERS
         concepts_p.h
         coroutine.h
         macros_p.h
         waitoperationbase_p.h
+        impl/connect.h
+        impl/lazytask.h
+        impl/task.h
+        impl/taskawaiterbase.h
+        impl/taskbase.h
+        impl/taskfinalsuspend.h
+        impl/taskpromise.h
+        impl/taskpromisebase.h
+        impl/waitfor.h
     QT_LINK_LIBRARIES
         INTERFACE Core
 )

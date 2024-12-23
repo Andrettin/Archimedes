@@ -2,16 +2,28 @@ import json
 from socket import create_connection
 from argparse import ArgumentParser
 
+qt5_config = {
+    "archives": [ "qtbase", "icu", "qtwebsockets", "qtdeclarative", "qtwebchannel", "qtlocation" ],
+    "modules": [ "qtwebengine" ]
+}
+
+qt6_config = {
+    "archives": [ "qtbase", "icu", "qtdeclarative" ],
+    "modules": [ "qtwebsockets", "qtwebengine", "qtwebchannel", "qtpositioning" ]
+}
+
 qt = [
     {
         "version": "5.15.2",
-        "archives": [ "qtbase", "icu", "qtwebsockets", "qtdeclarative", "qtwebchannel", "qtlocation" ],
-        "modules": [ "qtwebengine" ]
+        **qt5_config
     },
     {
         "version": "6.2.0",
-        "archives": [ "qtbase", "icu", "qtdeclarative" ],
-        "modules": [ "qtwebsockets", "qtwebengine", "qtwebchannel", "qtpositioning" ]
+        **qt6_config
+    },
+    {
+        "version": "6.5.0",
+        **qt6_config
     }
 ]
 
@@ -32,11 +44,11 @@ platforms = [
         "compilers": [
             {
                 "name": "gcc",
-                "versions": [ "10", "11", "12" ]
+                "versions": [ "11", "12", "13" ]
             },
             {
                 "name": "clang",
-                "versions": [ "11", "14", "16", "dev" ]
+                "versions": [ "15", "16", "17", "dev" ]
             }
         ]
     }
@@ -54,7 +66,7 @@ def get_os_for_platform(platform):
     if platform == "linux":
         return "ubuntu-20.04"
     if platform == "macos":
-        return "macos-11"
+        return "macos-13"
     raise RuntimeError(f"Invalid platform '{platform}'.")
 
 def get_base_image_for_compiler(compiler):

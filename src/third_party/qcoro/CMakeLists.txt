@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18.4)
-set(qcoro_VERSION 0.9.0)
+set(qcoro_VERSION 0.11.0)
 set(qcoro_SOVERSION 0)
 project(qcoro LANGUAGES CXX VERSION ${qcoro_VERSION})
 
@@ -13,8 +13,16 @@ include(FeatureSummary)
 # Options
 #-----------------------------------------------------------#
 
+
+# Allow QCORO_BUILD_TESTING to override BUILD_TESTING, but default to BUILD_TESTING if not set
+if (DEFINED QCORO_BUILD_TESTING)
+    set(BUILD_TESTING ${QCORO_BUILD_TESTING})
+endif()
+
 option(QCORO_BUILD_EXAMPLES "Build examples" ON)
 add_feature_info(Examples QCORO_BUILD_EXAMPLES "Build examples")
+option(QCORO_BUILD_TESTING "Build QCoro tests" ${BUILD_TESTING})
+add_feature_info(Testing QCORO_BUILD_TESTING "Build QCoro tests")
 option(QCORO_ENABLE_ASAN "Build with AddressSanitizer" OFF)
 add_feature_info(Asan QCORO_ENABLE_ASAN "Build with AddressSanitizer")
 option(QCORO_DISABLE_DEPRECATED_TASK_H "Disable deprecated task.h header" OFF)
@@ -58,7 +66,7 @@ if (QCORO_WITH_QTWEBSOCKETS)
     list(APPEND REQUIRED_QT_COMPONENTS WebSockets)
 endif()
 if (QCORO_WITH_QTQUICK)
-    list(APPEND REQUIRED_QT_COMPONENTS Quick QuickPrivate)
+    list(APPEND REQUIRED_QT_COMPONENTS Gui Quick QuickPrivate)
 endif()
 if (QCORO_WITH_QML)
     list(APPEND REQUIRED_QT_COMPONENTS Qml)
@@ -105,7 +113,10 @@ if (MSVC)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /W4 /WX")
     # Disable warning C5054: "operator '&': deprecated between enumerations of different types" caused by QtWidgets/qsizepolicy.h
     # Disable warning C4127: "conditional expression is constant" caused by QtCore/qiterable.h
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /wd5054 /wd4127")
+    if ("${QT_VERSION_MAJOR}" STREQUAL "6" AND "${Qt6_VERSION}" VERSION_GREATER_EQUAL "6.4.0" AND "${Qt6_VERSION}" VERSION_LESS "6.5.3")
+        # Disable warning C4702: "unreachable code" caused by QtTest/qtestcase.h - fixed in Qt 6.5.3
+        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /wd5054 /wd4127 /wd4702")
+    endif()
 
     if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         # Explicitly enable exceptions support for clang-cl (it's only enabled by CMake when targeting the Windows-MSVC platform,
@@ -115,23 +126,30 @@ if (MSVC)
 else()
     # Only enable strict warnings in debug mode
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Werror -pedantic")
+
+    if (ANDROID)
+        include(DetectAndroidNDKVersion)
+        detectAndroidNDKVersion(NDK_VERSION)
+        if ("${NDK_VERSION}" VERSION_LESS 26)
+            # Android NDK < 26 ships mismatching versions of clang and libc++ - libc++ is older and doesn't have coroutine support
+            # which forces us to use coroutines from std::experimental. But the clang itself is newer and emits an error about
+            # std::experimental coroutines being deprecated in LLVM 14. This option is needed to suppress the error.
+            add_compile_options(-Wno-error=deprecated-experimental-coroutine)
+        endif()
+    endif()
 endif()
 
 if (QCORO_ENABLE_ASAN)
     if (MSVC)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /INCREMENTAL:NO")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /INCREMENTAL:NO")
         if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
         else()
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /fsanitize=address")
         endif()
     else()
-        if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS_EQUAL "11.0.0")
-            # I tried my best, but there are crashes when combining asan and coroutines.
-            message(WARNING "ASAN not supported for Clang<=11.0")
-        else()
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fsanitize-recover=address")
-        endif()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fsanitize-recover=address")
     endif()
 endif()
 
@@ -162,6 +180,15 @@ add_code_coverage_all_targets(EXCLUDE "${CMAKE_BINARY_DIR}" tests/utils/*)
 # Definitions
 #-----------------------------------------------------------#
 
+# debug suffixes for qmake compatibility
+if(WIN32)
+    set(CMAKE_DEBUG_POSTFIX "d")
+elseif(APPLE)
+    set(CMAKE_DEBUG_POSTFIX "_debug")
+else()
+    set(CMAKE_DEBUG_POSTFIX "")
+endif()
+
 set(QCORO_TARGET_PREFIX "QCoro${QT_VERSION_MAJOR}")
 set(QCORO_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}/qcoro${QT_VERSION_MAJOR}")
 
@@ -174,7 +201,7 @@ add_subdirectory(qcoro)
 if (QCORO_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
-if (BUILD_TESTING)
+if (QCORO_BUILD_TESTING)
     add_subdirectory(tests)
 endif()
 

@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - 'docs/**'
   pull_request:
     types: [opened, synchronize, reopened, edited]
 
@@ -15,6 +13,31 @@ env:
 
 
 jobs:
+  detect_run:
+    name: Check changes
+    outputs: { "source_code_changed": "${{ steps.source_code_changed.outputs.source_code_changed}}" }
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+      - id: changed_files
+        uses: tj-actions/changed-files@v45
+        name: Get changed files
+        with:
+          files_ignore: |
+            docs/**
+            docker/**
+            requirements.txt
+            mkdocs.yml
+            README.md
+            .github/**
+      - id: source_code_changed
+        name: Check for source code changes
+        if: steps.changed_files.outputs.any_changed == 'true'
+        run: |
+          echo "Detected changed files:"
+          echo "${{ steps.changed_files.outputs.all_changed_files }}"
+          echo "::set-output name=source_code_changed::true"
 
   generate-matrix:
     name: Generate build matrix
@@ -23,7 +46,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
     - name: Checkout sources
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - id: set-matrix
       name: Generate matrix
       run: |
@@ -31,7 +54,7 @@ jobs:
         echo "::set-output name=matrix::${matrix_json}"
 
   build:
-    needs: generate-matrix
+    needs: [ generate-matrix, detect_run ]
     strategy:
       matrix: ${{ fromJSON(needs.generate-matrix.outputs.matrix) }}
       fail-fast: false
@@ -47,14 +70,17 @@ jobs:
 
     steps:
     - name: Checkout sources
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
+      if: ${{ needs.detect_run.outputs.source_code_changed == 'true' }}
 
 
     - name: Create Build Environment
+      if: ${{ needs.detect_run.outputs.source_code_changed == 'true' }}
       run: |
         cmake -E make_directory build
 
     - name: Configure CMake
+      if: ${{ needs.detect_run.outputs.source_code_changed == 'true' }}
       run: |
         QT_VERSION_MAJOR=$(echo ${{ matrix.qt_version }} | cut -d'.' -f1)
 
@@ -72,10 +98,12 @@ jobs:
           ${EXTRA_CMAKE_FLAGS}
 
     - name: Build
+      if: ${{ needs.detect_run.outputs.source_code_changed == 'true' }}
       run: |
         cmake --build build --config $BUILD_TYPE --parallel $(nproc) --verbose
 
     - name: Test
+      if: ${{ needs.detect_run.outputs.source_code_changed == 'true' }}
       run: |
         cd build
         QT_LOGGING_TO_CONSOLE=1 ctest -C $BUILD_TYPE \
@@ -84,16 +112,16 @@ jobs:
           --output-junit ${{ matrix.platform }}-${{ matrix.compiler_full }}-qt-${{ matrix.qt_version }}.xml
 
     - name: Upload Test Results
-      if: always()
-      uses: actions/upload-artifact@v2
+      if: ${{ needs.detect_run.outputs.source_code_changed == 'true' && always() }}
+      uses: actions/upload-artifact@v4
       with:
         name: Unit Tests Results (${{ matrix.platform }}-${{ matrix.compiler_full }}-qt-${{ matrix.qt_version }})
         path: |
           ${{ github.workspace }}/build/${{ matrix.platform }}-${{ matrix.compiler_full }}-qt-${{ matrix.qt_version }}.xml
 
     - name: Upload build logs on failure
-      if: failure()
-      uses: actions/upload-artifact@v2
+      if: ${{ needs.detect_run.outputs.source_code_changed == 'true' && failure() }}
+      uses: actions/upload-artifact@v4
       with:
         name: build-${{ matrix.platform }}-${{ matrix.compiler_full }}-qt-${{ matrix.qt_version }}
         path: build/**
@@ -103,7 +131,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Upload
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Event File
         path: ${{ github.event_path }}

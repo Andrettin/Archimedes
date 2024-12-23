@@ -595,6 +595,33 @@ private Q_SLOTS:
         QVERIFY(timer.elapsed() >= (90ms).count());
     }
 
+    void testWaitForWithValueRethrowsException() {
+        const auto coro = []() -> QCoro::Task<int> {
+            co_await timer();
+            throw std::runtime_error("Exception");
+            co_return 42;
+        };
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 3, 0)
+        QVERIFY_THROWS_EXCEPTION(std::runtime_error, QCoro::waitFor(coro()));
+#else
+        QVERIFY_EXCEPTION_THROWN(QCoro::waitFor(coro()), std::runtime_error);
+#endif
+    }
+
+    void testWaitForRethrowsException() {
+        const auto coro = []() -> QCoro::Task<> {
+            co_await timer();
+            throw std::runtime_error("Exception");
+        };
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 3, 0)
+        QVERIFY_THROWS_EXCEPTION(std::runtime_error, QCoro::waitFor(coro()));
+#else
+        QVERIFY_EXCEPTION_THROWN(QCoro::waitFor(coro()), std::runtime_error);
+#endif
+    }
+
 
     void testIgnoredVoidTaskResult() {
         QEventLoop el;
