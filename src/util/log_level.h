@@ -31,7 +31,7 @@ inline std::string_view get_log_level_name(const log_level level)
 			break;
 	}
 
-	throw std::runtime_error(std::format("Invalid log level: \"{}\".", std::to_string(static_cast<int>(level))));
+	throw std::runtime_error(std::format("Invalid log level: \"{}\".", static_cast<int>(level)));
 }
 
 }
