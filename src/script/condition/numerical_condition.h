@@ -9,8 +9,19 @@ template <typename scope_type, typename context_type, typename base_value_type =
 class numerical_condition : public condition_base<scope_type, context_type>
 {
 public:
-	explicit numerical_condition(const std::string &value, const gsml_operator condition_operator)
+	explicit numerical_condition(const gsml_operator condition_operator)
 		: condition_base<scope_type, context_type>(condition_operator)
+	{
+	}
+
+	explicit numerical_condition(const base_value_type &value, const gsml_operator condition_operator)
+		: numerical_condition(condition_operator)
+	{
+		this->base_value = value;
+	}
+
+	explicit numerical_condition(const std::string &value, const gsml_operator condition_operator)
+		: numerical_condition(condition_operator)
 	{
 		if constexpr (std::is_same_v<base_value_type, centesimal_int>) {
 			this->base_value = base_value_type(value);
