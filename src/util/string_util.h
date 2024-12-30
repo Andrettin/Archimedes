@@ -210,7 +210,7 @@ inline bool is_bool(const std::string &str)
 	return str == "true" || str == "false";
 }
 
-inline bool is_number(const std::string &str)
+inline bool is_number(const std::string &str, const bool allow_suffix = false)
 {
 	bool digit_found = false;
 
@@ -226,7 +226,11 @@ inline bool is_number(const std::string &str)
 			continue;
 		}
 
-		return false;
+		if (!digit_found || !allow_suffix) {
+			return false;
+		}
+
+		break;
 	}
 
 	return digit_found;
