@@ -59,7 +59,9 @@ std::string text_processor_base::process_string_tokens(std::string &&str, std::q
 
 	const std::string token = queue::take(tokens);
 
-	if (token == "lowered") {
+	if (token == "capitalized") {
+		string::capitalize(str);
+	} else if (token == "lowered") {
 		string::to_lower(str);
 	} else if (token == "normalized") {
 		string::normalize(str);
