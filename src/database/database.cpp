@@ -173,6 +173,8 @@ QVariant database::process_gsml_property_value(const gsml_property &property, co
 			new_property_value = QVariant::fromValue(std::filesystem::path(property.get_value()));
 		} else if (property_class_name == "archimedes::centesimal_int" || property_class_name == "archimedes::fractional_int<2>") {
 			new_property_value = QVariant::fromValue(centesimal_int(property.get_value()));
+		} else if (property_class_name == "std::optional<archimedes::centesimal_int>" || property_class_name == "std::optional<archimedes::fractional_int<2>>") {
+			new_property_value = QVariant::fromValue(std::optional<centesimal_int>(centesimal_int(property.get_value())));
 		} else if (property_class_name == "archimedes::data_module*") {
 			new_property_value = QVariant::fromValue(database::get()->get_module(property.get_value()));
 		} else if (property_class_name == "archimedes::decimal_int" || property_class_name == "archimedes::fractional_int<1>") {

@@ -559,3 +559,4 @@ using decimillesimal_int = fractional_int<4>;
 Q_DECLARE_METATYPE(archimedes::decimal_int)
 Q_DECLARE_METATYPE(archimedes::centesimal_int)
 Q_DECLARE_METATYPE(archimedes::decimillesimal_int)
+Q_DECLARE_METATYPE(std::optional<archimedes::centesimal_int>)
