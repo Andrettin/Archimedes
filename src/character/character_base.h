@@ -72,6 +72,11 @@ public:
 		return QString::fromStdString(this->get_full_name());
 	}
 
+	virtual bool is_surname_first() const
+	{
+		return false;
+	}
+
 	const std::string &get_description() const
 	{
 		return this->description;

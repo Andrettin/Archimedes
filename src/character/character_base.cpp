@@ -94,11 +94,19 @@ std::string character_base::get_full_name() const
 
 		full_name += this->get_epithet();
 	} else if (!this->get_surname().empty()) {
-		if (!full_name.empty()) {
-			full_name += " ";
-		}
+		if (this->is_surname_first()) {
+			if (!full_name.empty()) {
+				full_name = this->get_surname() + " " + full_name;
+			} else {
+				full_name = this->get_surname();
+			}
+		} else {
+			if (!full_name.empty()) {
+				full_name += " ";
+			}
 
-		full_name += this->get_surname();
+			full_name += this->get_surname();
+		}
 	}
 
 	return full_name;
