@@ -598,6 +598,15 @@ void database::initialize()
 
 	this->initialized = true;
 
+	//check if the defines are valid
+	if (this->defines != nullptr) {
+		try {
+			this->defines->check();
+		} catch (...) {
+			std::throw_with_nested(std::runtime_error("Error when checking the defines."));
+		}
+	}
+
 	//check if data entries are valid for each data type
 	for (const std::unique_ptr<data_type_metadata> &metadata : this->metadata) {
 		try {

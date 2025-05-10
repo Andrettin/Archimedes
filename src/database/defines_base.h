@@ -38,6 +38,10 @@ public:
 	{
 	}
 
+	virtual void check() const
+	{
+	}
+
 	const QColor &get_green_text_color() const
 	{
 		return this->green_text_color;
