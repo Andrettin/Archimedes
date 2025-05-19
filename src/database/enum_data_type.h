@@ -1,7 +1,8 @@
 #pragma once
 
 #include "database/data_type.h"
-#include "util/enum_converter.h"
+
+#include <magic_enum/magic_enum.hpp>
 
 namespace archimedes {
 
@@ -17,7 +18,7 @@ public:
 		T *instance = T::try_get(value);
 
 		if (instance == nullptr) {
-			throw std::runtime_error(std::format("Invalid {} instance: \"{}\".", T::class_identifier, enum_converter<enum_type>::to_string(value)));
+			throw std::runtime_error(std::format("Invalid {} instance: \"{}\".", T::class_identifier, magic_enum::enum_name(value)));
 		}
 
 		return instance;
@@ -37,7 +38,7 @@ public:
 	{
 		T *instance = data_type<T>::add(identifier, data_module);
 
-		const enum_type value = enum_converter<enum_type>::to_enum(identifier);
+		const enum_type value = magic_enum::enum_cast<enum_type>(identifier).value();
 
 		enum_data_type::instances_by_enum_value[value] = instance;
 
