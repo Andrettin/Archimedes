@@ -1,7 +1,5 @@
 #pragma once
 
-#include "util/enum_converter.h"
-
 namespace archimedes {
 
 enum class special_target_type {
@@ -9,8 +7,6 @@ enum class special_target_type {
 	source,
 	previous
 };
-
-extern template class enum_converter<special_target_type>;
 
 }
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "util/enum_converter.h"
+#include "script/special_target_type.h"
 
 namespace archimedes {
 
@@ -14,8 +14,8 @@ inline target_variant<scope_type> string_to_target_variant(const std::string &st
 {
 	static const std::string saved_scope_prefix = "saved_scope:";
 
-	if (enum_converter<special_target_type>::has_value(str)) {
-		return enum_converter<special_target_type>::to_enum(str);
+	if (magic_enum::enum_contains<special_target_type>(str)) {
+		return magic_enum::enum_cast<special_target_type>(str).value();
 	} else if (str.starts_with(saved_scope_prefix)) {
 		return str.substr(saved_scope_prefix.size(), str.size() - saved_scope_prefix.size());
 	} else {
