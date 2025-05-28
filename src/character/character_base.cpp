@@ -5,6 +5,7 @@
 #include "time/calendar.h"
 #include "util/assert_util.h"
 #include "util/gender.h"
+#include "util/random.h"
 
 namespace archimedes {
 
@@ -114,31 +115,60 @@ std::string character_base::get_full_name() const
 
 void character_base::initialize_dates()
 {
+	const int adulthood_age = this->get_adulthood_age();
+	assert_throw(adulthood_age != 0);
+	const int venerable_age = this->get_venerable_age();
+	assert_throw(venerable_age != 0);
+	const dice &maximum_age_modifier = this->get_maximum_age_modifier();
+	assert_throw(!maximum_age_modifier.is_null());
+
+	const dice &starting_age_modifier = this->get_starting_age_modifier();
+
 	bool date_changed = true;
 	while (date_changed) {
 		date_changed = false;
 
 		if (!this->get_start_date().isValid()) {
 			if (this->get_birth_date().isValid()) {
-				//if we have the birth date but not the start date, set the start date to when the character would become 30 years old
-				this->start_date = this->get_birth_date().addYears(30);
+				QDate start_date = this->get_birth_date();
+				start_date = start_date.addYears(adulthood_age);
+				start_date = start_date.addYears(random::get()->roll_dice(starting_age_modifier));
+				this->set_start_date(start_date);
 				date_changed = true;
+			} else if (this->get_contemporary_character() != nullptr) {
+				if (!this->get_contemporary_character()->is_initialized()) {
+					this->get_contemporary_character()->initialize();
+				}
+
+				if (this->get_contemporary_character()->get_start_date().isValid()) {
+					this->set_start_date(this->get_contemporary_character()->get_start_date());
+					date_changed = true;
+				}
 			}
 		}
 
 		if (!this->get_birth_date().isValid()) {
 			if (this->get_start_date().isValid()) {
-				this->birth_date = this->get_start_date().addYears(-30);
+				QDate birth_date = this->get_start_date();
+				birth_date = birth_date.addYears(-adulthood_age);
+				birth_date = birth_date.addYears(-random::get()->roll_dice(starting_age_modifier));
+				this->set_birth_date(birth_date);
 				date_changed = true;
 			} else if (this->get_death_date().isValid()) {
-				this->birth_date = this->get_death_date().addYears(-60);
+				QDate birth_date = this->get_death_date();
+				birth_date = birth_date.addYears(-venerable_age);
+				birth_date = birth_date.addYears(-random::get()->roll_dice(maximum_age_modifier));
+				this->set_birth_date(birth_date);
 				date_changed = true;
 			}
 		}
 
 		if (!this->get_death_date().isValid() && !this->is_immortal()) {
 			if (this->get_birth_date().isValid()) {
-				this->death_date = this->get_birth_date().addYears(60);
+				QDate death_date = this->get_birth_date();
+				death_date = death_date.addYears(venerable_age);
+				death_date = death_date.addYears(random::get()->roll_dice(maximum_age_modifier));
+				this->set_death_date(death_date);
 				date_changed = true;
 			}
 		}

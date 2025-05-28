@@ -2,6 +2,7 @@
 
 #include "database/data_type.h"
 #include "database/named_data_entry.h"
+#include "util/dice.h"
 
 Q_MOC_INCLUDE("time/calendar.h")
 
@@ -179,8 +180,12 @@ public:
 		this->start_date = date;
 	}
 
-	virtual void initialize_dates();
+	void initialize_dates();
 
+	virtual int get_adulthood_age() const = 0;
+	virtual int get_venerable_age() const = 0;
+	virtual const dice &get_maximum_age_modifier() const = 0;
+	virtual const dice &get_starting_age_modifier() const = 0;
 	virtual bool is_immortal() const = 0;
 
 signals:
