@@ -106,4 +106,20 @@ inline QVariantMap to_qvariant_map(const T &map)
 	return qvariant_map;
 }
 
+template <typename T>
+inline std::vector<typename T::key_type> to_weighted_vector(const T &map)
+{
+	static_assert(std::is_integral_v<typename T::mapped_type>);
+
+	std::vector<typename T::key_type> weighted_vector;
+
+	for (const auto &[key, value] : map) {
+		for (typename T::mapped_type i = 0; i < value; ++i) {
+			weighted_vector.push_back(key);
+		}
+	}
+
+	return weighted_vector;
+}
+
 }
