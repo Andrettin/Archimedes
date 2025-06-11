@@ -83,6 +83,15 @@ public:
 		return data_type::instances;
 	}
 
+	static std::vector<const T *> get_all_const()
+	{
+		std::vector<const T *> const_instances;
+		for (const T *instance : T::get_all()) {
+			const_instances.push_back(instance);
+		}
+		return const_instances;
+	}
+
 	static bool exists(const std::string &identifier)
 	{
 		return data_type::instances_by_identifier.contains(identifier) || data_type::instances_by_alias.contains(identifier);
