@@ -11,6 +11,7 @@
 #include "database/gsml_operator.h"
 #include "database/gsml_parser.h"
 #include "database/gsml_property.h"
+#include "game/game_rules_base.h"
 #include "map/map_projection.h"
 #include "util/assert_util.h"
 #include "util/dice.h"
@@ -542,7 +543,7 @@ void database::load_defines()
 	}
 }
 
-void database::load_history(const QDate &start_date, const timeline *timeline, const QObject *game_rules)
+void database::load_history(const QDate &start_date, const timeline *timeline, const game_rules_base *game_rules)
 {
 	try {
 		std::vector<const data_type_metadata *> metadata_list;

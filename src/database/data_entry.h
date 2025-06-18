@@ -6,6 +6,7 @@ namespace archimedes {
 
 class data_entry_history;
 class data_module;
+class game_rules_base;
 class gsml_data;
 class gsml_property;
 class timeline;
@@ -90,8 +91,8 @@ public:
 		return nullptr;
 	}
 
-	void load_history(const QDate &start_date, const timeline *current_timeline, const QObject *game_rules);
-	void load_history_scope(const gsml_data &history_scope, const QDate &start_date, const timeline *current_timeline, const QObject *game_rules, std::map<QDate, std::vector<const gsml_data *>> &history_entries);
+	void load_history(const QDate &start_date, const timeline *current_timeline, const game_rules_base *game_rules);
+	void load_history_scope(const gsml_data &history_scope, const QDate &start_date, const timeline *current_timeline, const game_rules_base *game_rules, std::map<QDate, std::vector<const gsml_data *>> &history_entries);
 	void load_date_scope(const gsml_data &date_scope, const QDate &date);
 
 	virtual void reset_history()

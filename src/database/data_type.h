@@ -11,6 +11,7 @@
 namespace archimedes {
 
 class data_module;
+class game_rules_base;
 
 class data_type_base
 {
@@ -249,7 +250,7 @@ public:
 		}
 	}
 
-	static void load_history_database(const QDate &start_date, const timeline *timeline, const QObject *game_rules)
+	static void load_history_database(const QDate &start_date, const timeline *timeline, const game_rules_base *game_rules)
 	{
 		if constexpr (T::history_enabled) {
 			try {

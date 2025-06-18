@@ -145,6 +145,12 @@ set(database_HDRS
 )
 source_group(database FILES ${database_HDRS})
 
+set(game_HDRS
+	src/game/game_rule.h
+	src/game/game_rules_base.h
+)
+source_group(game FILES ${game_HDRS})
+
 set(language_HDRS
 	src/language/gendered_name_generator.h
 	src/language/grammatical_gender.h
@@ -275,6 +281,7 @@ source_group(maskedmousearea FILES ${maskedmousearea_HDRS})
 set(archimedes_HDRS
 	${character_HDRS}
 	${database_HDRS}
+	${game_HDRS}
 	${language_HDRS}
 	${map_HDRS}
 	${script_HDRS}

@@ -3,6 +3,7 @@
 namespace archimedes {
 
 class data_module;
+class game_rules_base;
 class timeline;
 
 //the metadata for a data type, including e.g. its initialization function
@@ -10,8 +11,9 @@ class data_type_metadata final
 {
 public:
 	using parsing_function_type = std::function<QCoro::Task<void>(const std::filesystem::path &, const data_module *)>;
+	using history_loading_function_type = std::function<void(const QDate &, const timeline *, const game_rules_base *)>;
 
-	explicit data_type_metadata(const std::string &class_identifier, const std::set<std::string> &database_dependencies, const std::set<std::string> &history_database_dependencies, const parsing_function_type &parsing_function, const std::function<void(bool)> &processing_function, const std::function<void()> &initialization_function, const std::function<void()> &text_processing_function, const std::function<void()> &checking_function, const std::function<void()> &clearing_function, const std::function<void(const QDate &, const timeline *, const QObject *)> &history_loading_function)
+	explicit data_type_metadata(const std::string &class_identifier, const std::set<std::string> &database_dependencies, const std::set<std::string> &history_database_dependencies, const parsing_function_type &parsing_function, const std::function<void(bool)> &processing_function, const std::function<void()> &initialization_function, const std::function<void()> &text_processing_function, const std::function<void()> &checking_function, const std::function<void()> &clearing_function, const history_loading_function_type &history_loading_function)
 		: class_identifier(class_identifier), database_dependencies(database_dependencies), history_database_dependencies(history_database_dependencies), parsing_function(parsing_function), processing_function(processing_function), initialization_function(initialization_function), text_processing_function(text_processing_function), checking_function(checking_function), clearing_function(clearing_function), history_loading_function(history_loading_function)
 	{
 	}
@@ -69,7 +71,7 @@ public:
 		return this->clearing_function;
 	}
 
-	const std::function<void(const QDate &, const timeline *, const QObject *)> &get_history_loading_function() const
+	const history_loading_function_type &get_history_loading_function() const
 	{
 		return this->history_loading_function;
 	}
@@ -84,7 +86,7 @@ private:
 	std::function<void()> text_processing_function; //functions to process text for entries
 	std::function<void()> checking_function; //functions to check if data entries are valid
 	std::function<void()> clearing_function; //functions to clear the data entries
-	std::function<void(const QDate &, const timeline *, const QObject *)> history_loading_function;
+	history_loading_function_type history_loading_function;
 };
 
 }

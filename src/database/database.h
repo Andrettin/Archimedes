@@ -13,6 +13,7 @@ class data_entry;
 class data_module;
 class data_type_metadata;
 class defines_base;
+class game_rules_base;
 class timeline;
 
 class database final : public singleton<database>
@@ -107,7 +108,7 @@ public:
 
 	void load_predefines();
 	void load_defines();
-	void load_history(const QDate &start_date, const timeline *timeline, const QObject *game_rules = nullptr);
+	void load_history(const QDate &start_date, const timeline *timeline, const game_rules_base *game_rules = nullptr);
 
 	bool is_initialized() const
 	{

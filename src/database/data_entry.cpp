@@ -4,6 +4,8 @@
 
 #include "database/data_entry_history.h"
 #include "database/database.h"
+#include "game/game_rule.h"
+#include "game/game_rules_base.h"
 #include "time/calendar.h"
 #include "time/era.h"
 #include "time/timeline.h"
@@ -76,7 +78,7 @@ void data_entry::initialize()
 	this->initialized = true;
 }
 
-void data_entry::load_history(const QDate &start_date, const timeline *current_timeline, const QObject *game_rules)
+void data_entry::load_history(const QDate &start_date, const timeline *current_timeline, const game_rules_base *game_rules)
 {
 	std::map<QDate, std::vector<const gsml_data *>> history_entries;
 
@@ -100,12 +102,12 @@ void data_entry::load_history(const QDate &start_date, const timeline *current_t
 	}
 }
 
-void data_entry::load_history_scope(const gsml_data &history_scope, const QDate &start_date, const timeline *current_timeline, const QObject *game_rules, std::map<QDate, std::vector<const gsml_data *>> &history_entries)
+void data_entry::load_history_scope(const gsml_data &history_scope, const QDate &start_date, const timeline *current_timeline, const game_rules_base *game_rules, std::map<QDate, std::vector<const gsml_data *>> &history_entries)
 {
 	const timeline *timeline = nullptr;
 	const calendar *calendar = nullptr;
 	const era *era = nullptr;
-	QVariant game_rule_variant;
+	const game_rule *game_rule = nullptr;
 
 	const std::string &tag = history_scope.get_tag();
 	assert_throw(!tag.empty());
@@ -120,22 +122,20 @@ void data_entry::load_history_scope(const gsml_data &history_scope, const QDate 
 				era = era::try_get(tag);
 
 				if (era == nullptr) {
-					bool game_rule_value = true;
+					bool required_game_rule_value = true;
 
 					if (game_rules != nullptr) {
 						if (tag.front() == '!') {
 							//"!" is used for negation before game rules
-							game_rule_variant = game_rules->property(tag.substr(1, tag.size() - 1).c_str());
-							game_rule_value = false;
+							game_rule = game_rule::try_get(tag.substr(1, tag.size() - 1));
+							required_game_rule_value = false;
 						} else {
-							game_rule_variant = game_rules->property(tag.c_str());
+							game_rule = game_rule::try_get(tag.c_str());
 						}
 					}
 
-					if (game_rule_variant.isValid()) {
-						assert_throw(game_rule_variant.typeId() == QMetaType::Type::Bool);
-
-						if (game_rule_variant.toBool() != game_rule_value) {
+					if (game_rule != nullptr) {
+						if (game_rules->get_value(game_rule) != required_game_rule_value) {
 							//if the game rule scope is disabled, ignore what is contained in it
 							return;
 						}
@@ -160,7 +160,7 @@ void data_entry::load_history_scope(const gsml_data &history_scope, const QDate 
 				history_entries[date].push_back(&timeline_entry);
 			}
 		});
-	} else if (calendar != nullptr || game_rule_variant.isValid()) {
+	} else if (calendar != nullptr || game_rule != nullptr) {
 		history_scope.for_each_child([&](const gsml_data &history_subentry) {
 			QDate date = string::to_date(history_subentry.get_tag());
 
