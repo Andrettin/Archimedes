@@ -11,6 +11,7 @@ class game_rule final : public named_data_entry, public data_type<game_rule>
 
 	Q_PROPERTY(bool default_value MEMBER default_value READ get_default_value NOTIFY changed)
 	Q_PROPERTY(QString description READ get_description_qstring NOTIFY changed)
+	Q_PROPERTY(bool hidden MEMBER hidden READ is_hidden NOTIFY changed)
 
 public:
 	static constexpr const char class_identifier[] = "game_rule";
@@ -41,12 +42,18 @@ public:
 		return QString::fromStdString(this->get_description());
 	}
 
+	bool is_hidden() const
+	{
+		return this->hidden;
+	}
+
 signals:
 	void changed();
 
 private:
 	bool default_value = false;
 	std::string description;
+	bool hidden = false;
 };
 
 }
