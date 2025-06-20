@@ -33,6 +33,13 @@ set(database_SRCS
 source_group(database FILES ${database_SRCS})
 set_source_files_properties(${database_SRCS} PROPERTIES UNITY_GROUP "database")
 
+set(game_SRCS
+	src/game/game_rule.cpp
+	src/game/game_rule_group.cpp
+)
+source_group(game FILES ${game_SRCS})
+set_source_files_properties(${game_SRCS} PROPERTIES UNITY_GROUP "game")
+
 set(language_SRCS
 	src/language/gendered_name_generator.cpp
 	src/language/grammatical_gender.cpp
@@ -109,6 +116,7 @@ set_source_files_properties(${maskedmousearea_SRCS} PROPERTIES UNITY_GROUP "mask
 set(archimedes_SRCS
 	${character_SRCS}
 	${database_SRCS}
+	${game_SRCS}
 	${language_SRCS}
 	${map_SRCS}
 	${script_SRCS}
@@ -147,6 +155,7 @@ source_group(database FILES ${database_HDRS})
 
 set(game_HDRS
 	src/game/game_rule.h
+	src/game/game_rule_group.h
 	src/game/game_rules_base.h
 )
 source_group(game FILES ${game_HDRS})
