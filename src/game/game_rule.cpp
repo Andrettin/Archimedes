@@ -8,7 +8,7 @@ namespace archimedes {
 
 void game_rule::initialize()
 {
-	if (this->group != nullptr) {
+	if (this->group != nullptr && !this->is_hidden()) {
 		this->group->add_rule(this);
 	}
 
