@@ -66,8 +66,10 @@ public:
 		return false;
 	}
 
-	virtual bool is_hidden() const
+	virtual bool is_hidden(const scope_type *scope) const
 	{
+		Q_UNUSED(scope);
+
 		return false;
 	}
 
