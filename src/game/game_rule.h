@@ -70,6 +70,8 @@ public:
 		return this->requiring_rules;
 	}
 
+	int get_requirement_depth() const;
+
 signals:
 	void changed();
 

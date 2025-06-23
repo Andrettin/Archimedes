@@ -31,4 +31,15 @@ void game_rule::initialize()
 	named_data_entry::initialize();
 }
 
+int game_rule::get_requirement_depth() const
+{
+	int depth = 0;
+
+	for (const game_rule *required_rule : this->get_required_rules()) {
+		depth = std::max(depth, required_rule->get_requirement_depth() + 1);
+	}
+
+	return depth;
+}
+
 }

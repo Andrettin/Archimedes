@@ -35,6 +35,7 @@ set_source_files_properties(${database_SRCS} PROPERTIES UNITY_GROUP "database")
 
 set(game_SRCS
 	src/game/game_rule.cpp
+	src/game/game_rule_container.cpp
 	src/game/game_rule_group.cpp
 )
 source_group(game FILES ${game_SRCS})
@@ -155,6 +156,7 @@ source_group(database FILES ${database_HDRS})
 
 set(game_HDRS
 	src/game/game_rule.h
+	src/game/game_rule_container.h
 	src/game/game_rule_group.h
 	src/game/game_rules_base.h
 )
