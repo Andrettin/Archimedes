@@ -27,6 +27,7 @@ public:
 	{
 	}
 
+	virtual void process_gsml_scope(const gsml_data &scope) override;
 	virtual void initialize() override;
 
 	const game_rule_group *get_group() const
@@ -59,6 +60,16 @@ public:
 		return this->hidden;
 	}
 
+	const std::vector<const game_rule *> &get_required_rules() const
+	{
+		return this->required_rules;
+	}
+
+	const std::vector<const game_rule *> &get_requiring_rules() const
+	{
+		return this->requiring_rules;
+	}
+
 signals:
 	void changed();
 
@@ -67,6 +78,8 @@ private:
 	bool default_value = false;
 	std::string description;
 	bool hidden = false;
+	std::vector<const game_rule *> required_rules;
+	std::vector<const game_rule *> requiring_rules;
 };
 
 }
