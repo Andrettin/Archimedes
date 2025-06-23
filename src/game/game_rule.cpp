@@ -11,7 +11,7 @@ void game_rule::process_gsml_scope(const gsml_data &scope)
 	const std::string &tag = scope.get_tag();
 	const std::vector<std::string> &values = scope.get_values();
 
-	if (tag == "required_game_rules") {
+	if (tag == "required_rules") {
 		for (const std::string &value : values) {
 			game_rule *rule = game_rule::get(value);
 			this->required_rules.push_back(rule);
