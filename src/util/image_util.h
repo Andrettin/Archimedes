@@ -53,6 +53,12 @@ inline QImage scale(const QImage &src_image, const centesimal_int &scale_factor,
 		return image::scale<image_format>(reformatted_src_image, scale_factor, scaling_function);
 	}
 
+	//scale in steps if the scale factor is too large, since some scaling algorithms might have a maximum scale factor
+	if (scale_factor > 5 && scale_factor.get_fractional_value() == 0 && (scale_factor.to_int() % 2) == 0) {
+		const QImage scaled_src_image = image::scale<image_format>(src_image, centesimal_int(2), scaling_function);
+		return image::scale<image_format>(scaled_src_image, scale_factor / 2, scaling_function);
+	}
+
 	int scale_multiplier = scale_factor.to_int();
 	if (scale_factor.get_fractional_value() != 0) {
 		if (scale_factor.get_fractional_value() == 50) {
