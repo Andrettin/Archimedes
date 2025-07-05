@@ -31,7 +31,7 @@ QDateTime to_date_time(const std::string &date_str)
 		}
 	}
 
-	QDateTime date(QDate(years, months, days), QTime(hours, 0), Qt::UTC);
+	QDateTime date(QDate(years, months, days), QTime(hours, 0), QTimeZone(QTimeZone::UTC));
 
 	if (!date.isValid()) {
 		throw std::runtime_error(std::format("Date \"{}\" is not a valid date.", date_str));
