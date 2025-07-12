@@ -26,4 +26,23 @@ void data_module::process_gsml_scope(const gsml_data &scope)
 	}
 }
 
+bool data_module::is_enabled() const
+{
+	if (!this->enabled) {
+		return false;
+	}
+
+	if (this->parent_module != nullptr && !this->parent_module->is_enabled()) {
+		return false;
+	}
+
+	for (const data_module *dependency : this->dependencies) {
+		if (!dependency->is_enabled()) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 }

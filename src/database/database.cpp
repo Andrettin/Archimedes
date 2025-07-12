@@ -713,6 +713,10 @@ std::vector<std::pair<std::filesystem::path, const data_module *>> database::get
 	std::vector<std::pair<std::filesystem::path, const data_module *>> module_paths;
 
 	for (const qunique_ptr<data_module> &data_module : this->modules) {
+		if (!data_module->is_enabled()) {
+			continue;
+		}
+
 		module_paths.emplace_back(data_module->get_path(), data_module.get());
 	}
 

@@ -10,8 +10,11 @@ class data_module final : public QObject
 	Q_OBJECT
 
 	Q_PROPERTY(QString name READ get_name_qstring)
+	Q_PROPERTY(std::string description MEMBER description)
 	Q_PROPERTY(std::string license MEMBER license)
 	Q_PROPERTY(std::string version MEMBER version)
+	Q_PROPERTY(bool enabled MEMBER enabled)
+	Q_PROPERTY(bool hidden MEMBER hidden READ is_hidden)
 
 public:
 	explicit data_module(const std::string &identifier, const std::filesystem::path &path, const data_module *parent_module)
@@ -40,6 +43,28 @@ public:
 	QString get_name_qstring() const
 	{
 		return QString::fromStdString(this->get_name());
+	}
+
+	const std::string &get_description() const
+	{
+		return this->description;
+	}
+
+	const std::string &get_version() const
+	{
+		return this->version;
+	}
+
+	const std::string &get_license() const
+	{
+		return this->license;
+	}
+
+	bool is_enabled() const;
+
+	bool is_hidden() const
+	{
+		return this->hidden;
 	}
 
 	const std::filesystem::path &get_path() const
@@ -93,8 +118,11 @@ public:
 private:
 	std::string identifier;
 	std::string name;
-	std::string license;
+	std::string description;
 	std::string version;
+	std::string license;
+	bool enabled = true;
+	bool hidden = false;
 	std::filesystem::path path; //the module's path
 	const data_module *parent_module = nullptr;
 	std::set<const data_module *> dependencies; //modules on which this one is dependent
