@@ -35,23 +35,27 @@ std::string name_generator::generate_name() const
 	return get_name_variant_string(name_variant);
 }
 
-std::string name_generator::generate_name(const std::set<std::string> &used_names) const
+std::string name_generator::generate_name(const std::map<std::string, int> &used_name_counts) const
 {
-	std::vector<name_variant> available_names = this->names;
-	std::erase_if(available_names, [&used_names](const name_variant &name_variant) {
-		if (used_names.contains(get_name_variant_string(name_variant))) {
-			return true;
-		}
-
-		return false;
-	});
-
-	if (available_names.empty()) {
-		available_names = this->names;
+	if (this->names.empty()) {
+		return std::string();
 	}
 
-	if (available_names.empty()) {
-		return std::string();
+	std::vector<name_variant> available_names;
+	int max_count = 0;
+
+	while (available_names.empty()) {
+		available_names = this->names;
+		std::erase_if(available_names, [&used_name_counts, max_count](const name_variant &name_variant) {
+			const auto find_iterator = used_name_counts.find(get_name_variant_string(name_variant));
+			if (find_iterator != used_name_counts.end() && find_iterator->second > max_count) {
+				return true;
+			}
+
+			return false;
+		});
+
+		++max_count;
 	}
 
 	const name_variant &name_variant = vector::get_random(available_names);

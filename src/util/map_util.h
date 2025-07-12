@@ -4,6 +4,8 @@
 
 namespace archimedes::map {
 
+static inline const std::map<std::string, int> empty_string_to_int_map;
+
 template <typename T>
 inline std::vector<typename T::key_type> get_keys(const T &map)
 {

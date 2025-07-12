@@ -32,7 +32,7 @@ public:
 	void add_names(const std::vector<std::string> &names);
 
 	std::string generate_name() const;
-	std::string generate_name(const std::set<std::string> &used_names) const;
+	std::string generate_name(const std::map<std::string, int> &used_name_counts) const;
 
 private:
 	std::vector<name_variant> names; //name list for generation
