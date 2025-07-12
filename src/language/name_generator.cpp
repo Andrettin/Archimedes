@@ -47,6 +47,10 @@ std::string name_generator::generate_name(const std::set<std::string> &used_name
 	});
 
 	if (available_names.empty()) {
+		available_names = this->names;
+	}
+
+	if (available_names.empty()) {
 		return std::string();
 	}
 
