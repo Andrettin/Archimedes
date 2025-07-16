@@ -52,15 +52,8 @@ public:
 		return this->value;
 	}
 
-	constexpr int64_t get_fractional_value() const
-	{
-		return this->get_value() % fractional_int::divisor;
-	}
-
-	fractional_int abs() const
-	{
-		return fractional_int::from_value(std::abs(this->get_value()));
-	}
+	constexpr int64_t get_fractional_value() const;
+	fractional_int abs() const;
 
 	constexpr int to_int() const
 	{
@@ -69,119 +62,33 @@ public:
 	}
 
 	constexpr int to_rounded_int() const;
-
-	constexpr int64_t to_int64() const
-	{
-		const int64_t ret = this->value / fractional_int::divisor;
-		return ret;
-	}
-
-	constexpr uint64_t to_uint64() const
-	{
-		const int64_t ret = this->to_int64();
-		return static_cast<uint64_t>(ret);
-	}
-
-	constexpr double to_double() const
-	{
-		return static_cast<double>(this->value) / fractional_int::divisor;
-	}
-
+	constexpr int64_t to_int64() const;
+	constexpr uint64_t to_uint64() const;
+	constexpr double to_double() const;
 	constexpr QTime to_time() const;
 	std::string to_string(const bool show_as_fraction = false) const;
 	std::string to_percent_string() const;
 	std::string to_signed_string(const bool show_as_fraction = false) const;
 
-	constexpr fractional_int<N> operator -() const
-	{
-		return (*this) * -1;
-	}
+	constexpr fractional_int<N> operator -() const;
 
-	constexpr bool operator ==(const fractional_int<N> &other) const
-	{
-		return this->value == other.value;
-	}
+	constexpr bool operator ==(const fractional_int<N> &other) const;
+	constexpr bool operator ==(const int other) const;
+	constexpr bool operator !=(const fractional_int<N> &other) const;
+	constexpr bool operator !=(const int other) const;
+	constexpr bool operator <(const fractional_int<N> &other) const;
+	constexpr bool operator <(const int other) const;
+	constexpr bool operator <=(const fractional_int<N> &other) const;
+	constexpr bool operator <=(const int other) const;
+	constexpr bool operator >(const fractional_int<N> &other) const;
+	constexpr bool operator >(const int other) const;
+	constexpr bool operator >=(const fractional_int<N> &other) const;
+	constexpr bool operator >=(const int other) const;
 
-	constexpr bool operator ==(const int other) const
-	{
-		return (this->value / fractional_int::divisor) == other && this->get_fractional_value() == 0;
-	}
-
-	constexpr bool operator !=(const fractional_int<N> &other) const
-	{
-		return this->value != other.value;
-	}
-
-	constexpr bool operator !=(const int other) const
-	{
-		return !(*this == other);
-	}
-
-	constexpr bool operator <(const fractional_int<N> &other) const
-	{
-		return this->value < other.value;
-	}
-
-	constexpr bool operator <(const int other) const
-	{
-		const int int_value = this->to_int();
-		return int_value < other || (int_value == other && this->get_fractional_value() < 0);
-	}
-
-	constexpr bool operator <=(const fractional_int<N> &other) const
-	{
-		return this->value <= other.value;
-	}
-
-	constexpr bool operator <=(const int other) const
-	{
-		return *this < other || *this == other;
-	}
-
-	constexpr bool operator >(const fractional_int<N> &other) const
-	{
-		return this->value > other.value;
-	}
-
-	constexpr bool operator >(const int other) const
-	{
-		const int int_value = this->to_int();
-		return int_value > other || (int_value == other && this->get_fractional_value() > 0);
-	}
-
-	constexpr bool operator >=(const fractional_int<N> &other) const
-	{
-		return this->value >= other.value;
-	}
-
-	constexpr bool operator >=(const int other) const
-	{
-		return *this > other || *this == other;
-	}
-
-	constexpr const fractional_int<N> &operator +=(const fractional_int<N> &other)
-	{
-		this->value += other.value;
-		return *this;
-	}
-
-	constexpr const fractional_int<N> &operator +=(const int other)
-	{
-		this->value += other * fractional_int<N>::divisor;
-		return *this;
-	}
-
-	constexpr const fractional_int<N> &operator -=(const fractional_int<N> &other)
-	{
-		this->value -= other.value;
-		return *this;
-	}
-
-	constexpr const fractional_int<N> &operator -=(const int other)
-	{
-		this->value -= other * fractional_int<N>::divisor;
-		return *this;
-	}
+	constexpr const fractional_int<N> &operator +=(const fractional_int<N> &other);
+	constexpr const fractional_int<N> &operator +=(const int other);
+	constexpr const fractional_int<N> &operator -=(const fractional_int<N> &other);
+	constexpr const fractional_int<N> &operator -=(const int other);
 
 	template <int N2>
 	constexpr const fractional_int<N> &operator *=(const fractional_int<N2> &other)
@@ -191,23 +98,9 @@ public:
 		return *this;
 	}
 
-	constexpr const fractional_int<N> &operator *=(const int other)
-	{
-		this->value *= other;
-		return *this;
-	}
-
-	constexpr const fractional_int<N> &operator *=(const int64_t other)
-	{
-		this->value *= other;
-		return *this;
-	}
-
-	constexpr const fractional_int<N> &operator *=(const uint64_t other)
-	{
-		this->value *= static_cast<int64_t>(other);
-		return *this;
-	}
+	constexpr const fractional_int<N> &operator *=(const int other);
+	constexpr const fractional_int<N> &operator *=(const int64_t other);
+	constexpr const fractional_int<N> &operator *=(const uint64_t other);
 
 	template <int N2>
 	constexpr const fractional_int<N> &operator /=(const fractional_int<N2> &other)
@@ -217,51 +110,13 @@ public:
 		return *this;
 	}
 
-	constexpr const fractional_int<N> &operator /=(const int other)
-	{
-		this->value /= other;
-		return *this;
-	}
-
-	constexpr const fractional_int<N> &operator /=(const int64_t other)
-	{
-		this->value /= other;
-		return *this;
-	}
-
-	constexpr const fractional_int<N> &operator /=(const uint64_t other)
-	{
-		this->value /= static_cast<int64_t>(other);
-		return *this;
-	}
-
-	constexpr fractional_int<N> operator +(const fractional_int<N> &other) const
-	{
-		fractional_int res(*this);
-		res += other;
-		return res;
-	}
-
-	constexpr fractional_int<N> operator +(const int other) const
-	{
-		fractional_int res(*this);
-		res += other;
-		return res;
-	}
-
-	constexpr fractional_int<N> operator -(const fractional_int<N> &other) const
-	{
-		fractional_int res(*this);
-		res -= other;
-		return res;
-	}
-
-	constexpr fractional_int<N> operator -(const int other) const
-	{
-		fractional_int res(*this);
-		res -= other;
-		return res;
-	}
+	constexpr const fractional_int<N> &operator /=(const int other);
+	constexpr const fractional_int<N> &operator /=(const int64_t other);
+	constexpr const fractional_int<N> &operator /=(const uint64_t other);
+	constexpr fractional_int<N> operator +(const fractional_int<N> &other) const;
+	constexpr fractional_int<N> operator +(const int other) const;
+	constexpr fractional_int<N> operator -(const fractional_int<N> &other) const;
+	constexpr fractional_int<N> operator -(const int other) const;
 
 	template <int N2>
 	constexpr fractional_int<N> operator *(const fractional_int<N2> &other) const
@@ -271,36 +126,11 @@ public:
 		return res;
 	}
 
-	constexpr fractional_int<N> operator *(const int other) const
-	{
-		fractional_int res(*this);
-		res *= other;
-		return res;
-	}
-
-	constexpr fractional_int<N> operator *(const int64_t other) const
-	{
-		fractional_int res(*this);
-		res *= other;
-		return res;
-	}
-
-	constexpr fractional_int<N> operator *(const uint64_t other) const
-	{
-		fractional_int res(*this);
-		res *= other;
-		return res;
-	}
-
-	constexpr QPoint operator *(const QPoint &rhs) const
-	{
-		return rhs * this->get_value() / fractional_int::divisor;
-	}
-
-	constexpr QSize operator *(const QSize &rhs) const
-	{
-		return rhs * this->get_value() / fractional_int::divisor;
-	}
+	constexpr fractional_int<N> operator *(const int other) const;
+	constexpr fractional_int<N> operator *(const int64_t other) const;
+	constexpr fractional_int<N> operator *(const uint64_t other) const;
+	constexpr QPoint operator *(const QPoint &rhs) const;
+	constexpr QSize operator *(const QSize &rhs) const;
 
 	template <int N2>
 	constexpr fractional_int<N> operator /(const fractional_int<N2> &other) const
@@ -310,26 +140,9 @@ public:
 		return res;
 	}
 
-	constexpr fractional_int<N> operator /(const int other) const
-	{
-		fractional_int res(*this);
-		res /= other;
-		return res;
-	}
-
-	constexpr fractional_int<N> operator /(const int64_t other) const
-	{
-		fractional_int res(*this);
-		res /= other;
-		return res;
-	}
-
-	constexpr fractional_int<N> operator /(const uint64_t other) const
-	{
-		fractional_int res(*this);
-		res /= other;
-		return res;
-	}
+	constexpr fractional_int<N> operator /(const int other) const;
+	constexpr fractional_int<N> operator /(const int64_t other) const;
+	constexpr fractional_int<N> operator /(const uint64_t other) const;
 
 	friend constexpr const QSize &operator *=(QSize &lhs, const fractional_int<N> &rhs)
 	{

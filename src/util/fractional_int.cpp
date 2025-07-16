@@ -119,6 +119,18 @@ fractional_int<N>::fractional_int(const std::string &str)
 }
 
 template <int N>
+constexpr int64_t fractional_int<N>::get_fractional_value() const
+{
+	return this->get_value() % fractional_int::divisor;
+}
+
+template <int N>
+fractional_int<N> fractional_int<N>::abs() const
+{
+	return fractional_int::from_value(std::abs(this->get_value()));
+}
+
+template <int N>
 constexpr int fractional_int<N>::to_rounded_int() const
 {
 	int value = std::abs(this->value);
@@ -142,6 +154,26 @@ constexpr int fractional_int<N>::to_rounded_int() const
 	}
 
 	return value;
+}
+
+template <int N>
+constexpr int64_t fractional_int<N>::to_int64() const
+{
+	const int64_t ret = this->value / fractional_int::divisor;
+	return ret;
+}
+
+template <int N>
+constexpr uint64_t fractional_int<N>::to_uint64() const
+{
+	const int64_t ret = this->to_int64();
+	return static_cast<uint64_t>(ret);
+}
+
+template <int N>
+constexpr double fractional_int<N>::to_double() const
+{
+	return static_cast<double>(this->value) / fractional_int::divisor;
 }
 
 template <int N>
@@ -202,6 +234,248 @@ std::string fractional_int<N>::to_signed_string(const bool show_as_fraction) con
 	}
 	number_str += this->to_string(show_as_fraction);
 	return number_str;
+}
+
+template <int N>
+constexpr fractional_int<N> fractional_int<N>::operator -() const
+{
+	return (*this) * -1;
+}
+
+template <int N>
+constexpr bool fractional_int<N>::operator ==(const fractional_int<N> &other) const
+{
+	return this->value == other.value;
+}
+
+template <int N>
+constexpr bool fractional_int<N>::operator ==(const int other) const
+{
+	return (this->value / fractional_int::divisor) == other && this->get_fractional_value() == 0;
+}
+
+template <int N>
+constexpr bool fractional_int<N>::operator !=(const fractional_int<N> &other) const
+{
+	return this->value != other.value;
+}
+
+template <int N>
+constexpr bool fractional_int<N>::operator !=(const int other) const
+{
+	return !(*this == other);
+}
+
+template <int N>
+constexpr bool fractional_int<N>::operator <(const fractional_int<N> &other) const
+{
+	return this->value < other.value;
+}
+
+template <int N>
+constexpr bool fractional_int<N>::operator <(const int other) const
+{
+	const int int_value = this->to_int();
+	return int_value < other || (int_value == other && this->get_fractional_value() < 0);
+}
+
+template <int N>
+constexpr bool fractional_int<N>::operator <=(const fractional_int<N> &other) const
+{
+	return this->value <= other.value;
+}
+
+template <int N>
+constexpr bool fractional_int<N>::operator <=(const int other) const
+{
+	return *this < other || *this == other;
+}
+
+template <int N>
+constexpr bool fractional_int<N>::operator >(const fractional_int<N> &other) const
+{
+	return this->value > other.value;
+}
+
+template <int N>
+constexpr bool fractional_int<N>::operator >(const int other) const
+{
+	const int int_value = this->to_int();
+	return int_value > other || (int_value == other && this->get_fractional_value() > 0);
+}
+
+template <int N>
+constexpr bool fractional_int<N>::operator >=(const fractional_int<N> &other) const
+{
+	return this->value >= other.value;
+}
+
+template <int N>
+constexpr bool fractional_int<N>::operator >=(const int other) const
+{
+	return *this > other || *this == other;
+}
+
+template <int N>
+constexpr const fractional_int<N> &fractional_int<N>::operator +=(const fractional_int<N> &other)
+{
+	this->value += other.value;
+	return *this;
+}
+
+template <int N>
+constexpr const fractional_int<N> &fractional_int<N>::operator +=(const int other)
+{
+	this->value += other * fractional_int<N>::divisor;
+	return *this;
+}
+
+template <int N>
+constexpr const fractional_int<N> &fractional_int<N>::operator -=(const fractional_int<N> &other)
+{
+	this->value -= other.value;
+	return *this;
+}
+
+template <int N>
+constexpr const fractional_int<N> &fractional_int<N>::operator -=(const int other)
+{
+	this->value -= other * fractional_int<N>::divisor;
+	return *this;
+}
+
+template <int N>
+constexpr const fractional_int<N> &fractional_int<N>::operator *=(const int other)
+{
+	this->value *= other;
+	return *this;
+}
+
+template <int N>
+constexpr const fractional_int<N> &fractional_int<N>::operator *=(const int64_t other)
+{
+	this->value *= other;
+	return *this;
+}
+
+template <int N>
+constexpr const fractional_int<N> &fractional_int<N>::operator *=(const uint64_t other)
+{
+	this->value *= static_cast<int64_t>(other);
+	return *this;
+}
+
+template <int N>
+constexpr const fractional_int<N> &fractional_int<N>::operator /=(const int other)
+{
+	this->value /= other;
+	return *this;
+}
+
+template <int N>
+constexpr const fractional_int<N> &fractional_int<N>::operator /=(const int64_t other)
+{
+	this->value /= other;
+	return *this;
+}
+
+template <int N>
+constexpr const fractional_int<N> &fractional_int<N>::operator /=(const uint64_t other)
+{
+	this->value /= static_cast<int64_t>(other);
+	return *this;
+}
+
+template <int N>
+constexpr fractional_int<N> fractional_int<N>::operator +(const fractional_int<N> &other) const
+{
+	fractional_int res(*this);
+	res += other;
+	return res;
+}
+
+template <int N>
+constexpr fractional_int<N> fractional_int<N>::operator +(const int other) const
+{
+	fractional_int res(*this);
+	res += other;
+	return res;
+}
+
+template <int N>
+constexpr fractional_int<N> fractional_int<N>::operator -(const fractional_int<N> &other) const
+{
+	fractional_int res(*this);
+	res -= other;
+	return res;
+}
+
+template <int N>
+constexpr fractional_int<N> fractional_int<N>::operator -(const int other) const
+{
+	fractional_int res(*this);
+	res -= other;
+	return res;
+}
+
+template <int N>
+constexpr fractional_int<N> fractional_int<N>::operator *(const int other) const
+{
+	fractional_int res(*this);
+	res *= other;
+	return res;
+}
+
+template <int N>
+constexpr fractional_int<N> fractional_int<N>::operator *(const int64_t other) const
+{
+	fractional_int res(*this);
+	res *= other;
+	return res;
+}
+
+template <int N>
+constexpr fractional_int<N> fractional_int<N>::operator *(const uint64_t other) const
+{
+	fractional_int res(*this);
+	res *= other;
+	return res;
+}
+
+template <int N>
+constexpr QPoint fractional_int<N>::operator *(const QPoint &rhs) const
+{
+	return rhs * this->get_value() / fractional_int::divisor;
+}
+
+template <int N>
+constexpr QSize fractional_int<N>::operator *(const QSize &rhs) const
+{
+	return rhs * this->get_value() / fractional_int::divisor;
+}
+
+template <int N>
+constexpr fractional_int<N> fractional_int<N>::operator /(const int other) const
+{
+	fractional_int res(*this);
+	res /= other;
+	return res;
+}
+
+template <int N>
+constexpr fractional_int<N> fractional_int<N>::operator /(const int64_t other) const
+{
+	fractional_int res(*this);
+	res /= other;
+	return res;
+}
+
+template <int N>
+constexpr fractional_int<N> fractional_int<N>::operator /(const uint64_t other) const
+{
+	fractional_int res(*this);
+	res /= other;
+	return res;
 }
 
 template class fractional_int<1>;
