@@ -73,6 +73,11 @@ public:
 		throw std::runtime_error("Invalid \"" + this->get_class_identifier() + "\" condition scope: \"" + scope.get_tag() + "\".");
 	}
 
+	void process_gsml_data(const gsml_data &data)
+	{
+		data.process(this);
+	}
+
 	virtual void check_validity() const
 	{
 	}

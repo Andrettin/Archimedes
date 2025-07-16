@@ -14,6 +14,7 @@ class basic_data_entry : public QObject
 public:
 	virtual void process_gsml_property(const gsml_property &property);
 	virtual void process_gsml_scope(const gsml_data &scope);
+	void process_gsml_data(const gsml_data &data);
 
 	QString get_class_name() const
 	{

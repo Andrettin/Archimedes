@@ -96,4 +96,40 @@ void gsml_data::print(std::ostream &ostream, const size_t indentation, const boo
 	}
 }
 
+void gsml_data::print_components(std::ostream &ostream, const size_t indentation) const
+{
+	if (!this->get_values().empty()) {
+		if (this->is_minor()) {
+			ostream << " ";
+		} else {
+			ostream << std::string(indentation, '\t');
+		}
+	}
+	for (const std::string &value : this->get_values()) {
+		ostream << value << " ";
+	}
+	if (!this->get_values().empty()) {
+		if (!this->is_minor()) {
+			ostream << "\n";
+		}
+	}
+
+	this->for_each_property([&](const gsml_property &property) {
+		property.print(ostream, indentation);
+	});
+
+	bool new_line = true;
+	this->for_each_child([&](const gsml_data &child_data) {
+		child_data.print(ostream, indentation, new_line);
+		if (new_line && child_data.is_minor()) {
+			new_line = false;
+		}
+	});
+
+	//if the last child data was minor and did not print a new line, print one now
+	if (!new_line) {
+		ostream << "\n";
+	}
+}
+
 }

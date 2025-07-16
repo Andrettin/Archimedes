@@ -30,38 +30,6 @@ public:
 	static constexpr const char sounds_folder[] = "sounds";
 	static constexpr const char translations_folder[] = "translations";
 
-	template <typename T>
-	static void process_gsml_data(T *instance, const gsml_data &data)
-	{
-		data.for_each_element([&](const gsml_property &property) {
-			instance->process_gsml_property(property);
-		}, [&](const gsml_data &scope) {
-			instance->process_gsml_scope(scope);
-		});
-	}
-
-	template <typename T>
-	static void process_gsml_data(T &instance, const gsml_data &data)
-	{
-		if constexpr (is_specialization_of_v<T, std::unique_ptr>) {
-			database::process_gsml_data(instance.get(), data);
-		} else {
-			database::process_gsml_data(&instance, data);
-		}
-	}
-
-	template <typename T>
-	static void process_gsml_data(const std::unique_ptr<T> &instance, const gsml_data &data)
-	{
-		database::process_gsml_data(instance.get(), data);
-	}
-
-	template <typename T>
-	static void process_gsml_data(const qunique_ptr<T> &instance, const gsml_data &data)
-	{
-		database::process_gsml_data(instance.get(), data);
-	}
-
 	void process_gsml_property_for_object(QObject *object, const gsml_property &property);
 	QVariant process_gsml_property_value(const gsml_property &property, const QMetaProperty &meta_property, const QObject *object);
 	void process_gsml_scope_for_object(QObject *object, const gsml_data &scope);

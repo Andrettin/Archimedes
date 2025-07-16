@@ -18,7 +18,7 @@ void predefines::load(const std::filesystem::path &data_path)
 
 	gsml_parser parser;
 	const gsml_data data = parser.parse(predefines_path);
-	database::process_gsml_data(this, data);
+	data.process(this);
 }
 
 void predefines::process_gsml_property(const gsml_property &property)

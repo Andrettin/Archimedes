@@ -233,7 +233,7 @@ public:
 					} else {
 						try {
 							instance = T::get(identifier);
-							database_util::process_gsml_data<T>(instance, data_entry);
+							instance->process_gsml_data(data_entry);
 							instance->set_defined(true);
 						} catch (...) {
 							std::throw_with_nested(std::runtime_error("Error processing or loading data for " + std::string(T::class_identifier) + " instance \"" + identifier + "\"."));

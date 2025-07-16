@@ -3,6 +3,7 @@
 #include "database/basic_data_entry.h"
 
 #include "database/database.h"
+#include "database/gsml_data.h"
 
 namespace archimedes {
 
@@ -14,6 +15,11 @@ void basic_data_entry::process_gsml_property(const gsml_property &property)
 void basic_data_entry::process_gsml_scope(const gsml_data &scope)
 {
 	database::get()->process_gsml_scope_for_object(this, scope);
+}
+
+void basic_data_entry::process_gsml_data(const gsml_data &data)
+{
+	data.process(this);
 }
 
 }

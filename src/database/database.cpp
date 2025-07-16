@@ -662,7 +662,8 @@ void database::process_modules()
 
 		if (std::filesystem::exists(module_filepath)) {
 			gsml_parser parser;
-			database::process_gsml_data(data_module, parser.parse(module_filepath));
+			const gsml_data data = parser.parse(module_filepath);
+			data.process(data_module.get());
 		}
 	}
 

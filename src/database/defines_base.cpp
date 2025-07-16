@@ -18,7 +18,7 @@ void defines_base::load(const std::filesystem::path &data_path)
 
 	gsml_parser parser;
 	const gsml_data data = parser.parse(defines_path);
-	database::process_gsml_data(this, data);
+	data.process(this);
 }
 
 void defines_base::process_gsml_property(const gsml_property &property)

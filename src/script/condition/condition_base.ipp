@@ -1,6 +1,5 @@
 #pragma once
 
-#include "database/database.h"
 #include "script/condition/and_condition_base.h"
 #include "script/condition/birth_year_condition.h"
 #include "script/condition/gender_condition.h"
@@ -62,7 +61,7 @@ std::unique_ptr<const condition_base<scope_type, context_type>> condition_base<s
 		throw std::runtime_error(std::format("Invalid condition scope: \"{}\".", tag));
 	}
 
-	database::process_gsml_data(condition, scope);
+	condition->process_gsml_data(scope);
 
 	return condition;
 }

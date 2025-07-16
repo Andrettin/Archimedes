@@ -272,6 +272,16 @@ public:
 		}
 	}
 
+	template <typename T>
+	void process(T *instance) const
+	{
+		this->for_each_element([instance](const gsml_property &property) {
+			instance->process_gsml_property(property);
+		}, [instance](const gsml_data &scope) {
+			instance->process_gsml_scope(scope);
+		});
+	}
+
 	QColor to_color() const
 	{
 		if (this->get_values().size() != 3) {
@@ -349,42 +359,7 @@ public:
 	}
 
 	void print(std::ostream &ostream, const size_t indentation, const bool new_line) const;
-
-	void print_components(std::ostream &ostream, const size_t indentation = 0) const
-	{
-		if (!this->get_values().empty()) {
-			if (this->is_minor()) {
-				ostream << " ";
-			} else {
-				ostream << std::string(indentation, '\t');
-			}
-		}
-		for (const std::string &value : this->get_values()) {
-			ostream << value << " ";
-		}
-		if (!this->get_values().empty()) {
-			if (!this->is_minor()) {
-				ostream << "\n";
-			}
-		}
-
-		this->for_each_property([&](const gsml_property &property) {
-			property.print(ostream, indentation);
-		});
-
-		bool new_line = true;
-		this->for_each_child([&](const gsml_data &child_data) {
-			child_data.print(ostream, indentation, new_line);
-			if (new_line && child_data.is_minor()) {
-				new_line = false;
-			}
-		});
-
-		//if the last child data was minor and did not print a new line, print one now
-		if (!new_line) {
-			ostream << "\n";
-		}
-	}
+	void print_components(std::ostream &ostream, const size_t indentation = 0) const;
 
 private:
 	bool is_minor() const
