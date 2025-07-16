@@ -84,6 +84,7 @@ set(util_SRCS
 	src/util/date_util.cpp
 	src/util/enum_converter.cpp
 	src/util/exception_util.cpp
+	src/util/fractional_int.cpp
 	src/util/gender.cpp
 	src/util/geocircle_util.cpp
 	src/util/geocoordinate.cpp

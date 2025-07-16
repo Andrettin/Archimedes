@@ -2,13 +2,13 @@
 
 #include "database/data_type.h"
 #include "database/named_data_entry.h"
-#include "util/dice.h"
 
 Q_MOC_INCLUDE("time/calendar.h")
 
 namespace archimedes {
 
 class calendar;
+class dice;
 enum class gender;
 
 class character_base : public named_data_entry

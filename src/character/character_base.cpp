@@ -4,6 +4,7 @@
 
 #include "time/calendar.h"
 #include "util/assert_util.h"
+#include "util/dice.h"
 #include "util/gender.h"
 #include "util/random.h"
 

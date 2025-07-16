@@ -11,64 +11,13 @@ class fractional_int final
 public:
 	static constexpr int64_t divisor = number::pow(10, N);
 
-	static fractional_int from_value(const int64_t value)
-	{
-		fractional_int n;
-		n.value = value;
-		return n;
-	}
+	static fractional_int from_value(const int64_t value);
+	static std::string to_rest_string(int rest);
 
-	static std::string to_rest_string(int rest)
-	{
-		std::string rest_str;
-
-		rest = std::abs(rest);
-		if (rest > 0) {
-			rest_str.reserve(N + 1);
-			rest_str += ".";
-
-			int divisor = fractional_int::divisor / 10;
-			for (int i = 0; i < N; ++i) {
-				if (rest == 0) {
-					break;
-				}
-
-				rest_str += std::to_string(rest / divisor);
-				rest %= divisor;
-				divisor /= 10;
-			}
-		}
-
-		return rest_str;
-	}
-
-	static const fractional_int &min(const fractional_int &lhs, const fractional_int &rhs)
-	{
-		if (rhs < lhs) {
-			return rhs;
-		} else {
-			return lhs;
-		}
-	}
-
-	static const fractional_int &min(const fractional_int &lhs, const int rhs)
-	{
-		return fractional_int::min(lhs, fractional_int(rhs));
-	}
-
-	static const fractional_int &max(const fractional_int &lhs, const fractional_int &rhs)
-	{
-		if (rhs > lhs) {
-			return rhs;
-		} else {
-			return lhs;
-		}
-	}
-
-	static const fractional_int &max(const fractional_int &lhs, const int rhs)
-	{
-		return fractional_int::max(lhs, fractional_int(rhs));
-	}
+	static const fractional_int &min(const fractional_int &lhs, const fractional_int &rhs);
+	static const fractional_int &min(const fractional_int &lhs, const int rhs);
+	static const fractional_int &max(const fractional_int &lhs, const fractional_int &rhs);
+	static const fractional_int &max(const fractional_int &lhs, const int rhs);
 
 	constexpr fractional_int()
 	{
@@ -89,53 +38,14 @@ public:
 		this->value = n * fractional_int::divisor;
 	}
 
-	explicit constexpr fractional_int(const uint64_t n) : fractional_int(static_cast<int64_t>(n))
-	{
-	}
+	explicit constexpr fractional_int(const uint64_t n);
 
 	explicit constexpr fractional_int(const int n) : fractional_int(static_cast<int64_t>(n))
 	{
 	}
 
-	explicit constexpr fractional_int(const double n)
-	{
-		this->value = static_cast<int64_t>(std::round(n * fractional_int::divisor));
-	}
-
-	explicit fractional_int(const std::string &str)
-	{
-		try {
-			size_t decimal_point_pos = str.find('.');
-			int integer = 0;
-			int fraction = 0;
-			if (decimal_point_pos != std::string::npos) {
-				integer = std::stoi(str.substr(0, decimal_point_pos));
-				const size_t decimal_pos = decimal_point_pos + 1;
-				const size_t decimal_places = std::min(str.length() - decimal_pos, static_cast<size_t>(N));
-				fraction = std::stoi(str.substr(decimal_pos, decimal_places));
-				if (decimal_places < N) {
-					for (int i = static_cast<int>(decimal_places); i < N; ++i) {
-						fraction *= 10;
-					}
-				}
-				const bool negative = str.front() == '-';
-				if (negative) {
-					fraction *= -1;
-				}
-			} else {
-				integer = std::stoi(str);
-			}
-
-			for (int i = 0; i < N; ++i) {
-				integer *= 10;
-			}
-			integer += fraction;
-
-			this->value = integer;
-		} catch (...) {
-			std::throw_with_nested(std::runtime_error("Failed to convert the fractional number string \"" + str + "\" to an int."));
-		}
-	}
+	explicit constexpr fractional_int(const double n);
+	explicit fractional_int(const std::string &str);
 
 	constexpr int64_t get_value() const
 	{
@@ -158,30 +68,7 @@ public:
 		return static_cast<int>(ret);
 	}
 
-	constexpr int to_rounded_int() const
-	{
-		int value = std::abs(this->value);
-
-		int divisor = 10;
-		for (int i = 0; i < N; ++i) {
-			const int number = value % divisor;
-			if (number > 0) {
-				if (number >= (5 * number::pow(10, i))) {
-					value += divisor;
-				}
-				value -= number;
-			}
-			divisor *= 10;
-		}
-
-		value /= fractional_int::divisor;
-
-		if (this->value < 0) {
-			value *= -1;
-		}
-
-		return value;
-	}
+	constexpr int to_rounded_int() const;
 
 	constexpr int64_t to_int64() const
 	{
@@ -200,57 +87,10 @@ public:
 		return static_cast<double>(this->value) / fractional_int::divisor;
 	}
 
-	constexpr QTime to_time() const
-	{
-		const int hours = this->to_int();
-		int64_t rest = this->get_fractional_value();
-		const int minutes = rest * 60 / fractional_int::divisor;
-		rest -= minutes * fractional_int::divisor / 60;
-		const int seconds = rest * 60 * 60 / fractional_int::divisor;
-		rest -= seconds * fractional_int::divisor / 60 / 60;
-		const int milliseconds = rest * 60 * 60 / (fractional_int::divisor / 1000);
-
-		return QTime(hours, minutes, seconds, milliseconds);
-	}
-
-	std::string to_string(const bool show_as_fraction = false) const
-	{
-		const int64_t integer_value = this->to_int64();
-		std::string number_str;
-		if (integer_value == 0 && this->value < 0) {
-			number_str = "-";
-		}
-
-		if (show_as_fraction) {
-			if (integer_value == 0) {
-				return number_str + std::format("1/{}", (centesimal_int(1) / *this).abs().to_string());
-			}
-		}
-
-		number_str += std::to_string(integer_value);
-		number_str += fractional_int::to_rest_string(this->get_fractional_value());
-		return number_str;
-	}
-
-	std::string to_percent_string() const
-	{
-		static constexpr int N2 = (N > 2) ? (N - 2) : 0;
-
-		const int percent_value = this->value * 100;
-		std::string number_str = std::to_string(percent_value / fractional_int<N2>::divisor);
-		number_str += fractional_int<N2>::to_rest_string(percent_value % fractional_int<N2>::divisor);
-		return number_str;
-	}
-
-	std::string to_signed_string(const bool show_as_fraction = false) const
-	{
-		std::string number_str;
-		if (this->get_value() >= 0) {
-			number_str += "+";
-		}
-		number_str += this->to_string(show_as_fraction);
-		return number_str;
-	}
+	constexpr QTime to_time() const;
+	std::string to_string(const bool show_as_fraction = false) const;
+	std::string to_percent_string() const;
+	std::string to_signed_string(const bool show_as_fraction = false) const;
 
 	constexpr fractional_int<N> operator -() const
 	{
@@ -548,6 +388,11 @@ public:
 private:
 	int64_t value = 0;
 };
+
+extern template class fractional_int<1>;
+extern template class fractional_int<2>;
+extern template class fractional_int<3>;
+extern template class fractional_int<4>;
 
 using decimal_int = fractional_int<1>;
 using centesimal_int = fractional_int<2>;
