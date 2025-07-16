@@ -5,8 +5,6 @@
 #include "util/singleton.h"
 #include "util/type_traits.h"
 
-#include <magic_enum/magic_enum.hpp>
-
 namespace archimedes {
 
 class data_entry;
@@ -14,6 +12,8 @@ class data_module;
 class data_type_metadata;
 class defines_base;
 class game_rules_base;
+class gsml_data;
+class gsml_property;
 class timeline;
 
 class database final : public singleton<database>
@@ -374,14 +374,6 @@ public:
 
 	void register_string_to_qvariant_conversion(const std::string &class_name, std::function<QVariant(const std::string &)> &&function);
 	void register_list_property_function(const std::string &class_name, std::function<bool(QObject *object, const std::string &, const std::string &)> &&function);
-
-	template <typename enum_type>
-	void register_enum()
-	{
-		this->register_string_to_qvariant_conversion(QMetaType::fromType<enum_type>().name(), [](const std::string &value) {
-			return QVariant::fromValue(magic_enum::enum_cast<enum_type>(value).value());
-		});
-	}
 
 	void register_on_initialization_function(std::function<void()> &&function)
 	{

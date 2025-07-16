@@ -2,7 +2,7 @@
 
 #include "database/data_module_container.h"
 #include "database/data_type_metadata.h"
-#include "database/database.h"
+#include "database/database_util.h"
 #include "database/gsml_data.h"
 #include "database/gsml_operator.h"
 #include "util/aggregate_exception.h"
@@ -183,7 +183,7 @@ public:
 			co_return;
 		}
 
-		co_await database::parse_folder(database_path, data_type::gsml_data_to_process[data_module]);
+		co_await database_util::parse_folder(database_path, data_type::gsml_data_to_process[data_module]);
 	}
 
 	static void process_database(const bool definition)
@@ -195,7 +195,7 @@ public:
 		for (const auto &kv_pair : data_type::gsml_data_to_process) {
 			const data_module *data_module = kv_pair.first;
 
-			database::get()->set_current_module(data_module);
+			database_util::set_current_module(data_module);
 
 			const std::vector<gsml_data> &gsml_data_list = kv_pair.second;
 			for (const gsml_data &data : gsml_data_list) {
@@ -233,7 +233,7 @@ public:
 					} else {
 						try {
 							instance = T::get(identifier);
-							database::process_gsml_data<T>(instance, data_entry);
+							database_util::process_gsml_data<T>(instance, data_entry);
 							instance->set_defined(true);
 						} catch (...) {
 							std::throw_with_nested(std::runtime_error("Error processing or loading data for " + std::string(T::class_identifier) + " instance \"" + identifier + "\"."));
@@ -243,7 +243,7 @@ public:
 			}
 		}
 
-		database::get()->set_current_module(nullptr);
+		database_util::set_current_module(nullptr);
 
 		if (!definition) {
 			data_type::gsml_data_to_process.clear();
@@ -347,13 +347,13 @@ private:
 	{
 		//initialize the metadata (including database parsing/processing functions) for this data type
 		auto metadata = std::make_unique<data_type_metadata>(T::class_identifier, T::database_dependencies, T::history_database_dependencies, T::parse_database, T::process_database, T::initialize_all, T::process_all_text, T::check_all, T::clear, T::load_history_database);
-		database::get()->register_metadata(std::move(metadata));
+		database_util::register_metadata(std::move(metadata));
 
-		database::get()->register_string_to_qvariant_conversion(T::property_class_identifier, [](const std::string &value) {
+		database_util::register_string_to_qvariant_conversion(T::property_class_identifier, [](const std::string &value) {
 			return QVariant::fromValue(T::get(value));
 		});
 
-		database::get()->register_string_to_qvariant_conversion(std::format("const {}", T::property_class_identifier), [](const std::string &value) {
+		database_util::register_string_to_qvariant_conversion(std::format("const {}", T::property_class_identifier), [](const std::string &value) {
 			return QVariant::fromValue(T::get(value));
 		});
 
@@ -362,16 +362,16 @@ private:
 			return QMetaObject::invokeMethod(object, method_name.c_str(), Qt::ConnectionType::DirectConnection, QArgument<T *>((std::string(T::class_identifier) + " *").c_str(), value));
 		};
 
-		database::get()->register_list_property_function(std::format("std::vector<{}>", T::property_class_identifier), list_property_function);
-		database::get()->register_list_property_function(std::format("std::vector<{},std::allocator<{}>>", T::property_class_identifier, T::property_class_identifier), list_property_function);
+		database_util::register_list_property_function(std::format("std::vector<{}>", T::property_class_identifier), list_property_function);
+		database_util::register_list_property_function(std::format("std::vector<{},std::allocator<{}>>", T::property_class_identifier, T::property_class_identifier), list_property_function);
 
 		const auto const_list_property_function = [](QObject *object, const std::string &method_name, const std::string &value_str) {
 			const T *value = T::get(value_str);
 			return QMetaObject::invokeMethod(object, method_name.c_str(), Qt::ConnectionType::DirectConnection, QArgument<const T *>(("const " + std::string(T::class_identifier) + " *").c_str(), value));
 		};
 
-		database::get()->register_list_property_function(std::format("std::vector<const {}>", T::property_class_identifier), const_list_property_function);
-		database::get()->register_list_property_function(std::format("std::vector<const {},std::allocator<const {}>>", T::property_class_identifier, T::property_class_identifier), const_list_property_function);
+		database_util::register_list_property_function(std::format("std::vector<const {}>", T::property_class_identifier), const_list_property_function);
+		database_util::register_list_property_function(std::format("std::vector<const {},std::allocator<const {}>>", T::property_class_identifier, T::property_class_identifier), const_list_property_function);
 
 		return true;
 	}
