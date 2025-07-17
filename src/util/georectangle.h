@@ -9,7 +9,7 @@ class georectangle final
 public:
 	using number_type = geocoordinate::number_type;
 
-	static constexpr const georectangle get_global_georectangle()
+	static const georectangle get_global_georectangle()
 	{
 		return georectangle(geocoordinate(geocoordinate::min_longitude, geocoordinate::min_latitude), geocoordinate(geocoordinate::max_longitude, geocoordinate::max_latitude));
 	}

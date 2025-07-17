@@ -1,7 +1,5 @@
 #pragma once
 
-#include "util/number_util.h"
-
 namespace archimedes {
 
 //a fractional number with fixed decimal precision, implemented via an underlying integer
@@ -9,7 +7,7 @@ template <int N>
 class fractional_int final
 {
 public:
-	static constexpr int64_t divisor = number::pow(10, N);
+	static const int64_t divisor;
 
 	static fractional_int from_value(const int64_t value);
 	static std::string to_rest_string(int rest);

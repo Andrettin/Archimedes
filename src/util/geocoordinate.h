@@ -12,10 +12,10 @@ public:
 
 	static constexpr int longitude_size = 360;
 	static constexpr int latitude_size = 180;
-	static constexpr number_type min_longitude = number_type(geocoordinate::longitude_size / 2 * -1);
-	static constexpr number_type max_longitude = number_type(geocoordinate::longitude_size / 2);
-	static constexpr number_type min_latitude = number_type(geocoordinate::latitude_size / 2 * -1);
-	static constexpr number_type max_latitude = number_type(geocoordinate::latitude_size / 2);
+	static const number_type min_longitude;
+	static const number_type max_longitude;
+	static const number_type min_latitude;
+	static const number_type max_latitude;
 
 	static void for_each_random_until(const std::function<bool(const geocoordinate &)> &function);
 

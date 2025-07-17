@@ -7,13 +7,18 @@
 
 namespace archimedes {
 
+const geocoordinate::number_type geocoordinate::min_longitude = number_type(geocoordinate::longitude_size / 2 * -1);
+const geocoordinate::number_type geocoordinate::max_longitude = number_type(geocoordinate::longitude_size / 2);
+const geocoordinate::number_type geocoordinate::min_latitude = number_type(geocoordinate::latitude_size / 2 * -1);
+const geocoordinate::number_type geocoordinate::max_latitude = number_type(geocoordinate::latitude_size / 2);
+
 void geocoordinate::for_each_random_until(const std::function<bool(const geocoordinate &)> &function)
 {
 	//call a function for each possible geocoordinate until the function returns true, going through them in a random manner
 
-	static constexpr uint64_t max_potential_longitudes = static_cast<uint64_t>((geocoordinate::max_longitude - geocoordinate::min_longitude).get_value());
-	static constexpr uint64_t max_potential_latitudes = static_cast<uint64_t>((geocoordinate::max_latitude - geocoordinate::min_latitude).get_value());
-	static constexpr uint64_t max_potential_geocoordinates = max_potential_longitudes * max_potential_latitudes;
+	static const uint64_t max_potential_longitudes = static_cast<uint64_t>((geocoordinate::max_longitude - geocoordinate::min_longitude).get_value());
+	static const uint64_t max_potential_latitudes = static_cast<uint64_t>((geocoordinate::max_latitude - geocoordinate::min_latitude).get_value());
+	static const uint64_t max_potential_geocoordinates = max_potential_longitudes * max_potential_latitudes;
 
 	geocoordinate_set checked_geocoordinates;
 

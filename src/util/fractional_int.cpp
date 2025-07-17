@@ -7,6 +7,9 @@
 namespace archimedes {
 
 template <int N>
+const int64_t fractional_int<N>::divisor = number::pow(10, N);
+
+template <int N>
 fractional_int<N> fractional_int<N>::from_value(const int64_t value)
 {
 	fractional_int n;
