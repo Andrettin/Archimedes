@@ -80,6 +80,7 @@ set(util_SRCS
 	src/util/angle_util.cpp
 	src/util/assert_util.cpp
 	src/util/astronomy_util.cpp
+	src/util/color_container.cpp
 	src/util/colorization_type.cpp
 	src/util/date_util.cpp
 	src/util/enum_converter.cpp
