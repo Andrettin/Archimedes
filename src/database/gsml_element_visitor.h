@@ -9,12 +9,12 @@ template <typename property_function_type, typename data_function_type>
 class gsml_element_visitor final
 {
 public:
-	gsml_element_visitor(const property_function_type &property_function, const data_function_type &data_function)
+	explicit gsml_element_visitor(const property_function_type &property_function, const data_function_type &data_function)
 		: property_function(property_function), data_function(data_function)
 	{
 	}
 
-	gsml_element_visitor(property_function_type &&property_function, data_function_type &&data_function) = delete;
+	explicit gsml_element_visitor(property_function_type &&property_function, data_function_type &&data_function) = delete;
 
 	void operator()(const gsml_property &property) const
 	{

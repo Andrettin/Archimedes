@@ -10,11 +10,11 @@ template <typename function_type>
 class gsml_property_visitor
 {
 public:
-	gsml_property_visitor(const function_type &function) : function(function)
+	explicit gsml_property_visitor(const function_type &function) : function(function)
 	{
 	}
 
-	gsml_property_visitor(function_type &&function) = delete;
+	explicit gsml_property_visitor(function_type &&function) = delete;
 
 	void operator()(const gsml_property &property) const
 	{
