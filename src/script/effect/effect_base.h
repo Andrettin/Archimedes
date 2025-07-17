@@ -1,5 +1,6 @@
 #pragma once
 
+#include "script/context.h"
 #include "script/target_variant.h"
 
 namespace archimedes {

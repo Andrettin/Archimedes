@@ -42,8 +42,8 @@ int random::roll_dice(const dice &dice)
 
 geocoordinate random::generate_geocoordinate()
 {
-	static constexpr int64_t longitude_size_value = geocoordinate::longitude_size * longitude::divisor;
-	static constexpr int64_t latitude_size_value = geocoordinate::latitude_size * latitude::divisor;
+	static const int64_t longitude_size_value = geocoordinate::longitude_size * longitude::divisor;
+	static const int64_t latitude_size_value = geocoordinate::latitude_size * latitude::divisor;
 
 	longitude lon = longitude::from_value(this->generate<int64_t>(longitude_size_value) - (longitude_size_value / 2));
 	latitude lat = latitude::from_value(this->generate<int64_t>(latitude_size_value) - (latitude_size_value / 2));
