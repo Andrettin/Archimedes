@@ -464,17 +464,18 @@ QCoro::Task<void> database::parse()
 		const std::filesystem::path &path = kv_pair.first;
 		const data_module *data_module = kv_pair.second;
 
-		std::vector<QCoro::Task<void>> tasks;
+		std::vector<QCoro::Task<std::vector<gsml_data>>> tasks;
 
 		//parse the files in each data type's folder
 		for (const std::unique_ptr<data_type_metadata> &metadata : this->metadata) {
-			QCoro::Task<void> task = metadata->get_parsing_function()(path, data_module);
+			QCoro::Task<std::vector<gsml_data>> task = metadata->get_parsing_function()(path);
 			tasks.push_back(std::move(task));
 		}
 
 		//we need to wait for the tasks per module, so that this remains lock-free, as each data type has its own parsed GSML data list
-		for (QCoro::Task<void> &task : tasks) {
-			co_await std::move(task);
+		for (size_t i = 0; i < tasks.size(); ++i) {
+			QCoro::Task<std::vector<gsml_data>> &task = tasks.at(i);
+			this->gsml_data_to_process_by_data_type[this->metadata.at(i).get()][data_module] = co_await std::move(task);
 		}
 	}
 }
@@ -505,7 +506,11 @@ QCoro::Task<void> database::load(const bool initial_definition)
 	try {
 		//create or process data entries for each data type
 		for (const std::unique_ptr<data_type_metadata> &metadata : this->metadata) {
-			metadata->get_processing_function()(initial_definition);
+			metadata->get_processing_function()(initial_definition, this->gsml_data_to_process_by_data_type[metadata.get()]);
+		}
+
+		if (!initial_definition) {
+			this->gsml_data_to_process_by_data_type.clear();
 		}
 	} catch (...) {
 		std::throw_with_nested(std::runtime_error("Failed to process database."));

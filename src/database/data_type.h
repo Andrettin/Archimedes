@@ -171,28 +171,31 @@ public:
 	}
 
 	[[nodiscard]]
-	static QCoro::Task<void> parse_database(const std::filesystem::path &data_path, const data_module *data_module)
+	static QCoro::Task<std::vector<gsml_data>> parse_database(const std::filesystem::path &data_path)
 	{
+		std::vector<gsml_data> gsml_data_to_process;
+
 		if (std::string(T::database_folder).empty()) {
-			co_return;
+			co_return gsml_data_to_process;
 		}
 
 		const std::filesystem::path database_path(data_path / T::database_folder);
 
 		if (!std::filesystem::exists(database_path)) {
-			co_return;
+			co_return gsml_data_to_process;
 		}
 
-		co_await database_util::parse_folder(database_path, data_type::gsml_data_to_process[data_module]);
+		co_await database_util::parse_folder(database_path, gsml_data_to_process);
+		co_return gsml_data_to_process;
 	}
 
-	static void process_database(const bool definition)
+	static void process_database(const bool definition, const data_module_map<std::vector<gsml_data>> &gsml_data_to_process)
 	{
 		if (std::string(T::database_folder).empty()) {
 			return;
 		}
 
-		for (const auto &kv_pair : data_type::gsml_data_to_process) {
+		for (const auto &kv_pair : gsml_data_to_process) {
 			const data_module *data_module = kv_pair.first;
 
 			database_util::set_current_module(data_module);
@@ -244,10 +247,6 @@ public:
 		}
 
 		database_util::set_current_module(nullptr);
-
-		if (!definition) {
-			data_type::gsml_data_to_process.clear();
-		}
 	}
 
 	static void load_history_database(const QDate &start_date, const timeline *timeline, const game_rules_base *game_rules)
@@ -379,7 +378,6 @@ private:
 	static inline std::vector<T *> instances;
 	static inline std::map<std::string, qunique_ptr<T>> instances_by_identifier;
 	static inline std::map<std::string, T *> instances_by_alias;
-	static inline data_module_map<std::vector<gsml_data>> gsml_data_to_process;
 	static inline bool class_initialized = data_type::initialize_class();
 
 public:

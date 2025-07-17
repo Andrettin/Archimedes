@@ -1,5 +1,6 @@
 #pragma once
 
+#include "database/data_module_container.h"
 #include "database/gsml_data.h"
 #include "util/qunique_ptr.h"
 #include "util/singleton.h"
@@ -361,6 +362,7 @@ private:
 	std::map<std::string, std::function<QVariant(const std::string &)>> string_to_qvariant_conversion_map; //conversions functions from string to QVariant, mapped to the respective class names
 	std::map<std::string, std::function<bool(QObject *object, const std::string &, const std::string &)>> list_property_function_map;
 	std::vector<std::function<void()>> on_initialization_functions;
+	std::map<const data_type_metadata *, data_module_map<std::vector<gsml_data>>> gsml_data_to_process_by_data_type;
 };
 
 }
