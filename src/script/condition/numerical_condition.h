@@ -37,7 +37,7 @@ public:
 		return this->base_value;
 	}
 
-	std::string get_base_value_string() const
+	virtual std::string get_base_value_string() const
 	{
 		if constexpr (std::is_same_v<base_value_type, centesimal_int>) {
 			return this->base_value.to_string();
