@@ -142,6 +142,11 @@ public:
 	constexpr fractional_int<N> operator /(const int64_t other) const;
 	constexpr fractional_int<N> operator /(const uint64_t other) const;
 
+	friend constexpr bool operator <(const int lhs, const fractional_int<N> &rhs)
+	{
+		return rhs > lhs;
+	}
+
 	friend constexpr const QSize &operator *=(QSize &lhs, const fractional_int<N> &rhs)
 	{
 		lhs = rhs * lhs;
