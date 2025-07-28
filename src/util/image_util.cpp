@@ -5,7 +5,6 @@
 #include "util/assert_util.h"
 #include "util/colorization_type.h"
 #include "util/container_util.h"
-#include "util/fractional_int.h"
 #include "util/path_util.h"
 #include "util/point_util.h"
 #include "util/size_util.h"

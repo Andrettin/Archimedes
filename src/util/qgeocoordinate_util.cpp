@@ -2,7 +2,7 @@
 
 #include "util/qgeocoordinate_util.h"
 
-#include "util/fractional_int.h"
+#include "util/centesimal_int.h"
 
 namespace archimedes::qgeocoordinate {
 

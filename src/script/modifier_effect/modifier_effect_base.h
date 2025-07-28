@@ -3,7 +3,7 @@
 #include "database/defines_base.h"
 #include "database/gsml_data.h"
 #include "database/gsml_property.h"
-#include "util/fractional_int.h"
+#include "util/centesimal_int.h"
 #include "util/number_util.h"
 #include "util/string_util.h"
 

@@ -205,19 +205,4 @@ private:
 	int64_t value = 0;
 };
 
-extern template class fractional_int<1>;
-extern template class fractional_int<2>;
-extern template class fractional_int<3>;
-extern template class fractional_int<4>;
-
-using decimal_int = fractional_int<1>;
-using centesimal_int = fractional_int<2>;
-using millesimal_int = fractional_int<3>;
-using decimillesimal_int = fractional_int<4>;
-
 }
-
-Q_DECLARE_METATYPE(archimedes::decimal_int)
-Q_DECLARE_METATYPE(archimedes::centesimal_int)
-Q_DECLARE_METATYPE(archimedes::decimillesimal_int)
-Q_DECLARE_METATYPE(std::optional<archimedes::centesimal_int>)

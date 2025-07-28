@@ -2,6 +2,10 @@
 
 #include "util/fractional_int.h"
 
+#include "util/centesimal_int.h"
+#include "util/decimal_int.h"
+#include "util/decimillesimal_int.h"
+#include "util/millesimal_int.h"
 #include "util/number_util.h"
 
 namespace archimedes {

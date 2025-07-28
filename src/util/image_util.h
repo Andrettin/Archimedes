@@ -1,7 +1,7 @@
 #pragma once
 
+#include "util/centesimal_int.h"
 #include "util/color_container.h"
-#include "util/fractional_int.h"
 
 namespace archimedes {
 	enum class colorization_type;

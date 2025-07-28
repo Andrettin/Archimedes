@@ -1,7 +1,7 @@
 #pragma once
 
 #include "script/condition/condition_base.h"
-#include "util/fractional_int.h"
+#include "util/centesimal_int.h"
 
 namespace archimedes {
 

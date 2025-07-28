@@ -2,7 +2,7 @@
 
 #include "util/time_util.h"
 
-#include "util/fractional_int.h"
+#include "util/decimillesimal_int.h"
 
 #include <boost/test/unit_test.hpp>
 

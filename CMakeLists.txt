@@ -234,12 +234,15 @@ set(util_HDRS
 	src/util/angle_util.h
 	src/util/assert_util.h
 	src/util/astronomy_util.h
+	src/util/centesimal_int.h
 	src/util/char_util.h
 	src/util/color_container.h
 	src/util/colorization_type.h
 	src/util/container_random_util.h
 	src/util/container_util.h
 	src/util/date_util.h
+	src/util/decimal_int.h
+	src/util/decimillesimal_int.h
 	src/util/dice.h
 	src/util/empty_image_provider.h
 	src/util/enum_converter.h
@@ -262,6 +265,7 @@ set(util_HDRS
 	src/util/log_output_handler.h
 	src/util/log_util.h
 	src/util/map_util.h
+	src/util/millesimal_int.h
 	src/util/number_util.h
 	src/util/path_util.h
 	src/util/point_container.h

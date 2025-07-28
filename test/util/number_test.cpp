@@ -2,7 +2,11 @@
 
 #include "util/number_util.h"
 
+#include "util/centesimal_int.h"
+#include "util/decimal_int.h"
+#include "util/decimillesimal_int.h"
 #include "util/fractional_int.h"
+#include "util/millesimal_int.h"
 
 #include <boost/test/unit_test.hpp>
 

@@ -1,7 +1,7 @@
 #pragma once
 
+#include "util/centesimal_int.h"
 #include "util/container_util.h"
-#include "util/fractional_int.h"
 #include "util/path_util.h"
 #include "util/type_traits.h"
 
