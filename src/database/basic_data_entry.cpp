@@ -22,4 +22,9 @@ void basic_data_entry::process_gsml_data(const gsml_data &data)
 	data.process(this);
 }
 
+QString basic_data_entry::get_class_name() const
+{
+	return this->metaObject()->className();
+}
+
 }

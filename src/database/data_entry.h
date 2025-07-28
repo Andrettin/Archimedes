@@ -22,92 +22,35 @@ public:
 	explicit data_entry(const std::string &identifier);
 	virtual ~data_entry();
 
-	const std::string &get_identifier() const
-	{
-		return this->identifier;
-	}
-
-	QString get_identifier_qstring() const
-	{
-		return QString::fromStdString(this->get_identifier());
-	}
-
-	const std::set<std::string> &get_aliases() const
-	{
-		return this->aliases;
-	}
-
-	void add_alias(const std::string &alias)
-	{
-		this->aliases.insert(alias);
-	}
+	const std::string &get_identifier() const;
+	QString get_identifier_qstring() const;
+	const std::set<std::string> &get_aliases() const;
+	void add_alias(const std::string &alias);
 
 	virtual void process_gsml_property(const gsml_property &property) override;
 	virtual void process_gsml_scope(const gsml_data &scope) override;
 	virtual void process_gsml_dated_property(const gsml_property &property, const QDate &date);
 	virtual void process_gsml_dated_scope(const gsml_data &scope, const QDate &date);
 
-	bool is_defined() const
-	{
-		return this->defined;
-	}
+	bool is_defined() const;
+	void set_defined(const bool defined);
 
-	void set_defined(const bool defined)
-	{
-		this->defined = defined;
-	}
-
-	bool is_initialized() const
-	{
-		return this->initialized;
-	}
-
+	bool is_initialized() const;
 	virtual void initialize();
+	virtual void process_text();
+	virtual void check() const;
 
-	virtual void process_text()
-	{
-	}
+	const archimedes::data_module *get_module() const;
+	void set_module(const archimedes::data_module *data_module);
 
-	virtual void check() const
-	{
-	}
-
-	const archimedes::data_module *get_module() const
-	{
-		return this->data_module;
-	}
-
-	void set_module(const archimedes::data_module *data_module)
-	{
-		if (data_module == this->get_module()) {
-			return;
-		}
-
-		this->data_module = data_module;
-	}
-
-	virtual data_entry_history *get_history_base()
-	{
-		return nullptr;
-	}
-
+	virtual data_entry_history *get_history_base();
 	void load_history(const QDate &start_date, const timeline *current_timeline, const game_rules_base *game_rules);
 	void load_history_scope(const gsml_data &history_scope, const QDate &start_date, const timeline *current_timeline, const game_rules_base *game_rules, std::map<QDate, std::vector<const gsml_data *>> &history_entries);
 	void load_date_scope(const gsml_data &date_scope, const QDate &date);
+	virtual void reset_history();
 
-	virtual void reset_history()
-	{
-	}
-
-	virtual bool has_encyclopedia_entry() const
-	{
-		return false;
-	}
-
-	virtual std::string get_link_name() const
-	{
-		return this->get_identifier();
-	}
+	virtual bool has_encyclopedia_entry() const;
+	virtual std::string get_link_name() const;
 
 signals:
 	void changed();

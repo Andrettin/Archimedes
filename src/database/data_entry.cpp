@@ -23,6 +23,26 @@ data_entry::~data_entry()
 {
 }
 
+const std::string &data_entry::get_identifier() const
+{
+	return this->identifier;
+}
+
+QString data_entry::get_identifier_qstring() const
+{
+	return QString::fromStdString(this->get_identifier());
+}
+
+const std::set<std::string> &data_entry::get_aliases() const
+{
+	return this->aliases;
+}
+
+void data_entry::add_alias(const std::string &alias)
+{
+	this->aliases.insert(alias);
+}
+
 void data_entry::process_gsml_property(const gsml_property &property)
 {
 	if (property.get_key() == "aliases") {
@@ -63,6 +83,21 @@ void data_entry::process_gsml_dated_scope(const gsml_data &scope, const QDate &d
 	}
 }
 
+bool data_entry::is_defined() const
+{
+	return this->defined;
+}
+
+void data_entry::set_defined(const bool defined)
+{
+	this->defined = defined;
+}
+
+bool data_entry::is_initialized() const
+{
+	return this->initialized;
+}
+
 void data_entry::initialize()
 {
 	if (this->is_initialized()) {
@@ -76,6 +111,33 @@ void data_entry::initialize()
 	}
 
 	this->initialized = true;
+}
+
+void data_entry::process_text()
+{
+}
+
+void data_entry::check() const
+{
+}
+
+const archimedes::data_module *data_entry::get_module() const
+{
+	return this->data_module;
+}
+
+void data_entry::set_module(const archimedes::data_module *data_module)
+{
+	if (data_module == this->get_module()) {
+		return;
+	}
+
+	this->data_module = data_module;
+}
+
+data_entry_history *data_entry::get_history_base()
+{
+	return nullptr;
 }
 
 void data_entry::load_history(const QDate &start_date, const timeline *current_timeline, const game_rules_base *game_rules)
@@ -199,6 +261,20 @@ void data_entry::load_date_scope(const gsml_data &date_scope, const QDate &date)
 	} catch (...) {
 		std::throw_with_nested(std::runtime_error("Error loading history for data entry instance \"" + this->get_identifier() + "\", for the " + date::to_string(date) + " date."));
 	}
+}
+
+void data_entry::reset_history()
+{
+}
+
+bool data_entry::has_encyclopedia_entry() const
+{
+	return false;
+}
+
+std::string data_entry::get_link_name() const
+{
+	return this->get_identifier();
 }
 
 }

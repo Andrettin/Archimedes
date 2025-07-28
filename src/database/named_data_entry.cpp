@@ -7,6 +7,32 @@
 
 namespace archimedes {
 
+bool named_data_entry::compare_encyclopedia_entries(const named_data_entry *lhs, const named_data_entry *rhs)
+{
+	return lhs->get_name() < rhs->get_name();
+}
+
+void named_data_entry::concatenate_encyclopedia_text(std::string &text, const std::string &additional_text)
+{
+	if (additional_text.empty()) {
+		return;
+	}
+
+	if (!text.empty()) {
+		text += "\n\n";
+	}
+
+	text += additional_text;
+}
+
+named_data_entry::named_data_entry(const std::string &identifier) : data_entry(identifier)
+{
+}
+
+named_data_entry::~named_data_entry()
+{
+}
+
 void named_data_entry::initialize()
 {
 	if (this->get_name_word() != nullptr && this->name.empty()) {
@@ -33,9 +59,82 @@ void named_data_entry::process_text()
 	data_entry::process_text();
 }
 
+std::string named_data_entry::get_encyclopedia_text() const
+{
+	return std::string();
+}
+
+QString named_data_entry::get_encyclopedia_text_qstring() const
+{
+	return QString::fromStdString(this->get_encyclopedia_text());
+}
+
+const std::string &named_data_entry::get_name() const
+{
+	return this->name;
+}
+
+void named_data_entry::set_name(const std::string &name)
+{
+	this->name = name;
+}
+
+QString named_data_entry::get_name_qstring() const
+{
+	return QString::fromStdString(this->get_name());
+}
+
+word *named_data_entry::get_name_word() const
+{
+	return this->name_word;
+}
+
+void named_data_entry::set_name_word(word *word)
+{
+	if (word == this->name_word) {
+		return;
+	}
+
+	this->name_word = word;
+}
+
+bool named_data_entry::has_name_variant() const
+{
+	return this->get_name_word() != nullptr || !this->get_name().empty();
+}
+
+name_variant named_data_entry::get_name_variant() const
+{
+	if (this->get_name_word() != nullptr) {
+		return this->get_name_word();
+	}
+
+	return this->get_name();
+}
+
 std::unique_ptr<text_processor_base> named_data_entry::create_text_processor() const
 {
 	return nullptr;
+}
+
+std::string named_data_entry::get_scope_name() const
+{
+	return this->get_name();
+}
+
+std::string named_data_entry::get_link_name() const
+{
+	return this->get_name();
+}
+
+named_data_entry *named_data_entry::get_tree_parent() const
+{
+	return nullptr;
+}
+
+void named_data_entry::add_tree_child(const named_data_entry *data_entry)
+{
+	this->tree_children.push_back(data_entry);
 }
 
 int named_data_entry::get_tree_x() const
@@ -98,6 +197,16 @@ int named_data_entry::get_tree_width() const
 	}
 
 	return std::max(children_width, 1);
+}
+
+std::vector<const named_data_entry *> named_data_entry::get_top_tree_elements() const
+{
+	return {};
+}
+
+bool named_data_entry::is_hidden_in_tree() const
+{
+	return false;
 }
 
 }

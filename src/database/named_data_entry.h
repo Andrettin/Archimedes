@@ -23,122 +23,39 @@ class named_data_entry : public data_entry
 	Q_PROPERTY(bool tree_line_visible MEMBER tree_line_visible NOTIFY changed)
 
 public:
-	static bool compare_encyclopedia_entries(const named_data_entry *lhs, const named_data_entry *rhs)
-	{
-		return lhs->get_name() < rhs->get_name();
-	}
+	static bool compare_encyclopedia_entries(const named_data_entry *lhs, const named_data_entry *rhs);
+	static void concatenate_encyclopedia_text(std::string &text, const std::string &additional_text);
 
-	static void concatenate_encyclopedia_text(std::string &text, const std::string &additional_text)
-	{
-		if (additional_text.empty()) {
-			return;
-		}
-
-		if (!text.empty()) {
-			text += "\n\n";
-		}
-
-		text += additional_text;
-	}
-
-	explicit named_data_entry(const std::string &identifier) : data_entry(identifier)
-	{
-	}
-
-	virtual ~named_data_entry() {}
+	explicit named_data_entry(const std::string &identifier);
+	virtual ~named_data_entry();
 
 	virtual void initialize() override;
 	virtual void process_text() override;
 
-	virtual std::string get_encyclopedia_text() const
-	{
-		return std::string();
-	}
+	virtual std::string get_encyclopedia_text() const;
+	QString get_encyclopedia_text_qstring() const;
 
-	QString get_encyclopedia_text_qstring() const
-	{
-		return QString::fromStdString(this->get_encyclopedia_text());
-	}
-
-	const std::string &get_name() const
-	{
-		return this->name;
-	}
-
-	Q_INVOKABLE void set_name(const std::string &name)
-	{
-		this->name = name;
-	}
-
-	QString get_name_qstring() const
-	{
-		return QString::fromStdString(this->get_name());
-	}
-
-	word *get_name_word() const
-	{
-		return this->name_word;
-	}
-
-	void set_name_word(word *word)
-	{
-		if (word == this->name_word) {
-			return;
-		}
-
-		this->name_word = word;
-	}
-
-	bool has_name_variant() const
-	{
-		return this->get_name_word() != nullptr || !this->get_name().empty();
-	}
-
-	name_variant get_name_variant() const
-	{
-		if (this->get_name_word() != nullptr) {
-			return this->get_name_word();
-		}
-
-		return this->get_name();
-	}
+	const std::string &get_name() const;
+	Q_INVOKABLE void set_name(const std::string &name);
+	QString get_name_qstring() const;
+	word *get_name_word() const;
+	void set_name_word(word *word);
+	bool has_name_variant() const;
+	name_variant get_name_variant() const;
 
 	virtual std::unique_ptr<text_processor_base> create_text_processor() const;
 
-	virtual std::string get_scope_name() const
-	{
-		return this->get_name();
-	}
+	virtual std::string get_scope_name() const;
+	virtual std::string get_link_name() const override;
 
-	virtual std::string get_link_name() const override
-	{
-		return this->get_name();
-	}
-
-	virtual named_data_entry *get_tree_parent() const
-	{
-		return nullptr;
-	}
-
-	void add_tree_child(const named_data_entry *data_entry)
-	{
-		this->tree_children.push_back(data_entry);
-	}
-
+	virtual named_data_entry *get_tree_parent() const;
+	void add_tree_child(const named_data_entry *data_entry);
 	int get_tree_x() const;
 	int get_tree_relative_x(const std::vector<const named_data_entry *> &siblings) const;
 	virtual int get_tree_y() const;
 	int get_tree_width() const;
-
-	virtual std::vector<const named_data_entry *> get_top_tree_elements() const
-	{
-		return {};
-	}
-
-	virtual bool is_hidden_in_tree() const
-	{
-		return false;
-	}
+	virtual std::vector<const named_data_entry *> get_top_tree_elements() const;
+	virtual bool is_hidden_in_tree() const;
 
 signals:
 	void encyclopedia_text_changed();

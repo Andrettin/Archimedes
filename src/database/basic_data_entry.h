@@ -16,10 +16,7 @@ public:
 	virtual void process_gsml_scope(const gsml_data &scope);
 	void process_gsml_data(const gsml_data &data);
 
-	QString get_class_name() const
-	{
-		return this->metaObject()->className();
-	}
+	QString get_class_name() const;
 };
 
 }
