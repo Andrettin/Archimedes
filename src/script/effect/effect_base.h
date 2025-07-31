@@ -1,5 +1,7 @@
 #pragma once
 
+#include "database/gsml_data.h"
+#include "database/gsml_property.h"
 #include "script/context.h"
 #include "script/target_variant.h"
 
