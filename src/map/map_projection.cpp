@@ -2,6 +2,7 @@
 
 #include "map/map_projection.h"
 
+#include "map/central_cylindrical_map_projection.h"
 #include "map/equirectangular_map_projection.h"
 #include "map/mercator_map_projection.h"
 #include "map/miller_map_projection.h"
@@ -13,7 +14,9 @@ namespace archimedes {
 
 map_projection *map_projection::from_string(const std::string &str)
 {
-	if (str == "equirectangular") {
+	if (str == "central_cylindrical") {
+		return central_cylindrical_map_projection::get();
+	} else if (str == "equirectangular") {
 		return equirectangular_map_projection::get();
 	} else if (str == "mercator") {
 		return mercator_map_projection::get();
