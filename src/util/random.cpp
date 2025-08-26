@@ -37,7 +37,7 @@ template uint64_t random::generate_in_range<uint64_t>(std::mt19937 &, const uint
 
 int random::roll_dice(const dice &dice)
 {
-	return this->roll_dice(dice.get_count(), dice.get_sides());
+	return this->roll_dice(dice.get_count(), dice.get_sides()) + dice.get_modifier();
 }
 
 geocoordinate random::generate_geocoordinate()

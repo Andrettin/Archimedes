@@ -84,6 +84,7 @@ set(util_SRCS
 	src/util/color_container.cpp
 	src/util/colorization_type.cpp
 	src/util/date_util.cpp
+	src/util/dice.cpp
 	src/util/enum_converter.cpp
 	src/util/exception_util.cpp
 	src/util/fractional_int.cpp
