@@ -43,7 +43,7 @@ inline std::filesystem::path from_qstring(const QString &path_str)
 #ifdef USE_WIN32
 	return std::filesystem::path(path_str.toStdU16String());
 #else
-	return std::filesystem::path(path_str.toStdString());
+	return path::from_string(path_str.toStdString());
 #endif
 }
 
