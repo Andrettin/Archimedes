@@ -29,7 +29,7 @@ inline std::string to_string(const QDate &date)
 		throw std::runtime_error("Date is not valid, and cannot be converted to a string.");
 	}
 
-	return std::format("{}{}.{}.{}", date.year() < 0 ? "-" : "", date::year_to_string(date.year()), date.month(), date.day());
+	return std::format("{}.{}.{}", date.year(), date.month(), date.day());
 }
 
 inline std::string to_string(const QDateTime &date_time)
