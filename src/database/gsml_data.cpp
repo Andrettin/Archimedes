@@ -83,7 +83,23 @@ const gsml_data &gsml_data::get_child(const std::string &tag) const
 		}
 	}
 
-	throw std::runtime_error("No child with tag \"" + tag + "\" found for GSML data.");
+	throw std::runtime_error(std::format("No child with tag \"{}\" found for GSML data.", tag));
+}
+
+gsml_data &gsml_data::get_child(const std::string &tag)
+{
+	for (auto &element : this->elements) {
+		if (!std::holds_alternative<gsml_data>(element)) {
+			continue;
+		}
+
+		gsml_data &child = std::get<gsml_data>(element);
+		if (child.get_tag() == tag) {
+			return child;
+		}
+	}
+
+	throw std::runtime_error(std::format("No child with tag \"{}\" found for GSML data.", tag));
 }
 
 bool gsml_data::has_child(const std::string &tag) const

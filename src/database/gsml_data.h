@@ -52,6 +52,7 @@ public:
 	bool has_children() const;
 	int get_children_count() const;
 	const gsml_data &get_child(const std::string &tag) const;
+	gsml_data &get_child(const std::string &tag);
 	bool has_child(const std::string &tag) const;
 	gsml_data &add_child(gsml_data &&child);
 	gsml_data &add_child(std::string &&tag, gsml_data &&child);
