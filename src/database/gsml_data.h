@@ -39,6 +39,11 @@ public:
 		return this->tag;
 	}
 
+	void set_tag(const std::string &tag)
+	{
+		this->tag = tag;
+	}
+
 	gsml_operator get_operator() const
 	{
 		return this->scope_operator;
