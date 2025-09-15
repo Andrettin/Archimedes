@@ -85,6 +85,7 @@ public:
 	}
 
 	std::string to_string() const;
+	std::string to_display_string() const;
 
 	constexpr bool operator ==(const dice &rhs) const
 	{

@@ -15,4 +15,12 @@ std::string dice::to_string() const
 	}
 }
 
+std::string dice::to_display_string() const
+{
+	const int min_result = this->get_minimum_result();
+	const int max_result = this->get_maximum_result();
+
+	return std::format("{}-{}", min_result, max_result);
+}
+
 }
