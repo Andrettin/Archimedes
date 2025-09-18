@@ -88,6 +88,16 @@ QVariant database::process_gsml_property_value(const gsml_property &property, co
 		}
 
 		new_property_value = string::to_bool(property.get_value());
+	} else if (property_type == QMetaType::Type::Char) {
+		if (property.get_operator() != gsml_operator::assignment) {
+			throw std::runtime_error("Only the assignment operator is available for char properties.");
+		}
+
+		if (property.get_value().size() != 1) {
+			throw std::runtime_error("Char properties need to have exactly one char.");
+		}
+
+		new_property_value = property.get_value().at(0);
 	} else if (static_cast<QMetaType::Type>(property_type) == QMetaType::UChar) {
 		unsigned value = std::stoul(property.get_value());
 
