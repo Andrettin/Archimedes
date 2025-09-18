@@ -374,12 +374,11 @@ void gsml_data::print_components(std::ostream &ostream, const size_t indentation
 		}
 	}
 
-	this->for_each_property([&](const gsml_property &property) {
-		property.print(ostream, indentation);
-	});
-
 	bool new_line = true;
-	this->for_each_child([&](const gsml_data &child_data) {
+	this->for_each_element([&](const gsml_property &property) {
+		property.print(ostream, indentation);
+		new_line = true;
+	}, [&](const gsml_data &child_data) {
 		child_data.print(ostream, indentation, new_line);
 		if (new_line && child_data.is_minor()) {
 			new_line = false;
