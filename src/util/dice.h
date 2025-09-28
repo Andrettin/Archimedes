@@ -94,6 +94,19 @@ public:
 
 	constexpr bool operator !=(const dice &rhs) const = default;
 
+	constexpr bool operator <(const dice &other) const
+	{
+		if (this->get_sides() != other.get_sides()) {
+			return this->get_sides() < other.get_sides();
+		}
+
+		if (this->get_count() != other.get_count()) {
+			return this->get_count() < other.get_count();
+		}
+
+		return this->get_modifier() < other.get_modifier();
+	}
+
 private:
 	int count = 0;
 	int sides = 0;
