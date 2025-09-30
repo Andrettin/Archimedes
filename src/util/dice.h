@@ -61,6 +61,16 @@ public:
 		return this->modifier;
 	}
 
+	void set_modifier(const int modifier)
+	{
+		this->modifier = modifier;
+	}
+
+	void change_modifier(const int change)
+	{
+		this->set_modifier(this->get_modifier() + change);
+	}
+
 	constexpr int get_minimum_result() const
 	{
 		int min_result = 0;
