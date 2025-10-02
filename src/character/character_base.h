@@ -180,6 +180,8 @@ public:
 	}
 
 	void initialize_dates();
+	QDate generate_birth_date_from_start_date(const QDate &start_date) const;
+	QDate generate_death_date_from_birth_date(const QDate &birth_date) const;
 
 	virtual int get_adulthood_age() const = 0;
 	virtual int get_venerable_age() const = 0;

@@ -150,9 +150,7 @@ void character_base::initialize_dates()
 
 		if (!this->get_birth_date().isValid()) {
 			if (this->get_start_date().isValid()) {
-				QDate birth_date = this->get_start_date();
-				birth_date = birth_date.addYears(-adulthood_age);
-				birth_date = birth_date.addYears(-random::get()->roll_dice(starting_age_modifier));
+				const QDate birth_date = this->generate_birth_date_from_start_date(this->get_start_date());
 				this->set_birth_date(birth_date);
 				date_changed = true;
 			} else if (this->get_death_date().isValid()) {
@@ -166,14 +164,42 @@ void character_base::initialize_dates()
 
 		if (!this->get_death_date().isValid() && !this->is_immortal()) {
 			if (this->get_birth_date().isValid()) {
-				QDate death_date = this->get_birth_date();
-				death_date = death_date.addYears(venerable_age);
-				death_date = death_date.addYears(random::get()->roll_dice(maximum_age_modifier));
+				const QDate death_date = this->generate_death_date_from_birth_date(this->get_birth_date());
 				this->set_death_date(death_date);
 				date_changed = true;
 			}
 		}
 	}
+}
+
+QDate character_base::generate_birth_date_from_start_date(const QDate &start_date) const
+{
+	assert_throw(start_date.isValid());
+
+	const int adulthood_age = this->get_adulthood_age();
+	assert_throw(adulthood_age != 0);
+
+	const dice &starting_age_modifier = this->get_starting_age_modifier();
+
+	QDate birth_date = start_date;
+	birth_date = birth_date.addYears(-adulthood_age);
+	birth_date = birth_date.addYears(-random::get()->roll_dice(starting_age_modifier));
+	return birth_date;
+}
+
+QDate character_base::generate_death_date_from_birth_date(const QDate &birth_date) const
+{
+	assert_throw(birth_date.isValid());
+
+	const int venerable_age = this->get_venerable_age();
+	assert_throw(venerable_age != 0);
+	const dice &maximum_age_modifier = this->get_maximum_age_modifier();
+	assert_throw(!maximum_age_modifier.is_null());
+
+	QDate death_date = birth_date;
+	death_date = death_date.addYears(venerable_age);
+	death_date = death_date.addYears(random::get()->roll_dice(maximum_age_modifier));
+	return death_date;
 }
 
 }
