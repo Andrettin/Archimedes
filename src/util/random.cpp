@@ -37,7 +37,13 @@ template uint64_t random::generate_in_range<uint64_t>(std::mt19937 &, const uint
 
 int random::roll_dice(const dice &dice)
 {
-	return this->roll_dice(dice.get_count(), dice.get_sides()) + dice.get_modifier();
+	int roll_result = this->roll_dice(dice.get_count(), dice.get_sides()) + dice.get_modifier();
+
+	if (dice.get_min_value().has_value()) {
+		roll_result = std::max(roll_result, dice.get_min_value().value());
+	}
+
+	return roll_result;
 }
 
 geocoordinate random::generate_geocoordinate()

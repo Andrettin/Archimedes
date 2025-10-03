@@ -9,8 +9,8 @@ public:
 	{
 	}
 
-	explicit constexpr dice(const int count, const int sides, const int modifier = 0)
-		: count(count), sides(sides), modifier(modifier)
+	explicit constexpr dice(const int count, const int sides, const int modifier = 0, const std::optional<int> &min_value = std::nullopt)
+		: count(count), sides(sides), modifier(modifier), min_value(min_value)
 	{
 	}
 
@@ -71,6 +71,16 @@ public:
 		this->set_modifier(this->get_modifier() + change);
 	}
 
+	constexpr const std::optional<int> &get_min_value() const
+	{
+		return this->min_value;
+	}
+
+	void set_min_value(const std::optional<int> &min_value)
+	{
+		this->min_value = min_value;
+	}
+
 	constexpr int get_minimum_result() const
 	{
 		int min_result = 0;
@@ -81,12 +91,22 @@ public:
 
 		min_result += this->get_modifier();
 
+		if (this->get_min_value().has_value()) {
+			min_result = std::max(min_result, this->get_min_value().value());
+		}
+
 		return min_result;
 	}
 
 	constexpr int get_maximum_result() const
 	{
-		return (this->get_count() * this->get_sides()) + this->get_modifier();
+		int max_result = (this->get_count() * this->get_sides()) + this->get_modifier();
+
+		if (this->get_min_value().has_value()) {
+			max_result = std::max(max_result, this->get_min_value().value());
+		}
+
+		return max_result;
 	}
 
 	constexpr bool is_null() const
@@ -114,13 +134,24 @@ public:
 			return this->get_count() < other.get_count();
 		}
 
-		return this->get_modifier() < other.get_modifier();
+		if (this->get_modifier() != other.get_modifier()) {
+			return this->get_modifier() < other.get_modifier();
+		}
+
+		if (this->get_min_value().has_value() != other.get_min_value().has_value()) {
+			return !this->get_min_value().has_value();
+		} else if (this->get_min_value().has_value() && other.get_min_value().has_value()) {
+			return this->get_min_value().value() < other.get_min_value().value();
+		}
+
+		return false;
 	}
 
 private:
 	int count = 0;
 	int sides = 0;
 	int modifier = 0;
+	std::optional<int> min_value;
 };
 
 }
