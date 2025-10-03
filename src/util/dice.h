@@ -14,7 +14,7 @@ public:
 	{
 	}
 
-	constexpr dice(const dice &rhs) : dice(rhs.count, rhs.sides, rhs.modifier)
+	constexpr dice(const dice &rhs) : dice(rhs.count, rhs.sides, rhs.modifier, rhs.min_value)
 	{
 	}
 
@@ -119,7 +119,7 @@ public:
 
 	constexpr bool operator ==(const dice &rhs) const
 	{
-		return this->get_count() == rhs.get_count() && this->get_sides() == rhs.get_sides() && this->get_modifier() == rhs.get_modifier();
+		return this->get_count() == rhs.get_count() && this->get_sides() == rhs.get_sides() && this->get_modifier() == rhs.get_modifier() && this->get_min_value() == rhs.get_min_value();
 	}
 
 	constexpr bool operator !=(const dice &rhs) const = default;
