@@ -18,7 +18,9 @@
 #include "util/decimal_int.h"
 #include "util/decimillesimal_int.h"
 #include "util/dice.h"
+#include "util/exception_util.h"
 #include "util/geocoordinate.h"
+#include "util/log_util.h"
 #include "util/path_util.h"
 #include "util/qunique_ptr.h"
 #include "util/string_util.h"
@@ -431,34 +433,40 @@ const std::filesystem::path &database::get_base_path(const data_module *data_mod
 
 QCoro::Task<void> database::parse_folder(const std::filesystem::path &path, std::vector<gsml_data> &gsml_data_list)
 {
-	std::filesystem::recursive_directory_iterator dir_iterator(path);
+	try {
+		std::filesystem::recursive_directory_iterator dir_iterator(path);
 
-	std::map<int, std::set<std::filesystem::path>> filepaths_by_depth;
+		std::map<int, std::set<std::filesystem::path>> filepaths_by_depth;
 
-	for (const std::filesystem::directory_entry &dir_entry : dir_iterator) {
-		if (!dir_entry.is_regular_file() || dir_entry.path().extension() != ".txt") {
-			continue;
+		for (const std::filesystem::directory_entry &dir_entry : dir_iterator) {
+			if (!dir_entry.is_regular_file() || dir_entry.path().extension() != ".txt") {
+				continue;
+			}
+
+			//ensure that files with a lower depth will be processed earlier than those with a higher one, and that files will be processed in alphabetical order
+			filepaths_by_depth[dir_iterator.depth()].insert(dir_entry.path());
 		}
 
-		//ensure that files with a lower depth will be processed earlier than those with a higher one, and that files will be processed in alphabetical order
-		filepaths_by_depth[dir_iterator.depth()].insert(dir_entry.path());
-	}
+		std::vector<QFuture<gsml_data>> futures;
 
-	std::vector<QFuture<gsml_data>> futures;
+		for (const auto &kv_pair : filepaths_by_depth) {
+			for (const std::filesystem::path &filepath : kv_pair.second) {
+				QFuture<gsml_data> future = QtConcurrent::run([&filepath]() {
+					gsml_parser parser;
+					return parser.parse(filepath);
+				});
 
-	for (const auto &kv_pair : filepaths_by_depth) {
-		for (const std::filesystem::path &filepath : kv_pair.second) {
-			QFuture<gsml_data> future = QtConcurrent::run([&filepath]() {
-				gsml_parser parser;
-				return parser.parse(filepath);
-			});
-
-			futures.push_back(std::move(future));
+				futures.push_back(std::move(future));
+			}
 		}
-	}
 
-	for (QFuture<gsml_data> &future : futures) {
-		gsml_data_list.push_back(co_await std::move(future));
+		for (QFuture<gsml_data> &future : futures) {
+			gsml_data_list.push_back(co_await std::move(future));
+		}
+	} catch (...) {
+		exception::report(std::current_exception());
+		log::log_error(std::format("Failed to parse folder: {}", path::to_string(path)));
+		QApplication::exit(EXIT_FAILURE);
 	}
 }
 
