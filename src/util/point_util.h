@@ -134,12 +134,25 @@ inline void for_each_adjacent_until(const QPoint &point, const function_type &fu
 }
 
 template <typename function_type>
-inline void for_each_cardinally_adjacent(const QPoint &point, const function_type &function)
+inline void for_each_cardinally_adjacent(const QPoint &point, const function_type &function, const bool x_first = true, const bool left_first = true)
 {
-	function(QPoint(point.x() - 1, point.y()));
-	function(QPoint(point.x() + 1, point.y()));
-	function(QPoint(point.x(), point.y() - 1));
-	function(QPoint(point.x(), point.y() + 1));
+	if (!x_first) {
+		function(QPoint(point.x(), point.y() - 1));
+		function(QPoint(point.x(), point.y() + 1));
+	}
+
+	if (left_first) {
+		function(QPoint(point.x() - 1, point.y()));
+		function(QPoint(point.x() + 1, point.y()));
+	} else {
+		function(QPoint(point.x() + 1, point.y()));
+		function(QPoint(point.x() - 1, point.y()));
+	}
+
+	if (x_first) {
+		function(QPoint(point.x(), point.y() - 1));
+		function(QPoint(point.x(), point.y() + 1));
+	}
 }
 
 template <typename function_type>
