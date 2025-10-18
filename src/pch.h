@@ -77,6 +77,7 @@
 #include <QVariantList>
 
 #include <qcoro/core/qcorofuture.h>
+#include <qcoro/core/qcorotimer.h>
 #include <qcoro/qcorotask.h>
 #include <qcoro/qml/qcoroqmltask.h>
 #pragma warning(pop)
