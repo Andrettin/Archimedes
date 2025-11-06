@@ -2,6 +2,7 @@
 
 #include "language/name_generator.h"
 
+#include "util/assert_util.h"
 #include "util/gender.h"
 #include "util/vector_random_util.h"
 #include "util/vector_util.h"
@@ -31,6 +32,7 @@ void name_generator::add_names(const std::vector<std::string> &names)
 
 std::string name_generator::generate_name() const
 {
+	assert_throw(!this->names.empty());
 	const name_variant &name_variant = vector::get_random(this->names);
 	return get_name_variant_string(name_variant);
 }
