@@ -30,6 +30,21 @@ inline void for_each_point(const QRect &rect, const function_type &function)
 }
 
 template <typename function_type>
+inline void for_each_point_until(const QRect &rect, const function_type &function)
+{
+	const QPoint min_pos = rect.topLeft();
+	const QPoint max_pos = rect.bottomRight();
+
+	for (int x = min_pos.x(); x <= max_pos.x(); ++x) {
+		for (int y = min_pos.y(); y <= max_pos.y(); ++y) {
+			if (function(QPoint(x, y)) == true) {
+				return;
+			}
+		}
+	}
+}
+
+template <typename function_type>
 inline void for_each_edge_point(const QRect &rect, const function_type &function)
 {
 	const QPoint min_pos = rect.topLeft();
