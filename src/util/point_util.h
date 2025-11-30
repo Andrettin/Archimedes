@@ -2,6 +2,8 @@
 
 namespace archimedes::point {
 
+static constexpr QPoint invalid_point = QPoint(-1, -1);
+
 inline constexpr int to_index(const int x, const int y, const int width)
 {
 	return x + y * width;
