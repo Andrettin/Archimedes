@@ -22,4 +22,7 @@ extern bool operator<(const color_set &lhs, const color_set &rhs);
 template <typename T>
 using color_map = std::map<QColor, T, color_compare>;
 
+template <typename T>
+using color_unordered_map = std::unordered_map<QColor, T>;
+
 }
