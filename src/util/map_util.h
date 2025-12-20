@@ -124,4 +124,18 @@ inline std::vector<typename T::key_type> to_weighted_vector(const T &map)
 	return weighted_vector;
 }
 
+template <typename T>
+inline typename T::mapped_type get_total_value(const T &map)
+{
+	static_assert(std::is_integral_v<typename T::mapped_type>);
+
+	typename T::mapped_type total_value = 0;
+
+	for (const auto &[key, value] : map) {
+		total_value += value;
+	}
+
+	return total_value;
+}
+
 }
