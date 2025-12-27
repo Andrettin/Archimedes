@@ -195,6 +195,8 @@ public:
 			return;
 		}
 
+		std::vector<std::exception_ptr> exceptions;
+
 		for (const auto &kv_pair : gsml_data_to_process) {
 			const data_module *data_module = kv_pair.first;
 
@@ -203,47 +205,55 @@ public:
 			const std::vector<gsml_data> &gsml_data_list = kv_pair.second;
 			for (const gsml_data &data : gsml_data_list) {
 				data.for_each_child([&](const gsml_data &data_entry) {
-					const std::string &identifier = data_entry.get_tag();
+					try {
+						const std::string &identifier = data_entry.get_tag();
 
-					T *instance = nullptr;
-					if (definition) {
-						if (data_entry.get_operator() != gsml_operator::addition) {
-							//addition operators for data entry scopes mean modifying already-defined entries
-							instance = T::add(identifier, data_module);
+						T *instance = nullptr;
+						if (definition) {
+							if (data_entry.get_operator() != gsml_operator::addition) {
+								//addition operators for data entry scopes mean modifying already-defined entries
+								instance = T::add(identifier, data_module);
+							} else {
+								instance = T::get(identifier);
+							}
+
+							for (const gsml_property *alias_property : data_entry.try_get_properties("aliases")) {
+								if (alias_property->get_operator() != gsml_operator::addition) {
+									throw std::runtime_error("Only the addition operator is supported for data entry aliases.");
+								}
+
+								const std::string &alias = alias_property->get_value();
+								T::add_instance_alias(instance, alias);
+
+								//for backwards compatibility, change instances of "_" in the identifier with "-" and add that as a further alias, and do the opposite as well
+								if (alias.find("_") != std::string::npos) {
+									std::string other_alias = alias;
+									std::replace(other_alias.begin(), other_alias.end(), '_', '-');
+									T::add_instance_alias(instance, other_alias);
+								} else if (alias.find("-") != std::string::npos) {
+									std::string other_alias = alias;
+									std::replace(other_alias.begin(), other_alias.end(), '-', '_');
+									T::add_instance_alias(instance, other_alias);
+								}
+							}
 						} else {
-							instance = T::get(identifier);
-						}
-
-						for (const gsml_property *alias_property : data_entry.try_get_properties("aliases")) {
-							if (alias_property->get_operator() != gsml_operator::addition) {
-								throw std::runtime_error("Only the addition operator is supported for data entry aliases.");
-							}
-
-							const std::string &alias = alias_property->get_value();
-							T::add_instance_alias(instance, alias);
-
-							//for backwards compatibility, change instances of "_" in the identifier with "-" and add that as a further alias, and do the opposite as well
-							if (alias.find("_") != std::string::npos) {
-								std::string other_alias = alias;
-								std::replace(other_alias.begin(), other_alias.end(), '_', '-');
-								T::add_instance_alias(instance, other_alias);
-							} else if (alias.find("-") != std::string::npos) {
-								std::string other_alias = alias;
-								std::replace(other_alias.begin(), other_alias.end(), '-', '_');
-								T::add_instance_alias(instance, other_alias);
+							try {
+								instance = T::get(identifier);
+								instance->process_gsml_data(data_entry);
+								instance->set_defined(true);
+							} catch (...) {
+								std::throw_with_nested(std::runtime_error("Error processing or loading data for " + std::string(T::class_identifier) + " instance \"" + identifier + "\"."));
 							}
 						}
-					} else {
-						try {
-							instance = T::get(identifier);
-							instance->process_gsml_data(data_entry);
-							instance->set_defined(true);
-						} catch (...) {
-							std::throw_with_nested(std::runtime_error("Error processing or loading data for " + std::string(T::class_identifier) + " instance \"" + identifier + "\"."));
-						}
+					} catch (...) {
+						exceptions.push_back(std::current_exception());
 					}
 				});
 			}
+		}
+
+		if (!exceptions.empty()) {
+			throw aggregate_exception(std::format("The database processing for {} instances failed.", T::class_identifier), std::move(exceptions));
 		}
 
 		database_util::set_current_module(nullptr);
