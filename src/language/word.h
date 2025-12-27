@@ -18,12 +18,12 @@ class word final : public named_data_entry, public data_type<word>
 {
 	Q_OBJECT
 
-	Q_PROPERTY(std::string anglicized_name MEMBER anglicized_name)
-	Q_PROPERTY(archimedes::language* language MEMBER language WRITE set_language)
-	Q_PROPERTY(archimedes::word_type type MEMBER type READ get_type)
-	Q_PROPERTY(archimedes::grammatical_gender gender MEMBER gender READ get_gender)
-	Q_PROPERTY(archimedes::word* etymon READ get_etymon WRITE set_etymon)
-	Q_PROPERTY(QStringList meanings READ get_meanings_qstring_list)
+	Q_PROPERTY(std::string anglicized_name MEMBER anglicized_name NOTIFY changed)
+	Q_PROPERTY(archimedes::language* language MEMBER language WRITE set_language NOTIFY changed)
+	Q_PROPERTY(archimedes::word_type type MEMBER type READ get_type NOTIFY changed)
+	Q_PROPERTY(archimedes::grammatical_gender gender MEMBER gender READ get_gender NOTIFY changed)
+	Q_PROPERTY(archimedes::word* etymon READ get_etymon WRITE set_etymon NOTIFY changed)
+	Q_PROPERTY(QStringList meanings READ get_meanings_qstring_list NOTIFY changed)
 
 public:
 	static constexpr const char class_identifier[] = "word";
@@ -135,6 +135,11 @@ public:
 
 	Q_INVOKABLE void remove_meaning(const std::string &meaning);
 
+	const std::vector<const word *> &get_meaning_words() const
+	{
+		return this->meaning_words;
+	}
+
 	void add_compound_element(word *word)
 	{
 		this->compound_elements.push_back(word);
@@ -145,6 +150,9 @@ public:
 	const std::string &GetVerbInflection(int grammatical_number, int grammatical_person, int grammatical_tense, int grammatical_mood);
 	std::string GetAdjectiveInflection(int comparison_degree, int article_type, int grammatical_case, int grammatical_number, const grammatical_gender grammatical_gender);
 	const std::string &GetParticiple(int grammatical_tense);
+
+signals:
+	void changed();
 
 private:
 	std::string anglicized_name;
@@ -164,6 +172,7 @@ public:
 	std::string Participles[MaxGrammaticalTenses];		/// For verbs
 private:
 	std::vector<std::string> meanings; //meanings of the word in English
+	std::vector<const word *> meaning_words; //words which can be used to describe the meaning of this one
 	std::vector<const word *> compound_elements; //from which compound elements is this word formed
 	std::vector<const word *> compound_element_of; //which words are formed from this word as a compound element
 

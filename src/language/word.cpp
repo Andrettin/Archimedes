@@ -33,7 +33,11 @@ void word::process_gsml_scope(const gsml_data &scope)
 	const std::string &tag = scope.get_tag();
 	const std::vector<std::string> &values = scope.get_values();
 
-	if (tag == "compound_elements") {
+	if (tag == "meaning_words") {
+		for (const std::string &value : values) {
+			this->meaning_words.push_back(word::get(value));
+		}
+	} else if (tag == "compound_elements") {
 		for (const std::string &value : values) {
 			word *other_word = word::get(value);
 			this->add_compound_element(other_word);
