@@ -19,4 +19,12 @@ std::string get_indefinite_article(const std::string &str)
 	return "a";
 }
 
+std::string to_code_page_437(const std::string &str)
+{
+	std::string result = str;
+	string::replace(result, "\u00E1", "\xA0");
+	string::replace(result, "\u00F1", "\xA4");
+	return result;
+}
+
 }

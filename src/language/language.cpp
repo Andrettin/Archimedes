@@ -5,6 +5,8 @@
 #include "language/grammatical_gender.h"
 #include "language/word.h"
 #include "language/word_type.h"
+#include "util/assert_util.h"
+#include "util/path_util.h"
 #include "util/string_util.h"
 
 namespace archimedes {
@@ -87,6 +89,47 @@ std::string language::GetAdjectiveEnding(int article_type, int grammatical_case,
 	}
 
 	return std::string();
+}
+
+void language::print_df_words() const
+{
+	const std::string filename = std::format("language_{}.txt", this->get_identifier());
+	std::ofstream ofstream(path::from_string(filename));
+
+	if (!ofstream) {
+		throw std::runtime_error(std::format("Failed to open file \"{}\" for printing DF words to.", filename));
+	}
+
+	ofstream << std::format("language_{}", this->get_identifier());
+	ofstream << "\n\n" << "[OBJECT:LANGUAGE]";
+	ofstream << "\n\n" << std::format("[TRANSLATION:{}]", string::uppered(this->get_identifier()));
+
+	std::map<std::string, std::vector<const word *>> df_words_to_words;
+
+	for (const word *word : this->words) {
+		const std::vector<std::string> df_words = word->get_df_words();
+		for (const std::string &df_word : df_words) {
+			df_words_to_words[df_word].push_back(word);
+		}
+	}
+
+	for (auto &[df_word, potential_words] : df_words_to_words) {
+		const word *chosen_word = nullptr;
+		for (const word *word : potential_words) {
+			if (chosen_word == nullptr || word->get_name().length() < chosen_word->get_name().length()) {
+				chosen_word = word;
+			}
+		}
+		assert_throw(chosen_word != nullptr);
+
+		std::string word_str = chosen_word->get_name();
+		string::to_lower(word_str);
+		word_str = string::to_code_page_437(word_str);
+
+		ofstream << "\n\t" << std::format("[T_WORD:{}:{}]", df_word, word_str);
+	}
+
+	ofstream << "\n";
 }
 
 }

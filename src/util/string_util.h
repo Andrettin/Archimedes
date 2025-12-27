@@ -330,6 +330,9 @@ inline std::string colored(const std::string &str, const QColor &color)
 	return std::format("<font color=\"{}\">{}</font>", color.name().toStdString(), str);
 }
 
+[[nodiscard]]
+extern std::string to_code_page_437(const std::string &str);
+
 }
 
 Q_DECLARE_METATYPE(std::string)

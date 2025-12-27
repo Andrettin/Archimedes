@@ -23,6 +23,7 @@ class word final : public named_data_entry, public data_type<word>
 	Q_PROPERTY(archimedes::word_type type MEMBER type READ get_type NOTIFY changed)
 	Q_PROPERTY(archimedes::grammatical_gender gender MEMBER gender READ get_gender NOTIFY changed)
 	Q_PROPERTY(archimedes::word* etymon READ get_etymon WRITE set_etymon NOTIFY changed)
+	Q_PROPERTY(std::string df_word MEMBER df_word NOTIFY changed)
 	Q_PROPERTY(QStringList meanings READ get_meanings_qstring_list NOTIFY changed)
 
 public:
@@ -116,6 +117,13 @@ public:
 		etymon->reflexes.push_back(this);
 	}
 
+	const std::string &get_df_word() const
+	{
+		return this->df_word;
+	}
+
+	std::vector<std::string> get_df_words() const;
+
 	const std::vector<const word *> &get_reflexes() const
 	{
 		return this->reflexes;
@@ -164,6 +172,7 @@ public:
 	bool Archaic = false;				/// Whether the word is archaic (whether it is used in current speech)
 private:
 	word *etymon = nullptr; //the word from which this one derives
+	std::string df_word;
 	std::vector<const word *> reflexes; //words derived from this one
 public:
 	std::map<std::tuple<int, int>, std::string> NumberCaseInflections;	/// For nouns, mapped to grammatical number and grammatical case

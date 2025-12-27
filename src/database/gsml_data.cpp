@@ -292,7 +292,7 @@ void gsml_data::print_to_file(const std::filesystem::path &filepath) const
 	std::ofstream ofstream(filepath);
 
 	if (!ofstream) {
-		throw std::runtime_error("Failed to open file \"" + filepath.string() + "\" for printing GSML data to.");
+		throw std::runtime_error(std::format("Failed to open file \"{}\" for printing GSML data to.", path::to_string(filepath)));
 	}
 
 	this->print_components(ofstream);

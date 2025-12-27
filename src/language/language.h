@@ -120,6 +120,8 @@ public:
 	std::string GetNounEnding(int grammatical_number, int grammatical_case, int word_junction_type = -1);
 	std::string GetAdjectiveEnding(int article_type, int grammatical_case, int grammatical_number, const grammatical_gender grammatical_gender);
 
+	Q_INVOKABLE void print_df_words() const;
+
 private:
 	language_family *family = nullptr;
 public:

@@ -140,6 +140,21 @@ void word::set_language(archimedes::language *language)
 	language->add_word(this);
 }
 
+std::vector<std::string> word::get_df_words() const
+{
+	if (!this->get_df_word().empty()) {
+		return { this->get_df_word()};
+	}
+
+	std::vector<std::string> df_words;
+
+	for (const word *word : this->get_meaning_words()) {
+		vector::merge(df_words, word->get_df_words());
+	}
+
+	return df_words;
+}
+
 QStringList word::get_meanings_qstring_list() const
 {
 	return container::to_qstring_list(this->get_meanings());
