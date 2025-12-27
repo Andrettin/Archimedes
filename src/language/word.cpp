@@ -55,6 +55,21 @@ void word::initialize()
 	data_entry::initialize();
 }
 
+void word::check() const
+{
+	if (this->get_language() == nullptr) {
+		throw std::runtime_error(std::format("Word \"{}\" has not been assigned to any language.", this->get_identifier()));
+	}
+
+	if (this->get_etymon() != nullptr && !this->compound_elements.empty()) {
+		throw std::runtime_error(std::format("Word \"{}\" has both an etymon and compound elements.", this->get_identifier()));
+	}
+
+	if (this->get_type() != word_type::noun && this->is_uncountable()) {
+		throw std::runtime_error(std::format("Word \"{}\" is uncountable, but is not a noun.", this->get_identifier()));
+	}
+}
+
 std::string word::get_encyclopedia_text() const
 {
 	std::string text;

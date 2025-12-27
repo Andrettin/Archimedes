@@ -25,6 +25,7 @@ class word final : public named_data_entry, public data_type<word>
 	Q_PROPERTY(archimedes::word* etymon READ get_etymon WRITE set_etymon NOTIFY changed)
 	Q_PROPERTY(std::string df_word MEMBER df_word NOTIFY changed)
 	Q_PROPERTY(QStringList meanings READ get_meanings_qstring_list NOTIFY changed)
+	Q_PROPERTY(bool uncountable MEMBER uncountable READ is_uncountable NOTIFY changed)
 
 public:
 	static constexpr const char class_identifier[] = "word";
@@ -37,17 +38,7 @@ public:
 
 	virtual void process_gsml_scope(const gsml_data &scope) override;
 	virtual void initialize() override;
-
-	virtual void check() const override
-	{
-		if (this->get_language() == nullptr) {
-			throw std::runtime_error("Word \"" + this->get_identifier() + "\" has not been assigned to any language.");
-		}
-
-		if (this->get_etymon() != nullptr && !this->compound_elements.empty()) {
-			throw std::runtime_error("Word \"" + this->get_identifier() + "\" has both an etymon and compound elements.");
-		}
-	}
+	virtual void check() const override;
 
 	virtual bool has_encyclopedia_entry() const override
 	{
@@ -154,6 +145,11 @@ public:
 		word->compound_element_of.push_back(this);
 	}
 
+	bool is_uncountable() const
+	{
+		return this->uncountable;
+	}
+
 	std::string GetNounInflection(int grammatical_number, int grammatical_case, int word_junction_type = -1);
 	const std::string &GetVerbInflection(int grammatical_number, int grammatical_person, int grammatical_tense, int grammatical_mood);
 	std::string GetAdjectiveInflection(int comparison_degree, int article_type, int grammatical_case, int grammatical_number, const grammatical_gender grammatical_gender);
@@ -185,10 +181,10 @@ private:
 	std::vector<const word *> compound_elements; //from which compound elements is this word formed
 	std::vector<const word *> compound_element_of; //which words are formed from this word as a compound element
 
-public:
 	// noun-specific variables
-	bool Uncountable = false;				/// Whether the noun is uncountable or not.
+	bool uncountable = false;
 
+public:
 	//pronoun and article-specific variables
 	std::string Nominative;			/// Nominative case for the pronoun (if any)
 	std::string Accusative;			/// Accusative case for the pronoun (if any)
