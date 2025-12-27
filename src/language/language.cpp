@@ -6,6 +6,7 @@
 #include "language/word.h"
 #include "language/word_type.h"
 #include "util/assert_util.h"
+#include "util/log_util.h"
 #include "util/path_util.h"
 #include "util/string_util.h"
 
@@ -93,6 +94,8 @@ std::string language::GetAdjectiveEnding(int article_type, int grammatical_case,
 
 void language::print_df_words() const
 {
+	static constexpr size_t expected_df_word_count = 2196;
+
 	const std::string filename = std::format("language_{}.txt", this->get_identifier());
 	std::ofstream ofstream(path::from_string(filename));
 
@@ -113,6 +116,10 @@ void language::print_df_words() const
 		}
 	}
 
+	if (df_words_to_words.size() != expected_df_word_count) {
+		log::log_error(std::format("Expected {} DF words, but got {} instead.", expected_df_word_count, df_words_to_words.size()));
+	}
+
 	for (auto &[df_word, potential_words] : df_words_to_words) {
 		const word *chosen_word = nullptr;
 		for (const word *word : potential_words) {
@@ -123,6 +130,7 @@ void language::print_df_words() const
 		assert_throw(chosen_word != nullptr);
 
 		std::string word_str = chosen_word->get_name();
+		string::normalize(word_str);
 		string::to_lower(word_str);
 		word_str = string::to_code_page_437(word_str);
 
