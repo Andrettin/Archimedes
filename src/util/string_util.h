@@ -150,25 +150,7 @@ inline std::string capitalized(const std::string &str)
 	return string::capitalized(std::move(result));
 }
 
-inline void normalize(std::string &str)
-{
-	//remove special characters from the string that shouldn't be displayed even in strings for which accented characters are acceptable
-
-	//remove macrons
-	string::replace(str, "Ā", "A");
-	string::replace(str, "ā", "a");
-	string::replace(str, "Ē", "E");
-	string::replace(str, "ē", "e");
-	string::replace(str, "Ī", "I");
-	string::replace(str, "ī", "i");
-	string::replace(str, "Ō", "O");
-	string::replace(str, "ō", "o");
-	string::replace(str, "Ū", "U");
-	string::replace(str, "ū", "u");
-
-	//replace superscript versions of characters with their normal versions
-	string::replace(str, "ʷ", "w");
-}
+extern void normalize(std::string &str);
 
 inline std::string normalized(std::string &&str)
 {
