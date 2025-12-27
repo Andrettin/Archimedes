@@ -49,6 +49,7 @@ std::string to_code_page_437(const std::string &str)
 	string::replace(result, "\u00F3", "\xA2");
 	string::replace(result, "\u00FA", "\xA3");
 	string::replace(result, "\u00F1", "\xA4");
+	string::replace(result, "\u00FE", "th");
 	return result;
 }
 
