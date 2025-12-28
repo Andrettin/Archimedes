@@ -62,6 +62,7 @@ std::string get_indefinite_article(const std::string &str)
 std::string to_code_page_437(const std::string &str)
 {
 	std::string result = str;
+	string::replace(result, "\u00DE", "th"); //presumes the string should be lowered
 	string::replace(result, "\u00E1", "\xA0");
 	string::replace(result, "\u00ED", "\xA1");
 	string::replace(result, "\u00F3", "\xA2");
