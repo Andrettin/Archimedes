@@ -2,6 +2,8 @@
 
 namespace archimedes {
 
+enum class gender;
+
 enum class grammatical_gender {
 	none = -1,
 	masculine,
@@ -26,6 +28,8 @@ inline std::string grammatical_gender_to_name(const grammatical_gender gender)
 
 	throw std::runtime_error("Invalid grammatical gender: \"" + std::to_string(static_cast<int>(gender)) + "\".");
 }
+
+extern gender grammatical_gender_to_gender(const grammatical_gender grammatical_gender);
 
 }
 
