@@ -23,6 +23,7 @@ public:
 		return nullptr;
 	}
 
+	void create_name_generator(const gender gender);
 	void add_name(const gender gender, const name_variant &name);
 	void add_names(const gender gender, const std::vector<name_variant> &names);
 	void add_names(const gender gender, const std::vector<std::string> &names);
@@ -40,8 +41,11 @@ public:
 		this->propagate_ungendered_names_from(this);
 	}
 
+	void set_markov_chain_size(const size_t size);
+
 private:
 	std::map<gender, std::unique_ptr<name_generator>> name_generators;
+	size_t markov_chain_size = 0;
 };
 
 }

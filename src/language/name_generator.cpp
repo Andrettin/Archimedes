@@ -4,10 +4,28 @@
 
 #include "util/assert_util.h"
 #include "util/gender.h"
+#include "util/markov_generator.h"
 #include "util/vector_random_util.h"
 #include "util/vector_util.h"
 
 namespace archimedes {
+
+name_generator::name_generator()
+{
+}
+
+name_generator::~name_generator()
+{
+}
+
+bool name_generator::has_enough_data() const
+{
+	if (this->markov_generator != nullptr && this->markov_generator->has_enough_data()) {
+		return true;
+	}
+
+	return this->get_name_count() >= name_generator::minimum_name_count;
+}
 
 bool name_generator::is_name_valid(const std::string &name) const
 {
@@ -20,19 +38,37 @@ bool name_generator::is_name_valid(const std::string &name) const
 	return false;
 }
 
+void name_generator::add_name(const name_variant &name)
+{
+	this->names.push_back(name);
+
+	if (this->markov_generator != nullptr) {
+		this->markov_generator->add_word(get_name_variant_string(name));
+	}
+}
+
 void name_generator::add_names(const std::vector<name_variant> &names)
 {
-	vector::merge(this->names, names);
+	for (const auto &name_variant : names) {
+		this->add_name(name_variant);
+	}
 }
 
 void name_generator::add_names(const std::vector<std::string> &names)
 {
-	vector::merge(this->names, names);
+	for (const std::string &name : names) {
+		this->add_name(name);
+	}
 }
 
 std::string name_generator::generate_name() const
 {
 	assert_throw(!this->names.empty());
+
+	if (this->markov_generator != nullptr) {
+		return this->markov_generator->generate_word();
+	}
+
 	const name_variant &name_variant = vector::get_random(this->names);
 	return get_name_variant_string(name_variant);
 }
@@ -62,6 +98,15 @@ std::string name_generator::generate_name(const std::map<std::string, int> &used
 
 	const name_variant &name_variant = vector::get_random(available_names);
 	return get_name_variant_string(name_variant);
+}
+
+void name_generator::set_markov_chain_size(const size_t size)
+{
+	this->markov_generator = std::make_unique<archimedes::markov_generator>(size);
+
+	for (const auto &name_variant : this->names) {
+		this->markov_generator->add_word(get_name_variant_string(name_variant));
+	}
 }
 
 }

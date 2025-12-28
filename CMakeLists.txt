@@ -99,6 +99,7 @@ set(util_SRCS
 	src/util/image_util.cpp
 	src/util/log_level.cpp
 	src/util/log_util.cpp
+	src/util/markov_generator.cpp
 	src/util/number_util.cpp
 	src/util/point_container.cpp
 	src/util/point_util.cpp
@@ -268,6 +269,7 @@ set(util_HDRS
 	src/util/log_output_handler.h
 	src/util/log_util.h
 	src/util/map_util.h
+	src/util/markov_generator.h
 	src/util/millesimal_int.h
 	src/util/number_util.h
 	src/util/path_util.h
