@@ -9,11 +9,6 @@ public:
 
 	explicit markov_generator(const size_t chain_size);
 
-	bool has_enough_data() const
-	{
-		return this->prefixes.size() >= minimum_prefix_count;
-	}
-
 	void add_word(const std::string &word);
 	std::string generate_word() const;
 

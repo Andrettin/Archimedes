@@ -21,10 +21,6 @@ name_generator::~name_generator()
 
 bool name_generator::has_enough_data() const
 {
-	if (this->markov_generator != nullptr && this->markov_generator->has_enough_data()) {
-		return true;
-	}
-
 	return this->get_name_count() >= name_generator::minimum_name_count;
 }
 
