@@ -5,6 +5,7 @@
 #include "util/assert_util.h"
 #include "util/gender.h"
 #include "util/markov_generator.h"
+#include "util/string_util.h"
 #include "util/vector_random_util.h"
 #include "util/vector_util.h"
 
@@ -43,7 +44,21 @@ void name_generator::add_name(const name_variant &name)
 	this->names.push_back(name);
 
 	if (this->markov_generator != nullptr) {
-		this->markov_generator->add_word(get_name_variant_string(name));
+		const std::string &name_str = get_name_variant_string(name);
+		if (name_str.contains(' ')) {
+			const std::vector<std::string> words = string::split(name_str, ' ');
+			for (const std::string &word : words) {
+				assert_throw(!word.empty());
+				if (!std::isupper(word.at(0))) {
+					//ignore prepositions
+					continue;
+				}
+
+				this->markov_generator->add_word(word);
+			}
+		} else {
+			this->markov_generator->add_word(name_str);
+		}
 	}
 }
 
