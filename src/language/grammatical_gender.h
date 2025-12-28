@@ -1,7 +1,5 @@
 #pragma once
 
-#include "util/enum_converter.h"
-
 namespace archimedes {
 
 enum class grammatical_gender {
@@ -10,8 +8,6 @@ enum class grammatical_gender {
 	feminine,
 	neuter
 };
-
-extern template class enum_converter<grammatical_gender>;
 
 inline std::string grammatical_gender_to_name(const grammatical_gender gender)
 {
