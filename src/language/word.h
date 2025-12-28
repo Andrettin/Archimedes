@@ -68,14 +68,7 @@ public:
 
 	virtual std::string get_encyclopedia_text() const override;
 
-	const std::string &get_anglicized_name() const
-	{
-		if (!this->anglicized_name.empty()) {
-			return this->anglicized_name;
-		}
-
-		return this->get_name();
-	}
+	std::string get_anglicized_name() const;
 
 	const archimedes::language *get_language() const
 	{

@@ -36,6 +36,11 @@ public:
 	std::string generate_name() const;
 	std::string generate_name(const std::map<std::string, int> &used_name_counts) const;
 
+	bool uses_markov_generation() const
+	{
+		return this->markov_generator != nullptr;
+	}
+
 	void set_markov_chain_size(const size_t size);
 
 private:

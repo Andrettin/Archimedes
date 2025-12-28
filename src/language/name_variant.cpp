@@ -6,9 +6,9 @@
 
 namespace archimedes {
 
-const std::string &get_name_variant_string(const name_variant &name_variant)
+std::string get_name_variant_string(const name_variant &name_variant)
 {
-	return std::visit([](auto &&name_value) -> const std::string & {
+	return std::visit([](auto &&name_value) -> std::string {
 		using name_type = std::decay_t<decltype(name_value)>;
 
 		static_assert(std::is_same_v<name_type, std::string> || std::is_same_v<name_type, const word *>, "Invalid name variant type.");

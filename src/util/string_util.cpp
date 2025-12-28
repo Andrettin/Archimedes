@@ -6,7 +6,6 @@
 
 namespace archimedes::string {
 
-
 void normalize(std::string &str)
 {
 	//remove special characters from the string that shouldn't be displayed even in strings for which accented characters are acceptable
@@ -27,6 +26,25 @@ void normalize(std::string &str)
 	string::replace(str, "\u02B7", "w");
 }
 
+void anglicize(std::string &str)
+{
+	string::normalize(str);
+
+	string::replace(str, "\u00E1", "a");
+	string::replace(str, "\u00E9", "e");
+	string::replace(str, "\u00ED", "i");
+	string::replace(str, "\u00F3", "o");
+	string::replace(str, "\u00FA", "u");
+	string::replace(str, "\u00F1", "n");
+	string::replace(str, "\u00C1", "A");
+	string::replace(str, "\u00C9", "E");
+	string::replace(str, "\u00CD", "I");
+	string::replace(str, "\u00D3", "O");
+	string::replace(str, "\u00DA", "U");
+	string::replace(str, "\u00D1", "N");
+	string::replace(str, "\u00DE", "Th");
+	string::replace(str, "\u00FE", "th");
+}
 
 std::string get_indefinite_article(const std::string &str)
 {

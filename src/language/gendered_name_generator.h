@@ -41,6 +41,11 @@ public:
 		this->propagate_ungendered_names_from(this);
 	}
 
+	bool uses_markov_generation() const
+	{
+		return this->markov_chain_size > 0;
+	}
+
 	void set_markov_chain_size(const size_t size);
 
 private:

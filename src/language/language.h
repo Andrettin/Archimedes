@@ -110,6 +110,11 @@ public:
 		return this->family;
 	}
 
+	const std::vector<word *> &get_words() const
+	{
+		return this->words;
+	}
+
 	void add_word(word *word)
 	{
 		this->words.push_back(word);

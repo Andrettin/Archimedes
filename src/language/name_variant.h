@@ -6,6 +6,6 @@ class word;
 
 using name_variant = std::variant<std::string, const word *>;
 
-extern const std::string &get_name_variant_string(const name_variant &name_variant);
+extern std::string get_name_variant_string(const name_variant &name_variant);
 
 }

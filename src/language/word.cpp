@@ -172,6 +172,18 @@ std::string word::get_encyclopedia_text() const
 	return text;
 }
 
+std::string word::get_anglicized_name() const
+{
+	if (!this->anglicized_name.empty()) {
+		return this->anglicized_name;
+	}
+
+	std::string str = this->get_name();
+	string::anglicize(str);
+
+	return str;
+}
+
 void word::set_language(archimedes::language *language)
 {
 	if (language == this->get_language()) {

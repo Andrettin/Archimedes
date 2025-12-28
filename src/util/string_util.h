@@ -158,6 +158,8 @@ inline std::string normalized(std::string &&str)
 	return str;
 }
 
+extern void anglicize(std::string &str);
+
 inline std::string normalized(const std::string &str)
 {
 	std::string result(str);
