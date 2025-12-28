@@ -36,6 +36,7 @@ public:
 
 	explicit word(const std::string &identifier);
 
+	virtual void process_gsml_property(const gsml_property &property) override;
 	virtual void process_gsml_scope(const gsml_data &scope) override;
 	virtual void initialize() override;
 	virtual void check() const override;
@@ -168,6 +169,7 @@ public:
 	bool Archaic = false;				/// Whether the word is archaic (whether it is used in current speech)
 private:
 	word *etymon = nullptr; //the word from which this one derives
+	const archimedes::language *etymon_language = nullptr;
 	std::string df_word;
 	std::vector<const word *> reflexes; //words derived from this one
 public:

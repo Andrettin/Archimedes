@@ -5,7 +5,9 @@
 #include "language/grammatical_gender.h"
 #include "language/language.h"
 #include "language/word_type.h"
+#include "util/assert_util.h"
 #include "util/container_util.h"
+#include "util/string_util.h"
 #include "util/vector_util.h"
 
 namespace archimedes {
@@ -26,6 +28,25 @@ bool word::compare(const word *lhs, const word *rhs)
 word::word(const std::string &identifier)
 	: named_data_entry(identifier), type(word_type::none), gender(grammatical_gender::none)
 {
+}
+
+void word::process_gsml_property(const gsml_property &property)
+{
+	const std::string &key = property.get_key();
+	const std::string &value = property.get_value();
+
+	if (key == "etymon") {
+		assert_throw(property.get_operator() == gsml_operator::assignment);
+		const std::vector<std::string> string_list = string::split(value, ':');
+		assert_throw(!string_list.empty());
+		assert_throw(string_list.size() <= 2);
+		if (string_list.size() > 1) {
+			this->etymon_language = language::get(string_list.at(0));
+		}
+		this->set_etymon(word::get(string_list.back()));
+	} else {
+		named_data_entry::process_gsml_property(property);
+	}
 }
 
 void word::process_gsml_scope(const gsml_data &scope)
@@ -61,8 +82,14 @@ void word::check() const
 		throw std::runtime_error(std::format("Word \"{}\" has not been assigned to any language.", this->get_identifier()));
 	}
 
-	if (this->get_etymon() != nullptr && !this->compound_elements.empty()) {
-		throw std::runtime_error(std::format("Word \"{}\" has both an etymon and compound elements.", this->get_identifier()));
+	if (this->get_etymon() != nullptr) {
+		if (!this->compound_elements.empty()) {
+			throw std::runtime_error(std::format("Word \"{}\" has both an etymon and compound elements.", this->get_identifier()));
+		}
+
+		if (this->etymon_language != nullptr && this->etymon_language != this->get_etymon()->get_language()) {
+			throw std::runtime_error(std::format("Word \"{}\" has etymon \"{}\" from language \"{}\", but that etymon actually belongs to a different language.", this->get_identifier(), this->get_etymon()->get_identifier(), this->etymon_language->get_identifier()));
+		}
 	}
 
 	if (this->get_type() != word_type::noun && this->is_uncountable()) {
