@@ -24,6 +24,10 @@ public:
 	}
 
 	void create_name_generator(const gender gender);
+
+	bool has_enough_data() const;
+	bool has_enough_data(const gender gender) const;
+
 	void add_name(const gender gender, const name_variant &name);
 	void add_names(const gender gender, const std::vector<name_variant> &names);
 	void add_names(const gender gender, const std::vector<std::string> &names);

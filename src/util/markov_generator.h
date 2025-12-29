@@ -5,8 +5,6 @@ namespace archimedes {
 class markov_generator final
 {
 public:
-	static constexpr size_t minimum_prefix_count = 5;
-
 	explicit markov_generator(const size_t chain_size);
 
 	void add_word(const std::string &word);
