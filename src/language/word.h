@@ -109,9 +109,19 @@ public:
 		return this->name_front_compound_element;
 	}
 
+	void set_name_front_compound_element(const bool value)
+	{
+		this->name_front_compound_element = value;
+	}
+
 	bool is_name_rear_compound_element() const
 	{
 		return this->name_rear_compound_element;
+	}
+
+	void set_name_rear_compound_element(const bool value)
+	{
+		this->name_rear_compound_element = value;
 	}
 
 	const std::string &get_df_word() const
