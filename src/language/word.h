@@ -23,6 +23,8 @@ class word final : public named_data_entry, public data_type<word>
 	Q_PROPERTY(archimedes::word_type type MEMBER type READ get_type NOTIFY changed)
 	Q_PROPERTY(archimedes::grammatical_gender gender MEMBER gender READ get_gender NOTIFY changed)
 	Q_PROPERTY(archimedes::word* etymon READ get_etymon WRITE set_etymon NOTIFY changed)
+	Q_PROPERTY(bool name_front_compound_element MEMBER name_front_compound_element READ is_name_front_compound_element NOTIFY changed)
+	Q_PROPERTY(bool name_rear_compound_element MEMBER name_rear_compound_element READ is_name_rear_compound_element NOTIFY changed)
 	Q_PROPERTY(std::string df_word MEMBER df_word NOTIFY changed)
 	Q_PROPERTY(QStringList meanings READ get_meanings_qstring_list NOTIFY changed)
 	Q_PROPERTY(bool uncountable MEMBER uncountable READ is_uncountable NOTIFY changed)
@@ -102,6 +104,16 @@ public:
 		etymon->reflexes.push_back(this);
 	}
 
+	bool is_name_front_compound_element() const
+	{
+		return this->name_front_compound_element;
+	}
+
+	bool is_name_rear_compound_element() const
+	{
+		return this->name_rear_compound_element;
+	}
+
 	const std::string &get_df_word() const
 	{
 		return this->df_word;
@@ -163,6 +175,8 @@ public:
 private:
 	word *etymon = nullptr; //the word from which this one derives
 	const archimedes::language *etymon_language = nullptr;
+	bool name_front_compound_element = false;
+	bool name_rear_compound_element = false;
 	std::string df_word;
 	std::vector<const word *> reflexes; //words derived from this one
 public:

@@ -13,6 +13,21 @@
 
 namespace archimedes {
 
+void language::initialize()
+{
+	for (const word *word : this->get_words()) {
+		if (word->is_name_front_compound_element()) {
+			this->name_front_compound_elements.push_back(word);
+		}
+
+		if (word->is_name_rear_compound_element()) {
+			this->name_rear_compound_elements.push_back(word);
+		}
+	}
+
+	named_data_entry::initialize();
+}
+
 word *language::GetWord(const std::string &word, const word_type word_type, const std::vector<std::string> &word_meanings) const
 {
 	for (archimedes::word *language_word : this->words) {

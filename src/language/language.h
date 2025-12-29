@@ -105,6 +105,8 @@ public:
 	{
 	}
 
+	virtual void initialize() override;
+
 	const language_family *get_family() const
 	{
 		return this->family;
@@ -118,6 +120,16 @@ public:
 	void add_word(word *word)
 	{
 		this->words.push_back(word);
+	}
+
+	const std::vector<const word *> &get_name_front_compound_elements() const
+	{
+		return this->name_front_compound_elements;
+	}
+
+	const std::vector<const word *> &get_name_rear_compound_elements() const
+	{
+		return this->name_rear_compound_elements;
 	}
 
 	word *GetWord(const std::string &word, const word_type word_type, const std::vector<std::string> &word_meanings) const;
@@ -137,6 +149,8 @@ public:
 	std::vector<language *> Dialects;							/// Dialects of this language
 private:
 	std::vector<word *> words;
+	std::vector<const word *> name_front_compound_elements;
+	std::vector<const word *> name_rear_compound_elements;
 public:
 	std::map<std::string, std::vector<std::string>> NameTranslations;	/// Name translations; possible translations mapped to the name to be translated
 

@@ -73,7 +73,7 @@ void word::initialize()
 	std::sort(this->reflexes.begin(), this->reflexes.end(), word::compare);
 	std::sort(this->compound_element_of.begin(), this->compound_element_of.end(), word::compare);
 
-	data_entry::initialize();
+	named_data_entry::initialize();
 }
 
 void word::check() const
