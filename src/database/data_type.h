@@ -10,6 +10,7 @@
 
 namespace archimedes {
 
+class data_entry;
 class data_module;
 class game_rules_base;
 
@@ -20,6 +21,26 @@ public:
 
 	static inline const std::set<std::string> database_dependencies; //the other classes on which this one depends, i.e. after which this class' database can be processed
 	static inline const std::set<std::string> history_database_dependencies;
+
+protected:
+	static data_entry *try_get(const QMetaType &meta_type, const std::string &identifier);
+
+	static const std::vector<data_entry *> &get_all(const QMetaType &meta_type);
+	static std::vector<data_entry *> &get_all_modifiable(const QMetaType &meta_type);
+
+	static bool exists(const QMetaType &meta_type, const std::string &identifier);
+
+	static data_entry *add(const QMetaType &meta_type, const std::string &identifier, const data_module *data_module, const std::string_view &class_identifier, qunique_ptr<data_entry> &&instance);
+
+	static void add_instance_alias(const QMetaType &meta_type, data_entry *instance, const std::string &alias, const std::string_view &class_identifier);
+
+	static void remove(const QMetaType &meta_type, data_entry *instance);
+	static void clear(const QMetaType &meta_type);
+
+private:
+	static std::map<int, std::vector<data_entry *>> instances;
+	static std::map<int, std::map<std::string, qunique_ptr<data_entry>>> instances_by_identifier;
+	static std::map<int, std::map<std::string, data_entry *>> instances_by_alias;
 };
 
 template <typename T>
@@ -52,21 +73,7 @@ public:
 
 	static T *try_get(const std::string &identifier)
 	{
-		if (identifier == "none") {
-			return nullptr;
-		}
-
-		const auto find_iterator = data_type::instances_by_identifier.find(identifier);
-		if (find_iterator != data_type::instances_by_identifier.end()) {
-			return find_iterator->second.get();
-		}
-
-		const auto alias_find_iterator = data_type::instances_by_alias.find(identifier);
-		if (alias_find_iterator != data_type::instances_by_alias.end()) {
-			return alias_find_iterator->second;
-		}
-
-		return nullptr;
+		return static_cast<T *>(data_type_base::try_get(QMetaType::fromType<T>(), identifier));
 	}
 
 	static T *get_or_add(const std::string &identifier, const data_module *data_module)
@@ -81,7 +88,7 @@ public:
 
 	static const std::vector<T *> &get_all()
 	{
-		return data_type::instances;
+		return reinterpret_cast<const std::vector<T *> &>(data_type_base::get_all(QMetaType::fromType<T>()));
 	}
 
 	static std::vector<const T *> get_all_const()
@@ -95,61 +102,18 @@ public:
 
 	static bool exists(const std::string &identifier)
 	{
-		return data_type::instances_by_identifier.contains(identifier) || data_type::instances_by_alias.contains(identifier);
+		return data_type_base::exists(QMetaType::fromType<T>(), identifier);
 	}
 
 	static T *add(const std::string &identifier, const data_module *data_module)
 	{
-		if (identifier.empty()) {
-			throw std::runtime_error("Tried to add a " + std::string(T::class_identifier) + " instance with an empty string identifier.");
-		}
-
-		if (T::exists(identifier)) {
-			throw std::runtime_error("Tried to add a " + std::string(T::class_identifier) + " instance with the already-used \"" + identifier + "\" string identifier.");
-		}
-
-		data_type::instances_by_identifier[identifier] = make_qunique<T>(identifier);
-
-		T *instance = data_type::instances_by_identifier.find(identifier)->second.get();
-		data_type::instances.push_back(instance);
-		instance->moveToThread(QApplication::instance()->thread());
-		instance->set_module(data_module);
-
-		//for backwards compatibility, change instances of "_" in the identifier with "-" and add that as an alias, and do the opposite as well
-		if (identifier.find("_") != std::string::npos) {
-			std::string alias = identifier;
-			std::replace(alias.begin(), alias.end(), '_', '-');
-			T::add_instance_alias(instance, alias);
-		}
-		
-		if (identifier.find("-") != std::string::npos) {
-			std::string alias = identifier;
-			std::replace(alias.begin(), alias.end(), '-', '_');
-			T::add_instance_alias(instance, alias);
-		}
-
-		return instance;
+		auto instance = make_qunique<T>(identifier);
+		return static_cast<T *>(data_type_base::add(QMetaType::fromType<T>(), identifier, data_module, T::class_identifier, std::move(instance)));
 	}
 
-	static void add_instance_alias(T *instance, const std::string &alias)
+	static void remove(data_entry *instance)
 	{
-		if (alias.empty()) {
-			throw std::runtime_error("Tried to add a " + std::string(T::class_identifier) + " instance empty alias.");
-		}
-
-		if (T::exists(alias)) {
-			throw std::runtime_error("Tried to add a " + std::string(T::class_identifier) + " alias with the already-used \"" + alias + "\" string identifier.");
-		}
-
-		data_type::instances_by_alias[alias] = instance;
-		instance->add_alias(alias);
-	}
-
-	static void remove(T *instance)
-	{
-		data_type::instances.erase(std::remove(data_type::instances.begin(), data_type::instances.end(), instance), data_type::instances.end());
-
-		data_type::instances_by_identifier.erase(instance->get_identifier());
+		data_type_base::remove(QMetaType::fromType<T>(), instance);
 	}
 
 	static void remove(const std::string &identifier)
@@ -159,15 +123,14 @@ public:
 
 	static void clear()
 	{
-		data_type::instances.clear();
-		data_type::instances_by_alias.clear();
-		data_type::instances_by_identifier.clear();
+		data_type_base::clear(QMetaType::fromType<T>());
 	}
 
 	template <typename function_type>
 	static void sort_instances(const function_type &function)
 	{
-		std::sort(data_type::instances.begin(), data_type::instances.end(), function);
+		std::vector<T *> &instances = reinterpret_cast<std::vector<T *> &>(data_type_base::get_all_modifiable(QMetaType::fromType<T>()));
+		std::sort(instances.begin(), instances.end(), function);
 	}
 
 	[[nodiscard]]
@@ -223,17 +186,17 @@ public:
 								}
 
 								const std::string &alias = alias_property->get_value();
-								T::add_instance_alias(instance, alias);
+								T::add_instance_alias(QMetaType::fromType<T>(), instance, alias, T::class_identifier);
 
 								//for backwards compatibility, change instances of "_" in the identifier with "-" and add that as a further alias, and do the opposite as well
 								if (alias.find("_") != std::string::npos) {
 									std::string other_alias = alias;
 									std::replace(other_alias.begin(), other_alias.end(), '_', '-');
-									T::add_instance_alias(instance, other_alias);
+									T::add_instance_alias(QMetaType::fromType<T>(), instance, other_alias, T::class_identifier);
 								} else if (alias.find("-") != std::string::npos) {
 									std::string other_alias = alias;
 									std::replace(other_alias.begin(), other_alias.end(), '-', '_');
-									T::add_instance_alias(instance, other_alias);
+									T::add_instance_alias(QMetaType::fromType<T>(), instance, other_alias, T::class_identifier);
 								}
 							}
 						} else {
@@ -385,9 +348,6 @@ private:
 		return true;
 	}
 
-	static inline std::vector<T *> instances;
-	static inline std::map<std::string, qunique_ptr<T>> instances_by_identifier;
-	static inline std::map<std::string, T *> instances_by_alias;
 	static inline bool class_initialized = data_type::initialize_class();
 
 public:
