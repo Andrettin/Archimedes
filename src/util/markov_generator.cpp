@@ -24,6 +24,8 @@ void markov_generator::add_word(const std::string &word)
 		const char c = i != word.size() ? word[i] : 0;
 		this->prefixes[std::move(prefix)].push_back(c);
 	}
+
+	this->possible_word_count = 0; //recalculation needed
 }
 
 std::string markov_generator::generate_word() const
@@ -59,6 +61,56 @@ std::string markov_generator::generate_word() const
 	}
 
 	return "";
+}
+
+size_t markov_generator::get_possible_word_count()
+{
+	if (this->possible_word_count == 0) {
+		this->possible_word_count = this->calculate_possible_word_count();
+		assert_throw(this->possible_word_count > 0);
+	}
+
+	return this->possible_word_count;
+}
+
+size_t markov_generator::calculate_possible_word_count()
+{
+	return this->calculate_possible_word_count("", 0);
+}
+
+size_t markov_generator::calculate_possible_word_count(const std::string &prefix, const size_t word_length)
+{
+	assert_throw(!this->prefixes.empty());
+	assert_throw(this->chain_size > 0);
+
+	if (word_length >= this->max_length) {
+		return 0;
+	}
+
+	const auto it = this->prefixes.find(prefix);
+	if (it == this->prefixes.end() || it->second.empty()) {
+		return 1;
+	}
+
+	size_t word_count = 0;
+
+	for (const char c : it->second) {
+		if (c == 0) {
+			++word_count;
+			continue;
+		}
+
+		std::string new_prefix = prefix;
+
+		new_prefix.push_back(c);
+		while (new_prefix.size() > this->chain_size) {
+			new_prefix.erase(new_prefix.begin());
+		}
+
+		word_count += this->calculate_possible_word_count(new_prefix, word_length + 1);
+	}
+
+	return word_count;
 }
 
 }
