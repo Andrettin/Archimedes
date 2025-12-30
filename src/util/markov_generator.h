@@ -12,7 +12,7 @@ public:
 
 private:
 	size_t chain_size = 2;
-	size_t max_length = 12;
+	size_t max_length = 0;
 	std::map<std::string, std::string> prefixes;
 };
 

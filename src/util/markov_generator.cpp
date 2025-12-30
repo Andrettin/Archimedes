@@ -16,6 +16,8 @@ void markov_generator::add_word(const std::string &word)
 {
 	assert_throw(this->chain_size > 0);
 
+	this->max_length = std::max(this->max_length, word.size());
+
 	for (size_t i = 0; i <= word.size(); ++i) {
 		const size_t start = i > this->chain_size ? i - this->chain_size : 0;
 		std::string prefix = word.substr(start, i - start);
@@ -48,26 +50,15 @@ std::string markov_generator::generate_word() const
 		while (prefix.size() > this->chain_size) {
 			prefix.erase(prefix.begin());
 		}
+
+		if (word.size() >= this->max_length) {
+			//start over if the word ended up being too long
+			word.clear();
+			prefix.clear();
+		}
 	}
 
-	//try to make names which reached the maximum length have an appropriate ending
-	std::string original_word = word;
-	while (!word.empty()) {
-		const size_t prefix_length = this->chain_size < word.size() ? this->chain_size : word.size();
-		prefix = word.substr(word.size() - prefix_length, prefix_length);
-
-		const auto it = this->prefixes.find(prefix);
-		if (it == this->prefixes.end() || it->second.empty()) {
-			return word;
-		}
-		if (it->second.find(static_cast<char>(0)) != std::string::npos) {
-			return word;
-		}
-
-		word.pop_back();
-	}
-
-	return original_word;
+	return "";
 }
 
 }

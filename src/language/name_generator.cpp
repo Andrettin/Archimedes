@@ -24,7 +24,7 @@ bool name_generator::has_enough_data() const
 	return this->get_name_count() >= name_generator::minimum_name_count;
 }
 
-bool name_generator::is_name_valid(const std::string &name) const
+bool name_generator::has_name(const std::string &name) const
 {
 	for (const name_variant &name_variant : this->names) {
 		if (get_name_variant_string(name_variant) == name) {

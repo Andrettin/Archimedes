@@ -27,7 +27,7 @@ public:
 
 	bool has_enough_data() const;
 
-	bool is_name_valid(const std::string &name) const;
+	bool has_name(const std::string &name) const;
 
 	void add_name(const name_variant &name);
 	void add_names(const std::vector<name_variant> &names);
