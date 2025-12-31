@@ -21,7 +21,11 @@ name_generator::~name_generator()
 
 bool name_generator::has_enough_data() const
 {
-	return this->get_name_count() >= name_generator::minimum_name_count || (this->markov_generator != nullptr && this->markov_generator->get_possible_word_count() >= name_generator::minimum_name_count);
+	if (this->markov_generator != nullptr) {
+		return this->markov_generator->get_possible_word_count() >= name_generator::minimum_name_count;
+	}
+
+	return this->get_name_count() >= name_generator::minimum_name_count;
 }
 
 bool name_generator::has_name(const std::string &name) const

@@ -83,7 +83,7 @@ size_t markov_generator::calculate_possible_word_count(const std::string &prefix
 	assert_throw(!this->prefixes.empty());
 	assert_throw(this->chain_size > 0);
 
-	if (word_length >= this->max_length) {
+	if (word_length > this->max_length) {
 		return 0;
 	}
 
@@ -94,7 +94,16 @@ size_t markov_generator::calculate_possible_word_count(const std::string &prefix
 
 	size_t word_count = 0;
 
+	std::array<bool, std::numeric_limits<unsigned char>::max()> checked_values{};
+	checked_values.fill(false);
+
 	for (const char c : it->second) {
+		if (checked_values[static_cast<unsigned char>(c)]) {
+			continue;
+		}
+
+		checked_values[static_cast<unsigned char>(c)] = true;
+
 		if (c == 0) {
 			++word_count;
 			continue;
