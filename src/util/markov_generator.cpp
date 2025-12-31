@@ -36,7 +36,7 @@ std::string markov_generator::generate_word() const
 	std::string prefix;
 	std::string word;
 
-	while (word.size() < this->max_length) {
+	while (word.size() <= this->max_length) {
 		const auto it = this->prefixes.find(prefix);
 		if (it == this->prefixes.end() || it->second.empty()) {
 			return word;
@@ -53,7 +53,7 @@ std::string markov_generator::generate_word() const
 			prefix.erase(prefix.begin());
 		}
 
-		if (word.size() >= this->max_length) {
+		if (word.size() > this->max_length) {
 			//start over if the word ended up being too long
 			word.clear();
 			prefix.clear();
