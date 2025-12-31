@@ -147,6 +147,7 @@ set(database_HDRS
 	src/database/data_type.h
 	src/database/data_type_metadata.h
 	src/database/database.h
+	src/database/database_enum_util.h
 	src/database/database_util.h
 	src/database/defines_base.h
 	src/database/enum_data_type.h

@@ -60,6 +60,8 @@ std::string markov_generator::generate_word() const
 		}
 	}
 
+	assert_throw(false);
+
 	return "";
 }
 
