@@ -23,11 +23,21 @@ void write_image(const std::filesystem::path &filepath, color_map<std::vector<st
 
 	assert_throw(image.size() == image_size);
 
+	QTimer timer;
+	timer.setInterval(std::chrono::minutes(1));
+	timer.start();
+
 	for (const auto &[color, geoshapes] : geodata_map) {
 		assert_throw(color.isValid());
 
 		for (const auto &geoshape : geoshapes) {
 			geoshape::write_to_image(*geoshape, image, color, georectangle, map_projection, geocoordinate_x_offset);
+
+			if (timer.remainingTime() <= 0) {
+				//intermediate saving
+				image.save(path::to_qstring(filepath));
+				timer.start();
+			}
 		}
 	}
 
