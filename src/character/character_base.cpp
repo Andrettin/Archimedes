@@ -134,6 +134,10 @@ void character_base::initialize_dates()
 				QDate start_date = this->get_birth_date();
 				start_date = start_date.addYears(adulthood_age);
 				start_date = start_date.addYears(random::get()->roll_dice(starting_age_modifier));
+				if (this->get_death_date().isValid() && start_date > this->get_death_date()) {
+					//a character cannot have a start date beyond their death date
+					start_date = this->get_death_date();
+				}
 				this->set_start_date(start_date);
 				date_changed = true;
 			} else if (this->get_contemporary_character() != nullptr) {
