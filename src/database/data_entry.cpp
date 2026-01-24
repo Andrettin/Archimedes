@@ -66,7 +66,7 @@ void data_entry::process_gsml_dated_property(const gsml_property &property, cons
 	Q_UNUSED(date)
 
 	try {
-		this->get_history_base()->process_gsml_property(property);
+		this->get_history_base()->process_gsml_property(property, date);
 	} catch (...) {
 		std::throw_with_nested(std::runtime_error("Error processing history property \"" + property.get_key() + "\"."));
 	}
@@ -77,7 +77,7 @@ void data_entry::process_gsml_dated_scope(const gsml_data &scope, const QDate &d
 	Q_UNUSED(date)
 
 	try {
-		this->get_history_base()->process_gsml_scope(scope);
+		this->get_history_base()->process_gsml_scope(scope, date);
 	} catch (...) {
 		std::throw_with_nested(std::runtime_error("Error processing history scope \"" + scope.get_tag() + "\"."));
 	}
