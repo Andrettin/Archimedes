@@ -46,6 +46,8 @@ inline std::string_view get_ordinal_number_suffix(const int number)
 	}
 }
 
+extern std::string to_roman_numeral(int number);
+
 inline int fast_abs(const int value)
 {
 	const int temp = value >> 31;
