@@ -11,17 +11,7 @@ static constexpr int days_per_year = 365;
 static constexpr int hours_per_day = 24;
 
 extern std::string year_to_string(const int year);
-
-inline std::string year_to_labeled_string(const int year)
-{
-	std::string str = date::year_to_string(year);
-
-	if (year < 0) {
-		str += " BC";
-	}
-
-	return str;
-}
+extern std::string year_to_labeled_string(const int year, const std::string_view &year_label = "", const std::string_view &negative_year_label = "BC");
 
 inline std::string to_string(const QDate &date)
 {

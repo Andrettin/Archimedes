@@ -19,6 +19,21 @@ std::string year_to_string(const int year)
 	return number::to_formatted_string(abs_year);
 }
 
+std::string year_to_labeled_string(const int year, const std::string_view &year_label, const std::string_view &negative_year_label)
+{
+	std::string str = date::year_to_string(year);
+
+	if (year < 0) {
+		str += " ";
+		str += negative_year_label;
+	} else if (!year_label.empty()) {
+		str += " ";
+		str += year_label;
+	}
+
+	return str;
+}
+
 bool contains_date(const QDate &date, const timeline *timeline, const QDate &other_date, const archimedes::timeline *other_timeline)
 {
 	if (timeline == other_timeline) {
