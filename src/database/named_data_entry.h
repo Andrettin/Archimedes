@@ -49,6 +49,12 @@ public:
 	virtual std::string get_link_name() const override;
 
 	virtual named_data_entry *get_tree_parent() const;
+
+	const std::vector<const named_data_entry *> &get_tree_children() const
+	{
+		return this->tree_children;
+	}
+
 	void add_tree_child(const named_data_entry *data_entry);
 	int get_tree_x() const;
 	int get_tree_relative_x(const std::vector<const named_data_entry *> &siblings) const;
