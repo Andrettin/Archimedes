@@ -6,7 +6,6 @@
 #include "util/assert_util.h"
 #include "util/dice.h"
 #include "util/gender.h"
-#include "util/number_util.h"
 #include "util/random.h"
 
 namespace archimedes {
@@ -79,46 +78,6 @@ void character_base::check() const
 		assert_throw(this->get_start_date() <= this->get_death_date());
 		assert_throw(this->get_birth_date() <= this->get_death_date());
 	}
-}
-
-std::string character_base::get_full_name(const std::optional<int> &regnal_number) const
-{
-	if (!this->get_nickname().empty()) {
-		return this->get_nickname();
-	}
-
-	const std::string &name = this->get_name();
-	std::string full_name = name;
-
-	if (!this->get_epithet().empty()) {
-		if (!full_name.empty()) {
-			full_name += " ";
-		}
-
-		full_name += this->get_epithet();
-	} else if (regnal_number.has_value()) {
-		if (!full_name.empty()) {
-			full_name += " ";
-		}
-
-		full_name += number::to_roman_numeral(regnal_number.value());
-	} else if (!this->get_surname().empty()) {
-		if (this->is_surname_first()) {
-			if (!full_name.empty()) {
-				full_name = this->get_surname() + " " + full_name;
-			} else {
-				full_name = this->get_surname();
-			}
-		} else {
-			if (!full_name.empty()) {
-				full_name += " ";
-			}
-
-			full_name += this->get_surname();
-		}
-	}
-
-	return full_name;
 }
 
 void character_base::initialize_dates()

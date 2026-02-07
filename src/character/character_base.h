@@ -37,7 +37,7 @@ public:
 
 	virtual std::string get_scope_name() const override
 	{
-		return this->get_full_name(std::nullopt);
+		return this->get_full_name();
 	}
 
 	const std::string &get_surname() const
@@ -65,11 +65,11 @@ public:
 		return this->epithet;
 	}
 
-	std::string get_full_name(const std::optional<int> &regnal_number) const;
+	virtual std::string get_full_name() const = 0;
 
 	QString get_full_name_qstring() const
 	{
-		return QString::fromStdString(this->get_full_name(std::nullopt));
+		return QString::fromStdString(this->get_full_name());
 	}
 
 	virtual bool is_surname_first() const
