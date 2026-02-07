@@ -134,6 +134,8 @@ public:
 		this->children.push_back(child);
 	}
 
+	void sort_children();
+
 	character_base *get_contemporary_character() const
 	{
 		return this->contemporary_character;

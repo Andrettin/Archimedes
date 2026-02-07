@@ -80,6 +80,30 @@ void character_base::check() const
 	}
 }
 
+void character_base::sort_children()
+{
+	std::sort(this->children.begin(), this->children.end(), [](const character_base *lhs, const character_base *rhs) {
+		if (lhs->get_birth_date() != rhs->get_birth_date()) {
+			if (!lhs->get_birth_date().isValid() || !rhs->get_birth_date().isValid()) {
+				return lhs->get_birth_date().isValid();
+			}
+
+			return lhs->get_birth_date() < rhs->get_birth_date();
+		}
+
+		return lhs->get_identifier() < rhs->get_identifier();
+	});
+
+	//ensure that the tree children are in the correct order
+	this->clear_tree_children();
+
+	for (const character_base *child : this->get_children()) {
+		if (child->get_tree_parent() == this) {
+			this->add_tree_child(child);
+		}
+	}
+}
+
 void character_base::initialize_dates()
 {
 	const int adulthood_age = this->get_adulthood_age();

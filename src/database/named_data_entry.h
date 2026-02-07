@@ -55,6 +55,11 @@ public:
 		return this->tree_children;
 	}
 
+	void clear_tree_children()
+	{
+		this->tree_children.clear();
+	}
+
 	void add_tree_child(const named_data_entry *data_entry);
 	int get_tree_x() const;
 	int get_tree_relative_x(const std::vector<const named_data_entry *> &siblings) const;
