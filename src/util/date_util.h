@@ -12,6 +12,7 @@ static constexpr int hours_per_day = 24;
 
 extern std::string year_to_string(const int year);
 extern std::string year_to_labeled_string(const int year, const std::string_view &year_label = "", const std::string_view &negative_year_label = "BC");
+extern std::string year_range_to_labeled_string(const int start_year, const int end_year, const std::string_view &year_label = "", const std::string_view &negative_year_label = "BC");
 
 inline std::string to_string(const QDate &date)
 {
