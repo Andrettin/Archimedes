@@ -76,7 +76,8 @@ void character_base::check() const
 		throw std::runtime_error(std::format("Character \"{}\" has a start date that is earlier than their birth date.", this->get_identifier()));
 	}
 
-	if (this->get_start_date() < this->get_adulthood_date()) {
+	//characters who die before their generated start date get their death date set as their start date instead
+	if (this->get_start_date() < this->get_adulthood_date() && this->get_start_date() < this->get_death_date()) {
 		throw std::runtime_error(std::format("Character \"{}\" has a start date that is earlier than their date of adulthood.", this->get_identifier()));
 	}
 
@@ -113,7 +114,7 @@ void character_base::sort_children()
 QDate character_base::get_adulthood_date() const
 {
 	QDate adulthood_date = this->get_birth_date();
-	adulthood_date.addYears(this->get_adulthood_age());
+	adulthood_date = adulthood_date.addYears(this->get_adulthood_age());
 	return adulthood_date;
 }
 
