@@ -56,6 +56,10 @@ void character_base::check() const
 		throw std::runtime_error(std::format("The father of character \"{}\" is not male.", this->get_identifier()));
 	}
 
+	if (this->get_biological_father() != nullptr && this->get_biological_father()->get_gender() != gender::male) {
+		throw std::runtime_error(std::format("The biological father of character \"{}\" is not male.", this->get_identifier()));
+	}
+
 	if (this->get_mother() != nullptr && this->get_mother()->get_gender() != gender::female) {
 		throw std::runtime_error(std::format("The mother of character \"{}\" is not female.", this->get_identifier()));
 	}

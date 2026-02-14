@@ -111,6 +111,25 @@ public:
 	{
 		this->father = father;
 		father->add_child(this);
+
+		if (this->get_biological_father() == nullptr) {
+			this->set_biological_father(father);
+		}
+	}
+
+	character_base *get_biological_father() const
+	{
+		return this->biological_father;
+	}
+
+	void set_biological_father(character_base *biological_father)
+	{
+		if (this->get_biological_father() != nullptr) {
+			this->get_biological_father()->remove_biological_child(this);
+		}
+
+		this->biological_father = biological_father;
+		biological_father->add_biological_child(this);
 	}
 
 	character_base *get_mother() const
@@ -122,6 +141,7 @@ public:
 	{
 		this->mother = mother;
 		mother->add_child(this);
+		mother->add_biological_child(this);
 	}
 
 	const std::vector<character_base *> &get_children() const
@@ -132,6 +152,21 @@ public:
 	void add_child(character_base *child)
 	{
 		this->children.push_back(child);
+	}
+
+	const std::vector<character_base *> &get_biological_children() const
+	{
+		return this->biological_children;
+	}
+
+	void add_biological_child(character_base *biological_child)
+	{
+		this->biological_children.push_back(biological_child);
+	}
+
+	void remove_biological_child(character_base *biological_child)
+	{
+		std::erase(this->biological_children, biological_child);
 	}
 
 	void sort_children();
@@ -202,8 +237,10 @@ private:
 	std::string description;
 	archimedes::gender gender;
 	character_base *father = nullptr;
+	character_base *biological_father = nullptr;
 	character_base *mother = nullptr;
 	std::vector<character_base *> children;
+	std::vector<character_base *> biological_children;
 	character_base *contemporary_character = nullptr;
 	QDate birth_date;
 	QDate death_date;
