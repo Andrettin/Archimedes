@@ -53,11 +53,11 @@ void character_base::check() const
 	}
 
 	if (this->get_father() != nullptr && this->get_father()->get_gender() != gender::male) {
-		throw std::runtime_error("The father of character \"" + this->get_identifier() + "\" is not male.");
+		throw std::runtime_error(std::format("The father of character \"{}\" is not male.", this->get_identifier()));
 	}
 
 	if (this->get_mother() != nullptr && this->get_mother()->get_gender() != gender::female) {
-		throw std::runtime_error("The mother of character \"" + this->get_identifier() + "\" is not female.");
+		throw std::runtime_error(std::format("The mother of character \"{}\" is not female.", this->get_identifier()));
 	}
 
 	if (!this->get_birth_date().isValid()) {
@@ -72,7 +72,13 @@ void character_base::check() const
 		throw std::runtime_error(std::format("Character \"{}\" has no start date.", this->get_identifier()));
 	}
 
-	assert_throw(this->get_start_date() >= this->get_birth_date());
+	if (this->get_start_date() < this->get_birth_date()) {
+		throw std::runtime_error(std::format("Character \"{}\" has a start date that is earlier than their birth date.", this->get_identifier()));
+	}
+
+	if (this->get_start_date() < this->get_adulthood_date()) {
+		throw std::runtime_error(std::format("Character \"{}\" has a start date that is earlier than their date of adulthood.", this->get_identifier()));
+	}
 
 	if (this->get_death_date().isValid()) {
 		assert_throw(this->get_start_date() <= this->get_death_date());
@@ -102,6 +108,13 @@ void character_base::sort_children()
 			this->add_tree_child(child);
 		}
 	}
+}
+
+QDate character_base::get_adulthood_date() const
+{
+	QDate adulthood_date = this->get_birth_date();
+	adulthood_date.addYears(this->get_adulthood_age());
+	return adulthood_date;
 }
 
 void character_base::initialize_dates()
