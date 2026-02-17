@@ -54,6 +54,14 @@ inline void remove_value_if(T &map, const function_type &function)
 	}
 }
 
+template <typename T, typename U>
+void merge(T &map, const U &other_map)
+{
+	for (const auto &[key, value] : other_map) {
+		map[key] = value;
+	}
+}
+
 template <typename T>
 inline QVariantList to_qvariant_list(const T &map)
 {
