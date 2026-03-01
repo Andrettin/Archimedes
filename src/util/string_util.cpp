@@ -72,4 +72,50 @@ std::string to_code_page_437(const std::string &str)
 	return result;
 }
 
+std::string snake_case_to_pascal_case(const std::string_view &str)
+{
+	if (str.empty()) {
+		return std::string(str);
+	}
+
+	std::string result;
+	result += static_cast<char>(toupper(str[0]));
+
+	for (size_t pos = 1; pos < str.length(); ++pos) {
+		if (str[pos] == '_') {
+			++pos;
+			result += static_cast<char>(toupper(str[pos]));
+		} else {
+			result += str[pos];
+		}
+	}
+
+	return result;
+}
+
+std::string from_snake_case(const std::string_view &str)
+{
+	//converts from snake case to a display string
+
+	if (str.empty()) {
+		return std::string(str);
+	}
+
+	std::string result;
+	result += static_cast<char>(toupper(str[0]));
+
+	for (size_t pos = 1; pos < str.length(); ++pos) {
+		if (str[pos] == '_') {
+			result += " ";
+			++pos;
+			result += static_cast<char>(toupper(str[pos]));
+		} else {
+			result += str[pos];
+		}
+	}
+
+	return result;
+}
+
+
 }

@@ -264,32 +264,10 @@ inline std::string get_plural_form(const std::string &str)
 	return result;
 }
 
-std::string get_indefinite_article(const std::string &str);
+extern std::string get_indefinite_article(const std::string &str);
 
-inline std::string snake_case_to_pascal_case(const std::string &str)
-{
-	if (str.empty()) {
-		return str;
-	}
-
-	if (str.empty()) {
-		return str;
-	}
-
-	std::string result;
-	result += static_cast<char>(toupper(str[0]));
-
-	for (size_t pos = 1; pos < str.length(); ++pos) {
-		if (str[pos] == '_') {
-			++pos;
-			result += static_cast<char>(toupper(str[pos]));
-		} else {
-			result += str[pos];
-		}
-	}
-
-	return result;
-}
+extern std::string snake_case_to_pascal_case(const std::string_view &str);
+extern std::string from_snake_case(const std::string_view &str);
 
 inline std::string highlight(const std::string_view &str)
 {
