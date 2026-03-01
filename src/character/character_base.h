@@ -29,6 +29,8 @@ public:
 	static constexpr const char class_identifier[] = "character";
 	static constexpr const char database_folder[] = "characters";
 
+	static bool birth_date_compare(const character_base *lhs, const character_base *rhs);
+
 	explicit character_base(const std::string &identifier);
 	~character_base();
 

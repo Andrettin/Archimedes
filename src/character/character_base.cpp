@@ -10,6 +10,19 @@
 
 namespace archimedes {
 
+bool character_base::birth_date_compare(const character_base *lhs, const character_base *rhs)
+{
+	if (lhs->get_birth_date() != rhs->get_birth_date()) {
+		if (!lhs->get_birth_date().isValid() || !rhs->get_birth_date().isValid()) {
+			return lhs->get_birth_date().isValid();
+		}
+
+		return lhs->get_birth_date() < rhs->get_birth_date();
+	}
+
+	return lhs->get_identifier() < rhs->get_identifier();
+}
+
 character_base::character_base(const std::string &identifier)
 	: named_data_entry(identifier), gender(gender::none)
 {
@@ -93,17 +106,7 @@ void character_base::check() const
 
 void character_base::sort_children()
 {
-	std::sort(this->children.begin(), this->children.end(), [](const character_base *lhs, const character_base *rhs) {
-		if (lhs->get_birth_date() != rhs->get_birth_date()) {
-			if (!lhs->get_birth_date().isValid() || !rhs->get_birth_date().isValid()) {
-				return lhs->get_birth_date().isValid();
-			}
-
-			return lhs->get_birth_date() < rhs->get_birth_date();
-		}
-
-		return lhs->get_identifier() < rhs->get_identifier();
-	});
+	std::sort(this->children.begin(), this->children.end(), character_base::birth_date_compare);
 
 	//ensure that the tree children are in the correct order
 	this->clear_tree_children();
