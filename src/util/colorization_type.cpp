@@ -4,8 +4,6 @@
 
 namespace archimedes {
 
-template class enum_converter<colorization_type>;
-
 template <>
 const std::string enum_converter<colorization_type>::property_class_identifier = "archimedes::colorization_type";
 
@@ -23,5 +21,7 @@ const std::map<std::string, colorization_type> enum_converter<colorization_type>
 
 template <>
 const bool enum_converter<colorization_type>::initialized = enum_converter::initialize();
+
+template class enum_converter<colorization_type>;
 
 }

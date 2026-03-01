@@ -12,8 +12,6 @@ enum class log_level {
 	error
 };
 
-extern template class enum_converter<log_level>;
-
 inline std::string_view get_log_level_name(const log_level level)
 {
 	switch (level) {

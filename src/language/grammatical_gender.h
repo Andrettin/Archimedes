@@ -11,8 +11,6 @@ enum class grammatical_gender {
 	neuter
 };
 
-extern template class enum_converter<grammatical_gender>;
-
 inline std::string grammatical_gender_to_name(const grammatical_gender gender)
 {
 	switch (gender) {

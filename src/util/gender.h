@@ -12,8 +12,6 @@ enum class gender {
 	count
 };
 
-extern template class enum_converter<gender>;
-
 inline std::string get_gender_name(const gender gender)
 {
 	switch (gender) {

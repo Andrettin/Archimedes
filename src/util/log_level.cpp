@@ -4,8 +4,6 @@
 
 namespace archimedes {
 
-template class enum_converter<log_level>;
-
 template <>
 const std::string enum_converter<log_level>::property_class_identifier = "archimedes::log_level";
 
@@ -20,5 +18,7 @@ const std::map<std::string, log_level> enum_converter<log_level>::string_to_enum
 
 template <>
 const bool enum_converter<log_level>::initialized = enum_converter::initialize();
+
+template class enum_converter<log_level>;
 
 }

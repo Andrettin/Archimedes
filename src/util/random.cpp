@@ -34,6 +34,9 @@ template int32_t random::generate_in_range<int32_t>(std::mt19937 &, const int32_
 template uint32_t random::generate_in_range<uint32_t>(std::mt19937 &, const uint32_t, const uint32_t);
 template int64_t random::generate_in_range<int64_t>(std::mt19937 &, const int64_t, const int64_t);
 template uint64_t random::generate_in_range<uint64_t>(std::mt19937 &, const uint64_t, const uint64_t);
+#ifdef __APPLE__
+template unsigned long random::generate_in_range<unsigned long>(std::mt19937 &, const unsigned long, const unsigned long);
+#endif
 
 int random::roll_dice(const dice &dice)
 {

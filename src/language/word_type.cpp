@@ -4,8 +4,6 @@
 
 namespace archimedes {
 
-template class enum_converter<word_type>;
-
 template <>
 const std::string enum_converter<word_type>::property_class_identifier = "archimedes::word_type";
 
@@ -26,5 +24,7 @@ const std::map<std::string, word_type> enum_converter<word_type>::string_to_enum
 
 template <>
 const bool enum_converter<word_type>::initialized = enum_converter::initialize();
+
+template class enum_converter<word_type>;
 
 }

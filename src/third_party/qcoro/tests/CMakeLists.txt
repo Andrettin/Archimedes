@@ -98,7 +98,7 @@ function(qcoro_add_quick_test _name)
         PRIVATE
         QCoro${QT_VERSION_MAJOR}Quick
         Qt${QT_VERSION_MAJOR}::Quick
-        Qt${QT_VERSION_MAJOR}::QuickPrivate
+        $<TARGET_NAME_IF_EXISTS:Qt${QT_VERSION_MAJOR}::QuickPrivate>
     )
     get_test_property(test-${_name} ENVIRONMENT _env)
     list(APPEND _env QT_QPA_PLATFORM=offscreen)

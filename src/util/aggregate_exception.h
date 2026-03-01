@@ -10,7 +10,7 @@ public:
 	{
 	}
 
-	virtual const char *what() const override
+	virtual const char *what() const noexcept override
 	{
 		return this->message.c_str();
 	}

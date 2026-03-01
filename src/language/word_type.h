@@ -18,8 +18,6 @@ enum class word_type {
 	affix
 };
 
-extern template class enum_converter<word_type>;
-
 inline std::string word_type_to_name(const word_type type)
 {
 	switch (type) {

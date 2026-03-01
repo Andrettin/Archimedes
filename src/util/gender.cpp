@@ -4,8 +4,6 @@
 
 namespace archimedes {
 
-template class enum_converter<gender>;
-
 template <>
 const std::string enum_converter<gender>::property_class_identifier = "archimedes::gender";
 
@@ -18,5 +16,7 @@ const std::map<std::string, gender> enum_converter<gender>::string_to_enum_map =
 
 template <>
 const bool enum_converter<gender>::initialized = enum_converter::initialize();
+
+template class enum_converter<gender>;
 
 }

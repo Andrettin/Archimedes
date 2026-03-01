@@ -4,8 +4,6 @@
 
 namespace archimedes {
 
-template class enum_converter<grammatical_gender>;
-
 template <>
 const std::string enum_converter<grammatical_gender>::property_class_identifier = "archimedes::grammatical_gender";
 
@@ -19,5 +17,7 @@ const std::map<std::string, grammatical_gender> enum_converter<grammatical_gende
 
 template <>
 const bool enum_converter<grammatical_gender>::initialized = enum_converter::initialize();
+
+template class enum_converter<grammatical_gender>;
 
 }

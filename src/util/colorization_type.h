@@ -16,6 +16,4 @@ enum class colorization_type {
 
 }
 
-extern template class archimedes::enum_converter<archimedes::colorization_type>;
-
 Q_DECLARE_METATYPE(archimedes::colorization_type)
