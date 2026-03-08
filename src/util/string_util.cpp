@@ -6,6 +6,14 @@
 
 namespace archimedes::string {
 
+void replace_last(std::string &str, const std::string_view &find, const std::string_view &replace)
+{
+	const size_t pos = str.rfind(find);
+	if (pos != std::string::npos) {
+		str.replace(pos, find.length(), replace);
+	}
+}
+
 void normalize(std::string &str)
 {
 	//remove special characters from the string that shouldn't be displayed even in strings for which accented characters are acceptable

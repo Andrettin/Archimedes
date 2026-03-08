@@ -91,6 +91,8 @@ inline void remove_start(std::string &str, const char find)
 	}
 }
 
+extern void replace_last(std::string &str, const std::string_view &find, const std::string_view &replace);
+
 inline void to_lower(std::string &str)
 {
 	std::transform(str.begin(), str.end(), str.begin(), [](const char c) {
@@ -246,19 +248,19 @@ inline std::string get_plural_form(const std::string &str)
 	std::string result(str);
 
 	if (result.ends_with("y") && result != "Monkey") {
-		string::replace(result, "y", "ies");
+		string::replace_last(result, "y", "ies");
 	} else if (result.ends_with("ch") || result.ends_with("os") || result.ends_with("ps") || result.ends_with("sh") || result.ends_with("us") || result.ends_with("x")) {
 		result += "es";
 	} else if (result.ends_with("man") && result != "Human") {
-		string::replace(result, "man", "men");
+		string::replace_last(result, "man", "men");
 	} else if (result.ends_with("f")) {
-		string::replace(result, "f", "ves");
+		string::replace_last(result, "f", "ves");
 	} else if (!result.ends_with("s")) {
 		result += "s";
 	} else if (result.ends_with("mouse")) {
-		string::replace(result, "mouse", "mice");
+		string::replace_last(result, "mouse", "mice");
 	} else if (result.ends_with("Mouse")) {
-		string::replace(result, "Mouse", "Mice");
+		string::replace_last(result, "Mouse", "Mice");
 	}
 
 	return result;
