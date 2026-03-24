@@ -46,6 +46,11 @@ public:
 		}
 	}
 
+	void set_base_value(const base_value_type &value)
+	{
+		this->base_value = value;
+	}
+
 	virtual int get_value(const scope_type *scope) const
 	{
 		Q_UNUSED(scope);

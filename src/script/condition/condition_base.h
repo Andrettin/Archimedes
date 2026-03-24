@@ -78,6 +78,11 @@ public:
 		data.process(this);
 	}
 
+	void set_condition_operator(const gsml_operator condition_operator)
+	{
+		this->condition_operator = condition_operator;
+	}
+
 	virtual void check_validity() const
 	{
 	}
