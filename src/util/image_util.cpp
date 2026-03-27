@@ -522,4 +522,28 @@ void set_outline_color(QImage &image, const QColor &color)
 	}
 }
 
+QImage to_silhouette(const QImage &image)
+{
+	QImage silhouette_image = image;
+
+	if (silhouette_image.format() != QImage::Format_RGBA8888) {
+		silhouette_image = silhouette_image.convertToFormat(QImage::Format_RGBA8888);
+	}
+
+	for (int x = 0; x < image.width(); ++x) {
+		for (int y = 0; y < image.height(); ++y) {
+			const QPoint pixel_pos = QPoint(x, y);
+			const QColor pixel_color = image.pixelColor(pixel_pos);
+
+			if (pixel_color.alpha() == 0) {
+				continue;
+			}
+
+			silhouette_image.setPixelColor(pixel_pos, Qt::black);
+		}
+	}
+
+	return silhouette_image;
+}
+
 }

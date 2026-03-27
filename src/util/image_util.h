@@ -284,4 +284,6 @@ inline void apply_redscale(QImage &image)
 	}
 }
 
+extern QImage to_silhouette(const QImage &image);
+
 }
