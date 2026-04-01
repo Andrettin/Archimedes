@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# IDE and editor config
+.cursor/
+.vscode/
+
+# Build
+build/
