@@ -2,7 +2,9 @@
 
 #include "util/string_conversion_util.h"
 
+#include "util/assert_util.h"
 #include "util/string_util.h"
+#include "util/time_util.h"
 
 namespace archimedes::string {
 
@@ -101,6 +103,65 @@ QTime to_time(const std::string &time_str)
 	}
 
 	return time;
+}
+
+std::chrono::seconds to_duration(const std::string &str)
+{
+	const auto [number_str, unit_str] = string::to_number_string_and_unit_string(str);
+
+	const int64_t number = std::stoll(number_str);
+
+	assert_throw(!unit_str.empty());
+
+	const auto find_iterator = time::time_units_by_short_name.find(unit_str);
+	assert_throw(find_iterator != time::time_units_by_short_name.end());
+
+	const time::time_unit time_unit = find_iterator->second;
+
+	switch (time_unit) {
+		case time::time_unit::seconds:
+			return std::chrono::seconds(number);
+		case time::time_unit::minutes:
+			return std::chrono::minutes(number);
+		case time::time_unit::hours:
+			return std::chrono::hours(number);
+		default:
+			assert_throw(false);
+			break;
+	}
+
+	return {};
+}
+
+std::pair<std::string, std::string> to_number_string_and_unit_string(const std::string &str)
+{
+	size_t suffix_pos = std::string::npos;
+	bool has_suffix = false;
+
+	for (int i = (static_cast<int>(str.size()) - 1); i >= 0; --i) {
+		const char c = str[i];
+
+		if (!std::isdigit(c)) {
+			has_suffix = true;
+			continue;
+		}
+
+		if (!has_suffix) {
+			break;
+		}
+
+		suffix_pos = i + 1;
+		break;
+	}
+
+	if (suffix_pos == std::string::npos) {
+		return { str, "" };
+	}
+
+	const std::string number_str = str.substr(0, suffix_pos);
+	const std::string suffix = str.substr(suffix_pos);
+
+	return { number_str, suffix };
 }
 
 }

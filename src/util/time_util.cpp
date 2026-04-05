@@ -6,6 +6,12 @@
 
 namespace archimedes::time {
 
+const std::map<std::string, time_unit> time_units_by_short_name = {
+	{ "s", time_unit::seconds },
+	{ "min", time_unit::minutes },
+	{ "h", time_unit::hours }
+};
+
 decimillesimal_int to_number(const QTime &time)
 {
 	int64_t n = time.hour() * decimillesimal_int::divisor;

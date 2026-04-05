@@ -34,5 +34,7 @@ inline char to_character(const std::string &str)
 extern QDateTime to_date_time(const std::string &date_str);
 extern QDate to_date(const std::string &date_str);
 extern QTime to_time(const std::string &time_str);
+extern std::chrono::seconds to_duration(const std::string &str);
+extern std::pair<std::string, std::string> to_number_string_and_unit_string(const std::string &str);
 
 }
