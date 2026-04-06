@@ -164,4 +164,12 @@ std::pair<std::string, std::string> to_number_string_and_unit_string(const std::
 	return { number_str, suffix };
 }
 
+std::pair<int, int> to_numerator_and_denominator(const std::string &str)
+{
+	const size_t separator_pos = str.find("/");
+	const int numerator = std::stoi(str.substr(0, separator_pos));
+	const int denominator = std::stoi(str.substr(separator_pos + 1, str.size() - separator_pos - 1));
+	return { numerator, denominator };
+}
+
 }
