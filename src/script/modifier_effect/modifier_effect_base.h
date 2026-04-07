@@ -42,7 +42,19 @@ public:
 		return this->value * multiplier;
 	}
 
-	virtual void apply(scope_type *scope, const centesimal_int &multiplier) const = 0;
+	virtual void apply(scope_type *scope, const centesimal_int &multiplier) const
+	{
+		Q_UNUSED(scope);
+		Q_UNUSED(multiplier);
+
+		throw std::runtime_error(std::format("The non-coroutine application function is not supported for \"{}\" modifier effects.", this->get_identifier()));
+	}
+
+	[[nodiscard]] virtual QCoro::Task<void> apply_coro(scope_type *scope, const centesimal_int &multiplier) const
+	{
+		this->apply(scope, multiplier);
+		co_return;
+	}
 
 	virtual std::string get_base_string(const scope_type *scope) const = 0;
 

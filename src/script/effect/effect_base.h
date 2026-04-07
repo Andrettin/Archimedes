@@ -62,12 +62,13 @@ public:
 	{
 	}
 
-	void do_effect(scope_type *scope, context_type &ctx) const
+	[[nodiscard]]
+	QCoro::Task<void> do_effect(scope_type *scope, context_type &ctx) const
 	{
 		try {
 			switch (this->effect_operator) {
 				case gsml_operator::assignment:
-					this->do_assignment_effect(scope, ctx);
+					co_await this->do_assignment_effect_coro(scope, ctx);
 					break;
 				case gsml_operator::addition:
 					this->do_addition_effect(scope, ctx);
@@ -97,6 +98,12 @@ public:
 		this->do_assignment_effect(scope);
 	}
 
+	[[nodiscard]] virtual QCoro::Task<void> do_assignment_effect_coro(scope_type *scope, context_type &ctx) const
+	{
+		this->do_assignment_effect(scope, ctx);
+		co_return;
+	}
+
 	virtual void do_addition_effect(scope_type *scope) const
 	{
 		Q_UNUSED(scope)
@@ -111,6 +118,12 @@ public:
 		this->do_addition_effect(scope);
 	}
 
+	[[nodiscard]] virtual QCoro::Task<void> do_addition_effect_coro(scope_type *scope, context_type &ctx) const
+	{
+		this->do_addition_effect(scope, ctx);
+		co_return;
+	}
+
 	virtual void do_subtraction_effect(scope_type *scope) const
 	{
 		Q_UNUSED(scope)
@@ -123,6 +136,12 @@ public:
 		Q_UNUSED(ctx);
 
 		this->do_subtraction_effect(scope);
+	}
+
+	[[nodiscard]] virtual QCoro::Task<void> do_subtraction_effect_coro(scope_type *scope, context_type &ctx) const
+	{
+		this->do_subtraction_effect(scope, ctx);
+		co_return;
 	}
 
 	std::string get_string(const scope_type *scope, const read_only_context_type &ctx, const size_t indent, const std::string &prefix) const

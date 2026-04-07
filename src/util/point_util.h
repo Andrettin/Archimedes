@@ -119,6 +119,20 @@ inline void for_each_adjacent(const QPoint &point, const function_type &function
 }
 
 template <typename function_type>
+inline QCoro::Task<void> for_each_adjacent_coro(const QPoint &point, const function_type &function)
+{
+	for (int x_offset = -1; x_offset <= 1; ++x_offset) {
+		for (int y_offset = -1; y_offset <= 1; ++y_offset) {
+			if (x_offset == 0 && y_offset == 0) {
+				continue;
+			}
+
+			co_await function(QPoint(point.x() + x_offset, point.y() + y_offset));
+		}
+	}
+}
+
+template <typename function_type>
 inline void for_each_adjacent_until(const QPoint &point, const function_type &function)
 {
 	for (int x_offset = -1; x_offset <= 1; ++x_offset) {
