@@ -71,10 +71,10 @@ public:
 					co_await this->do_assignment_effect_coro(scope, ctx);
 					break;
 				case gsml_operator::addition:
-					this->do_addition_effect(scope, ctx);
+					co_await this->do_addition_effect_coro(scope, ctx);
 					break;
 				case gsml_operator::subtraction:
-					this->do_subtraction_effect(scope, ctx);
+					co_await this->do_subtraction_effect_coro(scope, ctx);
 					break;
 				default:
 					throw std::runtime_error("Invalid effect operator: \"" + std::to_string(static_cast<int>(this->effect_operator)) + "\".");
