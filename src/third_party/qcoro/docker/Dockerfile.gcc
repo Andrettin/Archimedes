@@ -38,7 +38,7 @@ RUN ln -s x86_64-linux-gnu /usr/lib/x86_64-unknown-linux-gnu
 WORKDIR /root
 # Necessary to allow using pip on newer images (--break-system-packages doesn't work on older images)
 RUN rm -f /usr/lib/python$(python3 --version | grep -oE "3.[0-9]+")/EXTERNALLY-MANAGED \
-    && pip3 install aqtinstall
+    && pip3 install 'aqtinstall==3.2.0'
 COPY install-qt.sh ./install-qt.sh
 RUN ./install-qt.sh "${qt_version}" "${qt_modules}" "${qt_archives}"
 

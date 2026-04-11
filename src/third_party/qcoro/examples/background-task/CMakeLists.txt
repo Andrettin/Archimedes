@@ -5,3 +5,5 @@ target_link_libraries(background-task-example
     QCoro${QT_VERSION_MAJOR}Core
     Qt${QT_VERSION_MAJOR}::Core
 )
+set_target_defaults(background-task-example)
+

@@ -1,6 +1,6 @@
 function(generate_headers output_var)
     set(options)
-    set(oneValueArgs OUTPUT_DIR ORIGINAL_PREFIX ORIGINAL_HEADERS_VAR)
+    set(oneValueArgs OUTPUT_DIR ORIGINAL_PREFIX ORIGINAL_HEADERS_VAR SOURCE_DIR)
     set(multiValueArgs HEADER_NAMES)
     cmake_parse_arguments(GH "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
@@ -8,9 +8,13 @@ function(generate_headers output_var)
         set(GH_OUTPUT_DIR "${GH_OUTPUT_DIR}/")
     endif()
 
+    if (NOT GH_SOURCE_DIR)
+        set(GH_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+    endif()
+
     foreach(_headername ${GH_HEADER_NAMES})
         string(TOLOWER "${_headername}" originalbase)
-        set(CC_ORIGINAL_FILE "${CMAKE_CURRENT_SOURCE_DIR}/${GH_ORIGINAL_PREFIX}/${originalbase}.h")
+        set(CC_ORIGINAL_FILE "${GH_SOURCE_DIR}/${GH_ORIGINAL_PREFIX}/${originalbase}.h")
         if (NOT EXISTS ${CC_ORIGINAL_FILE})
             message(FATAL_ERROR "Could not find header \"${CC_ORIGINAL_FILE}\"")
         endif()

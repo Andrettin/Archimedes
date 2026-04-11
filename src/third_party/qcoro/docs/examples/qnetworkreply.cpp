@@ -8,8 +8,8 @@ QCoro::Task<> MyClass::fetchData() {
     auto *reply = co_await nam.get(QUrl{QStringLiteral("https://.../api/fetch")});
     // When the reply finishes, the coroutine is resumed and we can access the reply content.
     const auto data = reply->readAll();
-    // Raise your hand if you never forgot to delete a QNetworkReply...
-    delete reply;
+    // Raise your hand if you ever forgot to delete a QNetworkReply...
+    reply->deleteLater();
     doSomethingWithData(data);
     // Extra bonus: the QNetworkAccessManager is destroyed automatically, since it's on stack.
 }

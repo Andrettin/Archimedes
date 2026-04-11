@@ -4,3 +4,5 @@ target_link_libraries(future-example
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Concurrent
 )
+set_target_defaults(future-example)
+

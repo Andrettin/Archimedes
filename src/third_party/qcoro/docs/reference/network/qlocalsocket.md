@@ -22,15 +22,15 @@ QCoroLocalSocket qCoro(QLocalSocket &);
 QCoroLocalSocket qCoro(QLocalSocket *);
 ```
 
-Same as `QLocalSocket` is a subclass of `QIODevice`, `QCoroLocalSocket` subclasses
+Just as `QLocalSocket` is a subclass of `QIODevice`, `QCoroLocalSocket` subclasses
 [`QCoroIODevice`][qcoro-qcoroiodevice], so it also provides the awaitable interface for selected
 `QIODevice` functions. See [`QCoroIODevice`][qcoro-qcoroiodevice] documentation for details.
 
 ## `waitForConnected()`
 
-Waits for the socket to connect or until it times out. Returns `bool` indicating whether
+Waits for the socket to connect or until it times out. Returns `bool` indicating whether the
 connection has been established (`true`) or whether the operation has timed out or another
-error has occurred (`false`). Returns immeditelly if the socket is already in connected
+error has occurred (`false`). Returns immediately if the socket is already in connected
 state.
 
 If the timeout is -1, the operation will never time out.
@@ -46,7 +46,7 @@ QCoro::Task<bool> QCoroLocalSocket::waitForConnected(std::chrono::milliseconds t
 ## `waitForDisconnected()`
 
 Waits for the socket to disconnect from the server or until the operation times out.
-Returns immediatelly if the socket is not in connected state.
+Returns immediately if the socket is not in connected state.
 
 If the timeout is -1, the operation will never time out.
 

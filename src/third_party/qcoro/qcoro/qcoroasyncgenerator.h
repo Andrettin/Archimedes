@@ -8,6 +8,7 @@
 #pragma once
 
 #include "coroutine.h"
+#include "mixins_p.h"
 
 #include <iterator>
 #include <exception>
@@ -25,7 +26,7 @@ class AsyncGeneratorIterator;
 class AsyncGeneratorYieldOperation;
 class AsyncGeneratorAdvanceOperation;
 
-class AsyncGeneratorPromiseBase {
+class AsyncGeneratorPromiseBase : public AwaitTransformMixin {
 public:
     AsyncGeneratorPromiseBase() noexcept = default;
     AsyncGeneratorPromiseBase(const AsyncGeneratorPromiseBase &) = delete;
@@ -102,7 +103,8 @@ inline AsyncGeneratorYieldOperation AsyncGeneratorPromiseBase::internal_yield_va
 
 class IteratorAwaitableBase {
 protected:
-    explicit IteratorAwaitableBase(std::nullptr_t) noexcept {}
+    constexpr explicit IteratorAwaitableBase(std::nullptr_t) noexcept {}
+
     IteratorAwaitableBase(
         AsyncGeneratorPromiseBase &promise,
         std::coroutine_handle<> producerCoroutine) noexcept
@@ -202,7 +204,7 @@ public:
     using reference = std::add_lvalue_reference_t<T>;
     using pointer = std::add_pointer_t<value_type>;
 
-    explicit AsyncGeneratorIterator(std::nullptr_t) noexcept {}
+    explicit constexpr AsyncGeneratorIterator(std::nullptr_t) noexcept {}
     explicit AsyncGeneratorIterator(handle_type coroutine) noexcept
         : m_coroutine(coroutine)
     {}
@@ -353,7 +355,7 @@ public:
     }
 
     /// Returns an iterator representing the finished generator.
-    auto end() noexcept {
+    constexpr iterator end() const noexcept {
         return iterator{nullptr};
     }
 

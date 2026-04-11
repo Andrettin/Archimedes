@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18.4)
-set(qcoro_VERSION 0.11.0)
+set(qcoro_VERSION 0.13.0)
 set(qcoro_SOVERSION 0)
 project(qcoro LANGUAGES CXX VERSION ${qcoro_VERSION})
 
@@ -110,23 +110,12 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_AUTOMOC ON)
 
 if (MSVC)
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /W4 /WX")
-    # Disable warning C5054: "operator '&': deprecated between enumerations of different types" caused by QtWidgets/qsizepolicy.h
-    # Disable warning C4127: "conditional expression is constant" caused by QtCore/qiterable.h
-    if ("${QT_VERSION_MAJOR}" STREQUAL "6" AND "${Qt6_VERSION}" VERSION_GREATER_EQUAL "6.4.0" AND "${Qt6_VERSION}" VERSION_LESS "6.5.3")
-        # Disable warning C4702: "unreachable code" caused by QtTest/qtestcase.h - fixed in Qt 6.5.3
-        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /wd5054 /wd4127 /wd4702")
-    endif()
-
     if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         # Explicitly enable exceptions support for clang-cl (it's only enabled by CMake when targeting the Windows-MSVC platform,
         # see https://github.com/danvratil/qcoro/issues/90 for details)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
     endif()
 else()
-    # Only enable strict warnings in debug mode
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Werror -pedantic")
-
     if (ANDROID)
         include(DetectAndroidNDKVersion)
         detectAndroidNDKVersion(NDK_VERSION)
@@ -151,22 +140,6 @@ if (QCORO_ENABLE_ASAN)
     else()
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fsanitize-recover=address")
     endif()
-endif()
-
-add_compile_definitions(
-    QT_NO_CAST_FROM_ASCII
-    QT_NO_CAST_TO_ASCII
-    QT_NO_URL_CAST_FROM_STRING
-    QT_NO_CAST_FROM_BYTEARRAY
-    QT_USE_STRINGBUILDER
-    QT_NO_NARROWING_CONVERSIONS_IN_CONNECT
-    QT_NO_KEYWORDS
-    QT_NO_FOREACH
-)
-if (NOT WIN32)
-    # strict iterators on MSVC only work when Qt itself is also built with them,
-    # which is not usually the case. Otherwise there are linking issues.
-    add_compile_definitions(QT_STRICT_ITERATORS)
 endif()
 
 include(qcoro/QCoroMacros.cmake)

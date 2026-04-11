@@ -7,6 +7,41 @@ include(GenerateExportHeader)
 include(GenerateModuleConfigFile)
 include(ECMGeneratePriFile)
 
+function(set_target_defaults target_name)
+    set(DEFAULT_QT_DEFINITIONS QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII QT_NO_URL_CAST_FROM_STRING QT_NO_CAST_FROM_BYTEARRAY QT_USE_STRINGBUILDER QT_NO_NARROWING_CONVERSIONS_IN_CONNECT QT_NO_KEYWORDS QT_NO_FOREACH)
+
+    get_target_property(target_type ${target_name} TYPE)
+    if (target_type STREQUAL "INTERFACE_LIBRARY")
+        # We can't set compile definitions for interface libraries as that would leak into user code
+        return()
+    endif()
+
+    target_compile_definitions(${target_name} PRIVATE ${DEFAULT_QT_DEFINITIONS})
+    
+    if (NOT WIN32)
+        # strict iterators on MSVC only work when Qt itself is also built with them,
+        # which is not usually the case. Otherwise there are linking issues.
+        target_compile_definitions(${target_name} PRIVATE QT_STRICT_ITERATORS)
+    endif()
+
+    string(TOLOWER "${CMAKE_BUILD_TYPE}" build_type_lowercase)
+    if ("${build_type_lowercase}" STREQUAL "debug")
+        if (MSVC)
+            target_compile_options(${target_name} PRIVATE /W4 /WX)
+            # Disable warning C5054: "operator '&': deprecated between enumerations of different types" caused by QtWidgets/qsizepolicy.h
+            # Disable warning C4127: "conditional expression is constant" caused by QtCore/qiterable.h
+            target_compile_options(${target_name} PRIVATE /wd5054 /wd4127)
+            if ("${QT_VERSION_MAJOR}" STREQUAL "6" AND "${Qt6_VERSION}" VERSION_GREATER_EQUAL "6.4.0" AND "${Qt6_VERSION}" VERSION_LESS "6.5.3")
+                # Disable warning C4702: "unreachable code" caused by QtTest/qtestcase.h - fixed in Qt 6.5.3
+                target_compile_options(${target_name} PRIVATE /wd4702)
+            endif()
+        else()
+            target_compile_options(${target_name} PRIVATE -Wall -Wextra -Werror -pedantic -Wno-language-extension-token)
+        endif()
+    endif()
+
+endfunction()
+
 function(add_qcoro_library)
     function(prefix_libraries)
         set(oneValueArgs PREFIX OUTPUT)
@@ -89,6 +124,7 @@ function(add_qcoro_library)
         ${target_include_interface} $<BUILD_INTERFACE:${QCORO_SOURCE_DIR}/qcoro>
         ${target_include_interface} $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         ${target_include_interface} $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+        ${target_include_interface} $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/QCoro>
         ${target_include_interface} $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
         ${target_include_interface} $<INSTALL_INTERFACE:${QCORO_INSTALL_INCLUDEDIR}>
         ${target_include_interface} $<INSTALL_INTERFACE:${QCORO_INSTALL_INCLUDEDIR}/qcoro>
@@ -108,6 +144,8 @@ function(add_qcoro_library)
         EXPORT_NAME ${LIB_NAME}
     )
 
+    set_target_defaults(${target_name})
+    
     if (NOT LIB_INTERFACE)
         set_target_properties(
             ${target_name}
@@ -117,6 +155,7 @@ function(add_qcoro_library)
             SOVERSION ${qcoro_SOVERSION}
         )
         target_code_coverage(${target_name} AUTO)
+
     else()
         target_code_coverage(${target_name} AUTO INTERFACE)
     endif()

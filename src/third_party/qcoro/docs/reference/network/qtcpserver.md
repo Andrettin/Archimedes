@@ -11,7 +11,7 @@ SPDX-License-Identifier: GFDL-1.3-or-later
 [`QTcpServer`][qtdoc-qtcpserver] really only has one asynchronous operation worth `co_await`ing, and that's
 `waitForNewConnection()`.
 
-Since `QTcpServer` doesn't provide the ability to `co_await` those operations, QCoro provides
+Since `QTcpServer` doesn't provide the ability to `co_await` that operation, QCoro provides
  a wrapper class `QCoroTcpServer`. To wrap a `QTcpServer` object into the `QCoroTcpServer`
  wrapper, use [`qCoro()`][qcoro-coro]:
 

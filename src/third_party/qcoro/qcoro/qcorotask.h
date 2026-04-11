@@ -6,6 +6,7 @@
 
 #include "coroutine.h"
 #include "concepts_p.h"
+#include "mixins_p.h"
 
 #include <atomic>
 #include <exception>
@@ -22,12 +23,6 @@ class Task;
 /*! \cond internal */
 
 namespace detail {
-
-template<typename T>
-struct awaiter_type;
-
-template<typename T>
-using awaiter_type_t = typename awaiter_type<T>::type;
 
 //! Continuation that resumes a coroutine co_awaiting on currently finished coroutine.
 class TaskFinalSuspend {
@@ -111,7 +106,7 @@ private:
  *  * await_transform() - this one is optional and is used by co_awaits inside the coroutine.
  *    It allows the promise to transform the co_awaited type to an Awaitable.
  */
-class TaskPromiseBase {
+class TaskPromiseBase: public AwaitTransformMixin {
 public:
     //! Called when the coroutine is started to decide whether it should be suspended or not.
     /*!
@@ -127,32 +122,6 @@ public:
      * This decides what should happen when the coroutine is finished.
      */
     auto final_suspend() const noexcept;
-
-    //! Called by co_await to obtain an Awaitable for type \c T.
-    /*!
-     * When co_awaiting on a value of type \c T, the type \c T must an Awaitable. To allow
-     * to co_await even on types that are not Awaitable (e.g. 3rd party types like QNetworkReply),
-     * C++ allows promise_type to provide \c await_transform() function that can transform
-     * the type \c T into an Awaitable. This is a very powerful mechanism in C++ coroutines.
-     *
-     * For types \c T for which there is no valid await_transform() overload, the C++ attempts
-     * to use those types directly as Awaitables. This is a perfectly valid scenario in cases
-     * when co_awaiting a type that implements the neccessary Awaitable interface.
-     *
-     * In our implementation, the await_transform() is overloaded only for Qt types for which
-     * a specialiation of the \c QCoro::detail::awaiter_type template class exists. The
-     * specialization returns type of the Awaiter for the given type \c T.
-     */
-    template<typename T, typename Awaiter = QCoro::detail::awaiter_type_t<std::remove_cvref_t<T>>>
-    auto await_transform(T &&value);
-
-    //! If the type T is already an awaitable (including Task or LazyTask), then just forward it as it is.
-    template<Awaitable T>
-    auto && await_transform(T &&awaitable);
-
-    //! \copydoc template<Awaitable T> QCoro::TaskPromiseBase::await_transform(T &&)
-    template<Awaitable T>
-    auto &await_transform(T &awaitable);
 
     //! Called by \c TaskAwaiter when co_awaited.
     /*!
@@ -219,9 +188,6 @@ public:
 
     template<typename U> requires QCoro::concepts::constructible_from<T, U>
     void return_value(U &&value) noexcept;
-
-    template<typename U> requires QCoro::concepts::constructible_from<T, U>
-    void return_value(const U &value) noexcept;
 
     //! Retrieves the result of the coroutine.
     /*!

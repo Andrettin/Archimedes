@@ -100,7 +100,7 @@ If the coroutine throws an exception, the exception is re-thrown when the result
 continuation is `co_await`ed. If the result of the continuation is not `co_await`ed, the exception
 is silently ignored.
 
-If an exception is thrown from the `ThenCallback`, then the exception is either propagated to the nex
+If an exception is thrown from the `ThenCallback`, then the exception is either propagated to the next
 chained `then()` continuation or re-thrown if directly `co_await`ed. If the result is not `co_await`ed
 and no futher `then()` continuation is chained after the one that has thrown, then the exception is
 silently ignored.
@@ -159,7 +159,7 @@ Since QCoro 0.8.0 it is possible to use `QCoro::waitFor()` with any awaitable ty
 
 ```cpp
 QCoro::Task<int> computeAnswer() {
-    co_await QCoro::sleepFor(std::chrono::years{7'500'00});
+    co_await QCoro::sleepFor(std::chrono::years{7'500'000});
     co_return 42;
 }
 

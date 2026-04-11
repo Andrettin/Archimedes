@@ -72,7 +72,7 @@ public:
 
      Returns a `QDBusMessage` representing the received reply. If the reply is already
      finished or an error has occurred the coroutine will not suspend and will return
-     a result immediatelly.
+     a result immediately.
 
      This is a coroutine-friendly equivalent to using [`QDBusPendingCallWatcher`][qdoc-qdbuspendingcallwatcher]:
 

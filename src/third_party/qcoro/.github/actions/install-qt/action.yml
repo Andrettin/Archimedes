@@ -27,7 +27,7 @@ runs:
     - name: Install Qt
       shell: bash
       run: |
-        pip3 install aqtinstall~=2.1
+        pip3 install --break-system-packages aqtinstall~=2.1
         case "${{ inputs.platform }}" in
           "windows")
             QT_ARCH="win64_msvc2019_64"

@@ -23,7 +23,8 @@ private:
     class WaitForFinishedOperationBase {
     public:
         explicit WaitForFinishedOperationBase(const QFuture<T_> &future)
-                : mFuture(future) {}
+            : mFuture(future) {}
+
         Q_DISABLE_COPY(WaitForFinishedOperationBase)
         QCORO_DEFAULT_MOVE(WaitForFinishedOperationBase)
 
@@ -32,15 +33,18 @@ private:
         }
 
         void await_suspend(std::coroutine_handle<> awaitingCoroutine) {
-            auto *watcher = new QFutureWatcher<T_>();
-            QObject::connect(watcher, &QFutureWatcherBase::finished, [watcher, awaitingCoroutine]() mutable {
-                watcher->deleteLater();
-                awaitingCoroutine.resume();
-            });
+            auto *watcher = new QFutureWatcher<T_>(mContext.get());
+            QObject::connect(
+                watcher, &QFutureWatcherBase::finished,
+                mContext.get(), [awaitingCoroutine]() mutable {
+                    // watcher will get deleted with mContext
+                    awaitingCoroutine.resume();
+                });
             watcher->setFuture(mFuture);
         }
 
     protected:
+        std::unique_ptr<QObject> mContext = std::make_unique<QObject>();
         QFuture<T_> mFuture;
     };
 

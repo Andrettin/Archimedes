@@ -175,7 +175,8 @@ private:
         auto reply = co_await nam.get(request);
         QCORO_VERIFY(reply != nullptr);
         QCORO_VERIFY(reply->isFinished());
-        QCORO_COMPARE(reply->error(), QNetworkReply::OperationCanceledError);
+        // Seems to depend on the Qt version which error we get.
+        QCORO_VERIFY(reply->error() == QNetworkReply::TimeoutError || reply->error() == QNetworkReply::OperationCanceledError);
         // QNAM is destroyed here and so is all its associated state, which could
         // crash (or cause invalid memory access)
     }

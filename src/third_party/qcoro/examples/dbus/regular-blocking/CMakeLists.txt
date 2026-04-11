@@ -9,3 +9,5 @@ target_link_libraries(dbustest
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::DBus
 )
+set_target_defaults(dbustest)
+

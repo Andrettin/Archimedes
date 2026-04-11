@@ -36,8 +36,8 @@ QCoro::Task<bool> QCoroThread::waitForStarted(std::chrono::milliseconds timeout)
 
 ## `waitForFinished()`
 
-Waits for the Waits for the process to finish or until it times out. Returns `bool` indicating
-whether the process has finished successfuly (`true`) or timed out (`false`).
+Waits for the thread to finish or until it times out. Returns `bool` indicating
+whether the thread has finished successfuly (`true`) or timed out (`false`).
 thread to finish. Returns `true` if the thread has already finished
 or if it finishes within the specified timeout. If the thread has not started yet
 or fails to stop within the specified timeout the coroutine will return `false`.

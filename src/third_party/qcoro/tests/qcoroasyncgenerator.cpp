@@ -3,13 +3,17 @@
 // SPDX-License-Identifier: MIT
 
 #include "qcoroasyncgenerator.h"
+#include "network/qcoronetworkreply.h"
 #include "qcorotimer.h"
 #include "testobject.h"
+#include "testlibs/testhttpserver.h"
 
 #include <cstdint>
 #include <vector>
 
 #include <QScopeGuard>
+#include <QHostAddress>
+#include <QTcpServer>
 
 struct Nocopymove {
     explicit constexpr Nocopymove(int val): val(val) {}
@@ -267,6 +271,29 @@ private:
         QCORO_VERIFY_EXCEPTION_THROWN(co_await generator.begin(), std::runtime_error);
     }
 
+    QCoro::Task<> testAwaitTransform_coro(QCoro::TestContext) {
+        TestHttpServer<QTcpServer> server;
+        server.start(QHostAddress::LocalHost);
+        QScopeGuard guard([&server]() {
+            server.stop();
+        });
+
+        const auto createGenerator = [&server]() -> QCoro::AsyncGenerator<QByteArray> {
+            QNetworkAccessManager nam;
+            auto *reply = nam.get(QNetworkRequest{QUrl{QStringLiteral("http://127.0.0.1:%1/").arg(server.port())}});
+            // This wouldn't compile without await_transform() in AsyncGeneratorPromise.
+            co_await reply;
+
+            co_yield reply->readAll();
+        };
+
+        auto generator = createGenerator();
+        auto iter = co_await generator.begin();
+        QCORO_VERIFY(iter != generator.end());
+        QCORO_COMPARE(*iter, QByteArray("abcdef"));
+        QCORO_COMPARE(co_await ++iter, generator.end());
+    }
+
 
 private Q_SLOTS:
     addTest(Generator)
@@ -281,6 +308,7 @@ private Q_SLOTS:
     addTest(ExceptionInDereference)
     addTest(ExceptionInBegin)
     addTest(ExceptionInBeginSync)
+    addTest(AwaitTransform)
 };
 
 QTEST_GUILESS_MAIN(AsyncGeneratorTest)

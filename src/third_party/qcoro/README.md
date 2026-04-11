@@ -1,8 +1,8 @@
-[![Linux CI](https://github.com/danvratil/qcoro/actions/workflows/build-linux.yml/badge.svg)](https://github.com/danvratil/qcoro/actions/workflows/build-linux.yml)
-[![Windows CI](https://github.com/danvratil/qcoro/actions/workflows/build-windows.yml/badge.svg)](https://github.com/danvratil/qcoro/actions/workflows/build-windows.yml)
-[![MacOS CI](https://github.com/danvratil/qcoro/actions/workflows/build-macos.yml/badge.svg)](https://github.com/danvratil/qcoro/actions/workflows/build-macos.yml)
-[![Docs build](https://github.com/danvratil/qcoro/actions/workflows/update-docs.yml/badge.svg?branch=main)](https://github.com/danvratil/qcoro/actions/workflows/update-docs.yml)
-[![Latest release](https://img.shields.io/github/v/release/danvratil/qcoro?label=%F0%9F%93%A6%20Release)](https://github.com/danvratil/qcoro/releases)
+[![Linux CI](https://github.com/qcoro/qcoro/actions/workflows/build-linux.yml/badge.svg)](https://github.com/qcoro/qcoro/actions/workflows/build-linux.yml)
+[![Windows CI](https://github.com/qcoro/qcoro/actions/workflows/build-windows.yml/badge.svg)](https://github.com/qcoro/qcoro/actions/workflows/build-windows.yml)
+[![MacOS CI](https://github.com/qcoro/qcoro/actions/workflows/build-macos.yml/badge.svg)](https://github.com/qcoro/qcoro/actions/workflows/build-macos.yml)
+[![Docs build](https://github.com/qcoro/qcoro/actions/workflows/update-docs.yml/badge.svg?branch=main)](https://github.com/qcoro/qcoro/actions/workflows/update-docs.yml)
+[![Latest release](https://img.shields.io/github/v/release/qcoro/qcoro?label=%F0%9F%93%A6%20Release)](https://github.com/qcoro/qcoro/releases)
 ![License: MIT](https://img.shields.io/badge/%E2%9A%96%EF%B8%8F%20License-MIT-brightgreen)
 ![C++20](https://img.shields.io/badge/C%2B%2B-20-%2300599C?logo=cplusplus)
 ![Supported Compilers](https://img.shields.io/badge/%E2%9A%99%EF%B8%8F%20Compilers-GCC%2C%20clang%2C%20MSVC-informational)
@@ -21,11 +21,11 @@ const QNetworkReply *reply = co_await networkAccessManager.get(url);
 const auto data = reply->readAll();
 ```
 
-It requires a compiler with support for the couroutines TS, see [documentation](https://qcoro.dvratil.cz/#supported-compilers) for a list of supported compilers and versions.
+It requires a compiler with support for the couroutines TS, see [documentation](https://qcoro.dev/#supported-compilers) for a list of supported compilers and versions.
 
 ## Documentation
 
-👉 📘 [Documentation](https://qcoro.dvratil.cz/)
+👉 📘 [Documentation](https://qcoro.dev/)
 
 ## Supported Qt Types
 
@@ -38,7 +38,7 @@ and others, that allow to `co_await` their asynchronous operations directly.
 Additionally, there's a magical `qCoro()` function that can wrap many native Qt functions and types
 to make them coroutine-friendly.
 
-Go check the [documentation](https://qcoro.dvratil.cz/reference) for a full list of all supported
+Go check the [documentation](https://qcoro.dev/reference/coro) for a full list of all supported
 features and Qt types.
 
 ### `QDBusPendingCall`
@@ -51,7 +51,7 @@ QDBusInterface remoteServiceInterface{serviceName, objectPath, interface};
 const QDBusReply<bool> isReady = co_await remoteServiceInterface.asyncCall(QStringLiteral("isReady"));
 ```
 
-📘 [Full documentation here](https://qcoro.dvratil.cz/reference/dbus/qdbuspendingcall).
+📘 [Full documentation here](https://qcoro.dev/reference/dbus/qdbuspendingcall).
 
 ### `QFuture`
 
@@ -68,7 +68,7 @@ const int b = co_await task2;
 co_return a + b;
 ```
 
-📘 [Full documentation here](https://qcoro.dvratil.cz/reference/core/qfuture).
+📘 [Full documentation here](https://qcoro.dev/reference/core/qfuture).
 
 ### `QNetworkReply`
 
@@ -78,8 +78,8 @@ broken into numerous functions. But not with QCoro, where you can simply `co_awa
 `QNetworkReply` to finish:
 
 ```cpp
-QNetworkReply qnam;
-QNetworkReply *reply = qnam.get(QStringLiteral("https://github.com/danvratil/qcoro"));
+QNetworkAccessManager qnam;
+QNetworkReply *reply = qnam.get(QStringLiteral("https://github.com/qcoro/qcoro"));
 const auto contents = co_await reply;
 reply->deleteLater();
 if (reply->error() != QNetworkReply::NoError) {
@@ -96,7 +96,7 @@ if (reply->error() != QNetworkReply::NoError) {
  ...
  ```
 
-📘 [Full documentation here](https://qcoro.dvratil.cz/reference/network/qnetworkreply).
+📘 [Full documentation here](https://qcoro.dev/reference/network/qnetworkreply).
 
 ### `QTimer`
 
@@ -116,7 +116,7 @@ for (int i = 1; i <= 100; ++i) {
 qDebug() << "Done!";
 ```
 
-📘 [Full documentation here](https://qcoro.dvratil.cz/reference/core/qtimer).
+📘 [Full documentation here](https://qcoro.dev/reference/core/qtimer).
 
 ### `QIODevice`
 
@@ -131,11 +131,11 @@ const auto data = co_await socket;
 co_return calculateLatency(data);
 ```
 
-📘 [Full documentation here](https://qcoro.dvratil.cz/reference/core/qiodevice).
+📘 [Full documentation here](https://qcoro.dev/reference/core/qiodevice).
 
 ### ...and more!
 
-Go check the [full documentation](https://qcoro.dvratil.cz) to learn more.
+Go check the [full documentation](https://qcoro.dev) to learn more.
 
 ## .then() continuations
 
@@ -157,7 +157,7 @@ expression is Task<T> where T is the return type of the continuation. Thanks to
 that it's possible to `co_await` the entire chain, or chain multiple `.then()`
 continuations.
 
-📘 [Full documentation here](https://qcoro.dvratil.cz/reference/coro/task).
+📘 [Full documentation here](https://qcoro.dev/reference/coro/task).
 
 ## Generators
 
@@ -172,13 +172,11 @@ objects, which is well-known and established API and makes generators compatible
 with existing algorithms.
 
 ```cpp
-QCoro::Generator<int> fibonacci() {
-    quint64 a = 0, b = 0;
+QCoro::Generator<quint64> fibonacci() {
+    quint64 a = 0, b = 1;
     Q_FOREVER {
-        co_yield b;
-        const auto tmp = b;
-        a = b;
-        b += tmp;
+        co_yield a;
+        a = std::exchange(b, a + b);
     }
 }
 
@@ -192,7 +190,7 @@ void printFib(quint64 max) {
 }
 ```
 
-📘 [Full documentation here](https://qcoro.dvratil.cz/reference/coro/generator).
+📘 [Full documentation here](https://qcoro.dev/reference/coro/generator).
 
 ## License
 

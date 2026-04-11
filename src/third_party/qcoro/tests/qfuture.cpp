@@ -270,6 +270,36 @@ private:
         }();
         co_await future;
     }
+
+private Q_SLOTS:
+    // Regression test for #312: verify that destroying a task while it is
+    // awaiting on a QFuture doesn't cause a crash or memory leak
+    void testTaskDestroyedBeforeFutureCompletes() {
+        QPromise<int> promise;
+        auto future = promise.future();
+
+        // Create a task that will await on the future
+        {
+            auto task = [](QFuture<int> future) -> QCoro::Task<> {
+                co_await future;
+            }(future);
+
+            // Give the coroutine time to suspend by processing events
+            QTest::qWait(50);
+
+            // Task is destroyed here when it goes out of scope
+        }
+
+        // Now complete the future - this should not crash despite the awaiting task being destroyed
+        promise.start();
+        promise.addResult(42);
+        promise.finish();
+
+        // Wait a bit to ensure any deferred cleanup happens
+        QTest::qWait(50);
+
+        // If we got here without crashing, the test passed
+    }
 #endif
 
 private Q_SLOTS:

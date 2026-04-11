@@ -27,21 +27,6 @@ inline auto TaskPromiseBase::final_suspend() const noexcept {
     return TaskFinalSuspend{mAwaitingCoroutines};
 }
 
-template<typename T, typename Awaiter>
-inline auto TaskPromiseBase::await_transform(T &&value) {
-    return Awaiter{std::forward<T>(value)};
-}
-
-template<Awaitable T>
-inline auto && TaskPromiseBase::await_transform(T &&awaitable) {
-    return std::forward<T>(awaitable);
-}
-
-template<Awaitable T>
-inline auto &TaskPromiseBase::await_transform(T &awaitable) {
-    return awaitable;
-}
-
 inline void TaskPromiseBase::addAwaitingCoroutine(std::coroutine_handle<> awaitingCoroutine) {
     mAwaitingCoroutines.push_back(awaitingCoroutine);
 }

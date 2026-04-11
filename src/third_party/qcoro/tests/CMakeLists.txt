@@ -30,6 +30,7 @@ function(qcoro_add_test _name)
         ${TEST_LINK_LIBRARIES}
         Threads::Threads
     )
+    set_target_defaults(test-${_name})
     if (NOT TEST_SKIP_ADD_TEST)
         add_test(NAME test-${_name} COMMAND test-${_name})
         _enable_supressions(${_name})
@@ -63,9 +64,10 @@ function(qcoro_add_dbus_test _name)
     target_compile_definitions(test-${_name} PRIVATE TESTDBUSSERVER_EXECUTABLE=\"$<TARGET_FILE:testdbusserver>\")
     if (APPLE)
         # On MacOS dbus-launch doesn't work, so we rely on the session dbus running
+        # TODO: check whether dbus-run-session works
         add_test(NAME test-${_name} COMMAND test-${_name})
     else()
-        add_test(NAME test-${_name} COMMAND dbus-launch $<TARGET_FILE:test-${_name}>)
+        add_test(NAME test-${_name} COMMAND dbus-run-session $<TARGET_FILE:test-${_name}>)
     endif()
     _enable_supressions(${_name})
 endfunction()
@@ -114,7 +116,7 @@ qcoro_add_test(qcorolazytask)
 qcoro_add_test(testconstraints)
 qcoro_add_test(qfuture LINK_LIBRARIES Qt${QT_VERSION_MAJOR}::Concurrent)
 qcoro_add_test(qcorogenerator)
-qcoro_add_test(qcoroasyncgenerator)
+qcoro_add_test(qcoroasyncgenerator LINK_LIBRARIES QCoro${QT_VERSION_MAJOR}Network Qt${QT_VERSION_MAJOR}::Network)
 qcoro_add_test(qcorowaitfor)
 
 if (QCORO_WITH_QTDBUS)

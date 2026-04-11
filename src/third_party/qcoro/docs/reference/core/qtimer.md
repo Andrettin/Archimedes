@@ -15,7 +15,7 @@ co_await timer;
 ```
 
 The QCoro frameworks allows `co_await`ing on [QTimer][qdoc-qtimer] object. The
-co-awaiting coroutine is suspended, until the timer finishes, that is until
+co-awaiting coroutine is suspended until the timer finishes, that is until
 [`QTimer::timeout()`][qdoc-qtimer-timeout] signal is emitted.
 
 The timer must be active. If the timer is not active (not started yet or already

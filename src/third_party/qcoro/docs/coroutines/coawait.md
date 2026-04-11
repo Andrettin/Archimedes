@@ -6,7 +6,7 @@ SPDX-License-Identifier: GFDL-1.3-or-later
 
 # `co_await` Explained
 
-The following paragraphs try to explain what is a coroutine and what `co_await` does in some
+The following paragraphs try to explain what a coroutine is and what `co_await` does in some
 simple way. I don't guarantee that any of this is factically correct. For more gritty (and
 correct) details, refer to the articles linked at the bottom of this document.
 
@@ -24,10 +24,10 @@ blocking the Qt event loop and making your application unresponsive. See the dif
 document.
 
 Now let's look at the `co_await` keyword. This keyword tells the compiler that this is the point where
-the coroutine wants to be suspended, until the *awaited* object (the *awaitable*) is ready. Anything type
+the coroutine wants to be suspended, until the *awaited* object (the *awaitable*) is ready. Any type
 can be *awaitable* - either because it directly implements the interface needed by the C++ coroutine
 machinery, or because some external tools (like this library) are provided to wrap that type into something
-that implements the *awaitable* interface.
+that implements the *awaitable* interface. For example: `QCoro::Task<Foo>`.
 
 The C++ coroutines introduce two additional keywords -`co_return` and `co_yield`:
 
@@ -36,7 +36,4 @@ you cannot use the regular `return` in coroutines. There are some major differen
 which is likely why there's a special keyword for returning from coroutines.
 
 `co_yield` allows a coroutine to produce a result without actually returning. Can be used for writing
-generators. Currently, this library has no support/usage of `co_yield`, so I won't go into more details
-here.
-
-
+generators. See the sections on `QCoro::Generator<T>` and `QCoro::AsyncGenerator<T>` for more information.

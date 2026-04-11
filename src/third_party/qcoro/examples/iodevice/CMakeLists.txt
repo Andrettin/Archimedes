@@ -5,3 +5,5 @@ target_link_libraries(iodevice-example
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Network
 )
+set_target_defaults(iodevice-example)
+

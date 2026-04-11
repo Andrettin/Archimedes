@@ -3,3 +3,5 @@ target_link_libraries(chained-example
     QCoro${QT_VERSION_MAJOR}Core
     Qt${QT_VERSION_MAJOR}::Core
 )
+set_target_defaults(chained-example)
+

@@ -47,7 +47,7 @@ public:
      Returns a `QDBusMessage` representing the reply to the call.
 
      If the call is already finished or has an error, the coroutine will not suspend and the `co_await`
-     expression will return immediatelly.
+     expression will return immediately.
 
      It is also possible to just directly use a `QDBusPendingCall` in a `co_await`
      expression to await its completion:

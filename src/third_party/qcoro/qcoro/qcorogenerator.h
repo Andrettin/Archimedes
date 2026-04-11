@@ -156,6 +156,11 @@ public:
     using pointer = std::add_pointer_t<value_type>;
 
     /**
+     * @brief Constructs an invalid iterator.
+     **/
+    explicit constexpr GeneratorIterator(std::nullptr_t) noexcept {}
+
+    /**
      * @brief Resumes the generator coroutine until it yields new value or finishes.
      *
      * Returns an iterator holding the next value produced by the generator coroutine
@@ -196,10 +201,6 @@ public:
 private:
     friend class QCoro::Generator<T>;
 
-    /**
-     * @brief Constructs an invalid iterator.
-     **/
-    explicit GeneratorIterator(std::nullptr_t) {}
     /**
      * @brief Constructs an iterator associated with the given generator coroutine.
      **/
@@ -261,7 +262,7 @@ public:
     /**
      * @brief Returns iterator "pointing" to the first value produced by the generator.
      *
-     * If the generator coroutine did not produce any value and finished immediatelly,
+     * If the generator coroutine did not produce any value and finished immediately,
      * the returned iterator will be equal to end().
      *
      * If the generator coroutine has thrown an exception if will be rethrown from here.
@@ -281,7 +282,7 @@ public:
      * Can be used to check whether the generator have produced another value or
      * whether it has finished.
      **/
-    iterator end() {
+    constexpr iterator end() const noexcept {
         return iterator{nullptr};
     }
 

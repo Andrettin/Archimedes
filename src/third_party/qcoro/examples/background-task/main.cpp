@@ -26,7 +26,8 @@ auto backgroundTask(const Stop &stop) -> QCoro::Task<> {
     co_await QCoro::sleepFor(0ms);
     qDebug() << "Task: Event loop is running";
     QFile file(QStringLiteral("/dev/stdin"));
-    file.open(QIODevice::ReadOnly | QIODevice::Unbuffered);
+    bool openResult = file.open(QIODevice::ReadOnly | QIODevice::Unbuffered);
+    Q_UNUSED(openResult);
     while (!stop.stopRequested()) {
         qDebug() << "Task: Waiting for input...";
         const auto result = co_await qCoro(file).readLine(1024, 5s);

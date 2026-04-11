@@ -8,6 +8,8 @@
 
 #include <chrono>
 
+#include <QElapsedTimer>
+
 using namespace std::chrono_literals;
 
 class QCoroTimerTest : public QCoro::TestObject<QCoroTimerTest> {

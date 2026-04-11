@@ -12,6 +12,7 @@
 #include <QScopeGuard>
 #include <QMetaObject>
 #include <QTimer>
+#include <QElapsedTimer>
 
 #include <chrono>
 
@@ -393,6 +394,12 @@ private:
         el.exec();
 
         QCOMPARE(result, QStringLiteral("42"));
+    }
+
+    void testReturnValueImplicitConversion(QCoro::TestContext) {
+        const auto testcoro [[maybe_unused]] = []() -> QCoro::Task<int> {
+            co_return 42LL;
+        };
     }
 
     QCoro::Task<> testMultipleAwaiters_coro(QCoro::TestContext) {

@@ -8,6 +8,7 @@ target_link_libraries(dbusserver
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::DBus
 )
+set_target_defaults(dbusserver)
 
 #-----------------------------------------------------#
 
@@ -26,3 +27,6 @@ target_link_libraries(examples-dbus-common
     PRIVATE
     Qt${QT_VERSION_MAJOR}::DBus
 )
+set_target_defaults(examples-dbus-common)
+
+

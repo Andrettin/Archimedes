@@ -5,3 +5,6 @@ target_link_libraries(network-example
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network
 )
+set_target_defaults(network-example)
+
+

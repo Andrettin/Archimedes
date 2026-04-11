@@ -83,7 +83,7 @@ while (it != listener.end() && networkReply->isRunning()) {
 }
 ```
 
-Alternatively, it's possible to use `QCORO_FOREACH` to look over the generator:
+Alternatively, it's possible to use `QCORO_FOREACH` to loop over the generator:
 
 ```cpp
 QCORO_FOREACH(const auto [received, total], qCoroSignalListener(reply, &QNetworkReply::downloadProgress)) {

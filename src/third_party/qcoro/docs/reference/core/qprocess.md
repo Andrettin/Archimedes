@@ -18,7 +18,7 @@ QCoroProcess qCoro(QProcess &);
 QCoroProcess qCoro(QProcess *);
 ```
 
-Same as `QProcess` is a subclass of `QIODevice`, `QCoroProcess` subclasses [`QCoroIODevice`][qcoro-qcoroiodevice],
+Just as `QProcess` is a subclass of `QIODevice`, `QCoroProcess` subclasses [`QCoroIODevice`][qcoro-qcoroiodevice],
 so it also provides the awaitable interface for selected QIODevice functions.
 See [`QCoroIODevice`][qcoro-qcoroiodevice] documentation for details.
 
@@ -54,7 +54,7 @@ QCoroProcess provides an additional method called `start()` which is equivalent 
 as well.
 
 See the documentation for [`QProcess::start()`][qtdoc-qprocess-start] and
-[`QProcess::waitForStarted()`][qtdoc-qprocess-waitForStarted] for details.o
+[`QProcess::waitForStarted()`][qtdoc-qprocess-waitForStarted] for details.
 
 Returns `true` when the process has successfully started, `false` otherwise.
 
