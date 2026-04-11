@@ -60,12 +60,17 @@ public:
 
 	virtual std::string get_string(const scope_type *scope, const centesimal_int &multiplier, const bool ignore_decimals) const
 	{
-		const centesimal_int value = this->get_multiplied_value(multiplier);
-		const std::string number_str = ignore_decimals && !this->are_decimals_relevant() ? number::to_signed_string(value.to_int()) : value.to_signed_string();
+		const std::string number_str = this->get_number_string(multiplier, ignore_decimals);
 		const QColor &number_color = this->is_negative(multiplier) ? defines_base::get()->get_red_text_color() : defines_base::get()->get_green_text_color();
 		const std::string colored_number_str = string::colored(number_str + (this->is_percent() ? "%" : ""), number_color);
 
 		return std::format("{}: {}", this->get_base_string(scope), colored_number_str);
+	}
+
+	virtual std::string get_number_string(const centesimal_int &multiplier, const bool ignore_decimals) const
+	{
+		const centesimal_int value = this->get_multiplied_value(multiplier);
+		return ignore_decimals && !this->are_decimals_relevant() ? number::to_signed_string(value.to_int()) : value.to_signed_string();
 	}
 
 	virtual bool is_negative(const centesimal_int &multiplier) const
