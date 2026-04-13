@@ -25,6 +25,11 @@ public:
 		this->conditions.process_gsml_scope(scope);
 	}
 
+	void add_condition(std::unique_ptr<const condition_base<scope_type, context_type>> &&condition)
+	{
+		this->conditions.add_condition(std::move(condition));
+	}
+
 	virtual void check_validity() const override
 	{
 		this->conditions.check_validity();
