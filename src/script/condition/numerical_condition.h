@@ -30,7 +30,7 @@ public:
 		}
 	}
 
-	virtual int get_scope_value(const scope_type *scope) const = 0;
+	virtual base_value_type get_scope_value(const scope_type *scope) const = 0;
 
 	const base_value_type &get_base_value() const
 	{
@@ -39,11 +39,19 @@ public:
 
 	virtual std::string get_base_value_string() const
 	{
+		std::string str;
+
 		if constexpr (std::is_same_v<base_value_type, centesimal_int>) {
-			return this->base_value.to_string();
+			str = this->base_value.to_string();
 		} else {
-			return std::to_string(this->base_value);
+			str = std::to_string(this->base_value);
 		}
+
+		if (this->is_percent()) {
+			str += "%";
+		}
+
+		return str;
 	}
 
 	void set_base_value(const base_value_type &value)
@@ -51,15 +59,11 @@ public:
 		this->base_value = value;
 	}
 
-	virtual int get_value(const scope_type *scope) const
+	virtual base_value_type get_value(const scope_type *scope) const
 	{
 		Q_UNUSED(scope);
 
-		if constexpr (std::is_same_v<base_value_type, centesimal_int>) {
-			return this->base_value.to_int();
-		} else {
-			return this->base_value;
-		}
+		return this->base_value;
 	}
 
 	virtual bool check_assignment(const scope_type *scope, const context_type &ctx) const override
@@ -133,6 +137,11 @@ public:
 	virtual std::string get_greater_than_or_equality_string() const override
 	{
 		return this->build_string("At least");
+	}
+
+	virtual bool is_percent() const
+	{
+		return false;
 	}
 
 private:
