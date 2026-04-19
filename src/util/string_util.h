@@ -146,7 +146,7 @@ inline std::string capitalized(std::string &&str)
 	return str;
 }
 
-inline std::string capitalized(const std::string &str)
+inline std::string capitalized(const std::string_view &str)
 {
 	std::string result(str);
 	return string::capitalized(std::move(result));
