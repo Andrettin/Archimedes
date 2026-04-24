@@ -88,6 +88,13 @@ inline bool is_cardinally_adjacent_to(const QPoint &point, const QPoint &other_p
 	return point::is_horizontally_adjacent_to(point, other_point) || point::is_vertically_adjacent_to(point, other_point);
 }
 
+inline bool is_diagonally_adjacent_to(const QPoint &point, const QPoint &other_point)
+{
+	const int diff_x = std::abs(point.x() - other_point.x());
+	const int diff_y = std::abs(point.y() - other_point.y());
+	return diff_x == 1 && diff_y == 1;
+}
+
 inline QPoint get_circle_point(const QPoint &point, const int64_t source_radius, const int64_t target_radius)
 {
 	if (source_radius == 0) {
