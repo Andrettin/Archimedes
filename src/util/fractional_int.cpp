@@ -222,6 +222,20 @@ std::string fractional_int<N>::to_string(const bool show_as_fraction) const
 }
 
 template <int N>
+std::string fractional_int<N>::to_formatted_string() const
+{
+	const int64_t integer_value = this->to_int64();
+	std::string number_str;
+	if (integer_value == 0 && this->value < 0) {
+		number_str = "-";
+	}
+
+	number_str += number::to_formatted_string(integer_value);
+	number_str += fractional_int::to_rest_string(this->get_fractional_value());
+	return number_str;
+}
+
+template <int N>
 std::string fractional_int<N>::to_percent_string() const
 {
 	static constexpr int N2 = (N > 2) ? (N - 2) : 0;

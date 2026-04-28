@@ -65,6 +65,7 @@ public:
 	constexpr double to_double() const;
 	constexpr QTime to_time() const;
 	std::string to_string(const bool show_as_fraction = false) const;
+	std::string to_formatted_string() const;
 	std::string to_percent_string() const;
 	std::string to_signed_string(const bool show_as_fraction = false) const;
 
