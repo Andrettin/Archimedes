@@ -125,6 +125,12 @@ std::chrono::seconds to_duration(const std::string &str)
 			return std::chrono::minutes(number);
 		case time::time_unit::hours:
 			return std::chrono::hours(number);
+		case time::time_unit::days:
+			return std::chrono::days(number);
+		case time::time_unit::months:
+			return std::chrono::months(number);
+		case time::time_unit::years:
+			return std::chrono::years(number);
 		default:
 			assert_throw(false);
 			break;

@@ -9,7 +9,10 @@ namespace archimedes::time {
 const std::map<std::string, time_unit> time_units_by_short_name = {
 	{ "s", time_unit::seconds },
 	{ "min", time_unit::minutes },
-	{ "h", time_unit::hours }
+	{ "h", time_unit::hours },
+	{ "d", time_unit::days },
+	{ "mo", time_unit::months },
+	{ "y", time_unit::years }
 };
 
 decimillesimal_int to_number(const QTime &time)

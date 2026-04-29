@@ -13,7 +13,10 @@ enum class time_unit
 {
 	seconds,
 	minutes,
-	hours
+	hours,
+	days,
+	months,
+	years
 };
 
 extern const std::map<std::string, time_unit> time_units_by_short_name;
