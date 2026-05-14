@@ -21,7 +21,7 @@ public:
 		if (std::holds_alternative<scope_type *>(target)) {
 			return std::get<scope_type *>(target);
 		} else if (std::holds_alternative<special_target_type>(target)) {
-			return ctx.get_special_target_scope<scope_type>(std::get<special_target_type>(target));
+			return ctx.template get_special_target_scope<scope_type>(std::get<special_target_type>(target));
 		}
 
 		return nullptr;
@@ -32,7 +32,7 @@ public:
 		if (std::holds_alternative<scope_type *>(target)) {
 			return std::get<scope_type *>(target);
 		} else if (std::holds_alternative<special_target_type>(target)) {
-			return ctx.get_special_target_scope<const scope_type>(std::get<special_target_type>(target));
+			return ctx.template get_special_target_scope<const scope_type>(std::get<special_target_type>(target));
 		}
 
 		return nullptr;

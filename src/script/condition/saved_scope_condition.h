@@ -33,7 +33,7 @@ public:
 	{
 		Q_UNUSED(upper_scope);
 
-		return ctx.get_saved_scope<const scope_type>(this->scope_name);
+		return ctx.template get_saved_scope<const scope_type>(this->scope_name);
 	}
 
 	virtual std::string get_scope_name() const override
