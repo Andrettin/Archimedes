@@ -60,6 +60,7 @@ public:
 	}
 
 	constexpr int to_rounded_int() const;
+	constexpr int64_t to_ceil_int64() const;
 	constexpr int64_t to_int64() const;
 	constexpr uint64_t to_uint64() const;
 	constexpr double to_double() const;

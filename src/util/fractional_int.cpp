@@ -164,6 +164,18 @@ constexpr int fractional_int<N>::to_rounded_int() const
 }
 
 template <int N>
+constexpr int64_t fractional_int<N>::to_ceil_int64() const
+{
+	int64 value = this->to_int64();
+	const int64_t fractional_value = this->get_fractional_value();
+	if (fractional_value != 0) {
+		value += number::sign(fractional_value);
+	}
+
+	return value;
+}
+
+template <int N>
 constexpr int64_t fractional_int<N>::to_int64() const
 {
 	const int64_t ret = this->value / fractional_int::divisor;
