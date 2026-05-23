@@ -27,6 +27,10 @@ static QVariant from_value(const T &value)
 		return QVariant::fromValue(value.get());
 	} else if constexpr (is_specialization_of_v<T, std::vector>) {
 		return container::to_qvariant_list(value);
+	} else if constexpr (is_specialization_of_v<T, std::variant>) {
+		return std::visit([](auto &&variant_value) -> QVariant {
+			return qvariant::from_value(variant_value);
+		}, value);
 	} else if constexpr (std::is_same_v<T, centesimal_int>) {
 		return value.to_int();
 	} else {
