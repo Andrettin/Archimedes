@@ -43,10 +43,7 @@ void log_qt_message(QtMsgType type, const QMessageLogContext &context, const QSt
 	log_message += msg.toStdString();
 
 	if (context.file != nullptr) {
-		log_message += " (";
-		log_message += context.file;
-		log_message += ": ";
-		log_message += context.line;
+		log_message += std::format(" ({}: {}", context.file, context.line);
 
 		if (context.function != nullptr) {
 			log_message += ", ";

@@ -120,6 +120,11 @@ set(maskedmousearea_SRCS
 )
 source_group(maskedmousearea FILES ${maskedmousearea_SRCS})
 set_source_files_properties(${maskedmousearea_SRCS} PROPERTIES UNITY_GROUP "maskedmousearea")
+if(MSVC)
+	set_source_files_properties(${maskedmousearea_SRCS} PROPERTIES
+		COMPILE_FLAGS "/wd4244"
+	)
+endif()
 
 set(archimedes_SRCS
 	${character_SRCS}
@@ -396,7 +401,7 @@ if(ENABLE_UNITY_BUILD)
 endif()
 
 if(MSVC)
-	add_compile_options(/W4 /w44800 /wd4244 /wd4458 /MP)
+	add_compile_options(/W4 /w44800 /wd4458 /MP)
 else()
 	add_compile_options(-Wall -Wno-unknown-pragmas)
 endif()

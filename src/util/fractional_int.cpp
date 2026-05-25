@@ -22,7 +22,7 @@ fractional_int<N> fractional_int<N>::from_value(const int64_t value)
 }
 
 template <int N>
-std::string fractional_int<N>::to_rest_string(int rest)
+std::string fractional_int<N>::to_rest_string(int64_t rest)
 {
 	std::string rest_str;
 
@@ -31,7 +31,7 @@ std::string fractional_int<N>::to_rest_string(int rest)
 		rest_str.reserve(N + 1);
 		rest_str += ".";
 
-		int divisor = fractional_int::divisor / 10;
+		int64_t divisor = fractional_int::divisor / 10;
 		for (int i = 0; i < N; ++i) {
 			if (rest == 0) {
 				break;
@@ -138,13 +138,13 @@ fractional_int<N> fractional_int<N>::abs() const
 }
 
 template <int N>
-constexpr int fractional_int<N>::to_rounded_int() const
+constexpr int64_t fractional_int<N>::to_rounded_int64() const
 {
-	int value = std::abs(this->value);
+	int64_t value = std::abs(this->value);
 
-	int divisor = 10;
+	int64_t divisor = 10;
 	for (int i = 0; i < N; ++i) {
-		const int number = value % divisor;
+		const int64_t number = value % divisor;
 		if (number > 0) {
 			if (number >= (5 * number::pow(10, i))) {
 				value += divisor;
@@ -200,17 +200,17 @@ constexpr QTime fractional_int<N>::to_time() const
 {
 	const int hours = this->to_int();
 	int64_t rest = this->get_fractional_value();
-	const int minutes = rest * 60 / fractional_int::divisor;
+	const int64_t minutes = rest * 60 / fractional_int::divisor;
 	rest -= minutes * fractional_int::divisor / 60;
-	const int seconds = rest * 60 * 60 / fractional_int::divisor;
+	const int64_t seconds = rest * 60 * 60 / fractional_int::divisor;
 	rest -= seconds * fractional_int::divisor / 60 / 60;
 
-	int milliseconds = 0;
+	int64_t milliseconds = 0;
 	if constexpr (fractional_int::divisor >= 1000) {
 		milliseconds = rest * 60 * 60 / (fractional_int::divisor / 1000);
 	}
 
-	return QTime(hours, minutes, seconds, milliseconds);
+	return QTime(hours, static_cast<int>(minutes), static_cast<int>(seconds), static_cast<int>(milliseconds));
 }
 
 template <int N>
@@ -252,7 +252,7 @@ std::string fractional_int<N>::to_percent_string() const
 {
 	static constexpr int N2 = (N > 2) ? (N - 2) : 0;
 
-	const int percent_value = this->value * 100;
+	const int64_t percent_value = this->value * 100;
 	std::string number_str = std::to_string(percent_value / fractional_int<N2>::divisor);
 	number_str += fractional_int<N2>::to_rest_string(percent_value % fractional_int<N2>::divisor);
 	return number_str;
@@ -484,7 +484,7 @@ constexpr QPoint fractional_int<N>::operator *(const QPoint &rhs) const
 template <int N>
 constexpr QSize fractional_int<N>::operator *(const QSize &rhs) const
 {
-	return rhs * this->get_value() / fractional_int::divisor;
+	return rhs * static_cast<int>(this->get_value()) / fractional_int::divisor;
 }
 
 template <int N>

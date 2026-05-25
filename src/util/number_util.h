@@ -16,9 +16,9 @@ inline constexpr number_type sign(const number_type &n)
 	}
 }
 
-extern std::string to_formatted_string(const int number);
+extern std::string to_formatted_string(const int64_t number);
 
-inline std::string to_signed_string(const int number)
+inline std::string to_signed_string(const int64_t number)
 {
 	std::string number_str;
 	if (number >= 0) {

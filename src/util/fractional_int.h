@@ -10,7 +10,7 @@ public:
 	static const int64_t divisor;
 
 	static fractional_int from_value(const int64_t value);
-	static std::string to_rest_string(int rest);
+	static std::string to_rest_string(int64_t rest);
 
 	static const fractional_int &min(const fractional_int &lhs, const fractional_int &rhs);
 	static const fractional_int &min(const fractional_int &lhs, const int rhs);
@@ -59,7 +59,7 @@ public:
 		return static_cast<int>(ret);
 	}
 
-	constexpr int to_rounded_int() const;
+	constexpr int64_t to_rounded_int64() const;
 	constexpr int64_t to_ceil_int64() const;
 	constexpr int64_t to_int64() const;
 	constexpr uint64_t to_uint64() const;
@@ -162,14 +162,14 @@ public:
 		return lhs;
 	}
 
-	friend constexpr fractional_int<N> operator -(const int lhs, const fractional_int<N> &rhs)
+	friend constexpr fractional_int<N> operator -(const int64_t lhs, const fractional_int<N> &rhs)
 	{
 		fractional_int res(lhs);
 		res -= rhs;
 		return res;
 	}
 
-	friend constexpr fractional_int<N> operator *(const int lhs, const fractional_int<N> &rhs)
+	friend constexpr fractional_int<N> operator *(const int64_t lhs, const fractional_int<N> &rhs)
 	{
 		fractional_int res(rhs);
 		res *= lhs;
@@ -186,7 +186,7 @@ public:
 		return rhs * lhs;
 	}
 
-	friend constexpr fractional_int<N> operator /(const int lhs, const fractional_int<N> &rhs)
+	friend constexpr fractional_int<N> operator /(const int64_t lhs, const fractional_int<N> &rhs)
 	{
 		fractional_int res(lhs);
 		res /= rhs;

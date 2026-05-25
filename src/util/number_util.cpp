@@ -6,7 +6,7 @@
 
 namespace archimedes::number {
 
-std::string to_formatted_string(const int number)
+std::string to_formatted_string(const int64_t number)
 {
 	return locale::english_locale.toString(number).toStdString();
 }

@@ -91,7 +91,7 @@ public:
 
 	constexpr QPoint to_circle_point() const
 	{
-		return QPoint(centesimal_int(this->get_longitude()).get_value(), centesimal_int(this->get_latitude()).get_value() * 2 * -1);
+		return QPoint(static_cast<int>(centesimal_int(this->get_longitude()).get_value()), static_cast<int>(centesimal_int(this->get_latitude()).get_value() * 2 * -1));
 	}
 
 	QPoint to_circle_edge_point() const;

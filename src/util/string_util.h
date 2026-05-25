@@ -137,7 +137,7 @@ inline void capitalize(std::string &str)
 		return;
 	}
 
-	str[0] = toupper(str[0]);
+	str[0] = static_cast<char>(toupper(str[0]));
 }
 
 inline std::string capitalized(std::string &&str)
