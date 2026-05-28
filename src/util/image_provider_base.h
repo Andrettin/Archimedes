@@ -11,11 +11,9 @@ class image_provider_base : public QQuickAsyncImageProvider
 public:
 	virtual QQuickImageResponse *requestImageResponse(const QString &id, const QSize &requested_size) override;
 
-	[[nodiscard]]
-	QCoro::Task<const QImage *> get_image(const std::string &id);
+	[[nodiscard]] QCoro::Task<const QImage *> get_image(const std::string &id);
 
-	[[nodiscard]]
-	virtual QCoro::Task<void> load_image(const std::string id) = 0;
+	[[nodiscard]] virtual QCoro::Task<void> load_image(const std::string id) = 0;
 
 	void set_image(const std::string &id, QImage &&image);
 

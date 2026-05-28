@@ -18,16 +18,16 @@ public:
 
 	virtual QQuickTextureFactory *textureFactory() const override
 	{
-		assert_throw(image != nullptr);
-		return QQuickTextureFactory::textureFactoryForImage(*image);
+		assert_throw(this->image != nullptr);
+		return QQuickTextureFactory::textureFactoryForImage(*this->image);
 	}
 
-	QCoro::Task<void> run()
+	[[nodiscard]] QCoro::Task<void> run()
 	{
 		try {
 			this->image = co_await this->provider->get_image(id);
-			assert_throw(image != nullptr);
-			assert_throw(!image->isNull());
+			assert_throw(this->image != nullptr);
+			assert_throw(!this->image->isNull());
 			emit finished();
 		} catch (...) {
 			exception::report(std::current_exception());
@@ -48,7 +48,9 @@ QQuickImageResponse *image_provider_base::requestImageResponse(const QString &id
 	try {
 		const std::string id_str = id.toStdString();
 		image_response *response = new image_response(this, id_str);
-		response->run();
+		QTimer::singleShot(0, [response]() -> QCoro::Task<void> {
+			co_await response->run();
+		});
 		return response;
 	} catch (...) {
 		exception::report(std::current_exception());
