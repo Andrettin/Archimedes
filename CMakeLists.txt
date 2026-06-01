@@ -401,7 +401,8 @@ if(ENABLE_UNITY_BUILD)
 endif()
 
 if(MSVC)
-	add_compile_options(/W4 /w44800 /wd4458 /MP)
+	#C4702 needs to be turned off because it apparently can't be suppressed in external headers
+	add_compile_options(/W4 /w44800 /wd4458 /wd4702 /bigobj /external:anglebrackets /external:W0)
 else()
 	add_compile_options(-Wall -Wno-unknown-pragmas)
 endif()
@@ -427,6 +428,6 @@ set_source_files_properties(${util_test_SRCS} PROPERTIES UNITY_GROUP "util_test"
 
 target_link_libraries(archimedes ${archimedes_LIBS} QCoro6Core QCoro6Network QCoro6Qml)
 
-target_precompile_headers(archimedes_test PRIVATE src/pch.h)
+target_precompile_headers(archimedes_test REUSE_FROM archimedes)
 
 target_link_libraries(archimedes_test PUBLIC archimedes)
