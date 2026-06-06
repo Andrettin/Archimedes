@@ -522,7 +522,7 @@ void set_outline_color(QImage &image, const QColor &color)
 	}
 }
 
-QImage to_silhouette(const QImage &image)
+QImage to_silhouette(const QImage &image, const QColor &silhouette_color)
 {
 	QImage silhouette_image = image;
 
@@ -539,7 +539,7 @@ QImage to_silhouette(const QImage &image)
 				continue;
 			}
 
-			silhouette_image.setPixelColor(pixel_pos, Qt::black);
+			silhouette_image.setPixelColor(pixel_pos, silhouette_color);
 		}
 	}
 
