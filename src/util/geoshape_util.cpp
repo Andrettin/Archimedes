@@ -31,7 +31,7 @@ void write_image(const std::filesystem::path &filepath, color_map<std::vector<st
 		assert_throw(color.isValid());
 
 		for (const auto &geoshape : geoshapes) {
-			geoshape::write_to_image(*geoshape, image, color, georectangle, map_projection, geocoordinate_x_offset);
+			geoshape::write_to_image(*geoshape, image, color, georectangle, map_projection, geocoordinate_x_offset, timer, filepath);
 
 			if (timer.remainingTime() <= 0) {
 				//intermediate saving
@@ -44,18 +44,18 @@ void write_image(const std::filesystem::path &filepath, color_map<std::vector<st
 	image.save(path::to_qstring(filepath));
 }
 
-void write_to_image(QImage &image, color_map<std::vector<std::unique_ptr<QGeoShape>>> &geodata_map, const georectangle &georectangle, const map_projection *map_projection, const int geocoordinate_x_offset)
+void write_to_image(QImage &image, color_map<std::vector<std::unique_ptr<QGeoShape>>> &geodata_map, const georectangle &georectangle, const map_projection *map_projection, const int geocoordinate_x_offset, QTimer &timer, const std::filesystem::path &filepath)
 {
 	for (const auto &[color, geoshapes] : geodata_map) {
 		assert_throw(color.isValid());
 
 		for (const auto &geoshape : geoshapes) {
-			geoshape::write_to_image(*geoshape, image, color, georectangle, map_projection, geocoordinate_x_offset);
+			geoshape::write_to_image(*geoshape, image, color, georectangle, map_projection, geocoordinate_x_offset, timer, filepath);
 		}
 	}
 }
 
-void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection, const int geocoordinate_x_offset)
+void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection, const int geocoordinate_x_offset, QTimer &timer, const std::filesystem::path &filepath)
 {
 	const QGeoRectangle qgeorectangle = georectangle.to_qgeorectangle();
 	QGeoRectangle bounding_qgeorectangle = geoshape.boundingGeoRectangle();
@@ -163,6 +163,12 @@ void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &colo
 			}
 
 			image.setPixelColor(pixel_pos, color);
+
+			if (timer.remainingTime() <= 0) {
+				//intermediate saving
+				image.save(path::to_qstring(filepath));
+				timer.start();
+			}
 		}
 	}
 }
