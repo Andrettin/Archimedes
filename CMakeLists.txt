@@ -275,6 +275,7 @@ set(util_HDRS
 	src/util/log_level.h
 	src/util/log_output_handler.h
 	src/util/log_util.h
+	src/util/map_random_util.h
 	src/util/map_util.h
 	src/util/markov_generator.h
 	src/util/millesimal_int.h
