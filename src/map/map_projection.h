@@ -39,6 +39,8 @@ public:
 	geocoordinate point_to_geocoordinate(const QPoint &point, const number_type &lon_per_pixel, const number_type &lat_per_pixel) const;
 	geocoordinate point_to_geocoordinate(const QPoint &point, const georectangle &georectangle, const QSize &area_size, const int x_offset = 0) const;
 
+	QPolygon geopolygon_to_polygon(const QGeoPolygon &geopolygon, const georectangle &map_georectangle, const QSize &map_size, const int x_offset) const;
+
 	void validate_area(const georectangle &georectangle, const QSize &area_size) const;
 };
 

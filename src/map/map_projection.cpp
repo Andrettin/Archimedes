@@ -161,6 +161,24 @@ geocoordinate map_projection::point_to_geocoordinate(const QPoint &point, const 
 	return this->scaled_geocoordinate_to_geocoordinate(scaled_geocoordinate);
 }
 
+QPolygon map_projection::geopolygon_to_polygon(const QGeoPolygon &geopolygon, const georectangle &map_georectangle, const QSize &map_size, const int x_offset) const
+{
+	QPolygon polygon;
+
+	for (const QGeoCoordinate &qgeocoordinate : geopolygon.perimeter()) {
+		const geocoordinate geocoordinate(qgeocoordinate);
+		QPoint point = this->geocoordinate_to_point(geocoordinate, map_georectangle, map_size, x_offset);
+
+		if (!polygon.isEmpty() && polygon.back() == point) {
+			continue;
+		}
+
+		polygon.append(std::move(point));
+	}
+
+	return polygon;
+}
+
 void map_projection::validate_area(const georectangle &georectangle, const QSize &area_size) const
 {
 	const longitude lon_per_pixel = this->longitude_per_pixel(georectangle, area_size);
