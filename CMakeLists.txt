@@ -4,7 +4,6 @@ set(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo" CACHE STRING "" FORCE)
 
 include_directories(
 	src
-	src/third_party/magic_enum/include
 	src/third_party/maskedmousearea
 	src/third_party/qcoro
 )
@@ -390,8 +389,11 @@ else()
 	add_definitions(-include archimedes.h)
 endif()
 
+find_package(magic_enum CONFIG REQUIRED)
+
 set(archimedes_LIBS
 	${QT_LIBRARIES}
+	magic_enum::magic_enum
 )
 
 set(CMAKE_CXX_STANDARD 23)
