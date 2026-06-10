@@ -350,7 +350,7 @@ if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.18.0")
 	option(ENABLE_UNITY_BUILD "Use unity builds for compilation" ON)
 endif()
 
-find_package(Boost 1.69.0 REQUIRED)
+find_package(Boost 1.69.0 REQUIRED COMPONENTS math random unit_test_framework)
 
 include_directories(${Boost_INCLUDE_DIRS})
 add_definitions(-DBOOST_DATE_TIME_NO_LIB)
@@ -427,7 +427,7 @@ set_target_properties(archimedes_test PROPERTIES
 )
 set_source_files_properties(${util_test_SRCS} PROPERTIES UNITY_GROUP "util_test")
 
-target_link_libraries(archimedes ${archimedes_LIBS} QCoro6Core QCoro6Network QCoro6Qml)
+target_link_libraries(archimedes ${archimedes_LIBS} QCoro6Core QCoro6Qml)
 
 target_precompile_headers(archimedes_test REUSE_FROM archimedes)
 
