@@ -5,7 +5,6 @@ set(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo" CACHE STRING "" FORCE)
 include_directories(
 	src
 	src/third_party/maskedmousearea
-	src/third_party/qcoro
 )
 
 set(character_SRCS
@@ -365,8 +364,6 @@ find_package(Qt6 6.8 COMPONENTS Location REQUIRED) #licensed under the GPL 2.0, 
 find_package(Qt6 6.8 COMPONENTS Qml REQUIRED) #licensed under the GPL 2.0, as well as the LGPL 3.0
 find_package(Qt6 6.8 COMPONENTS Quick REQUIRED) #licensed under the GPL 2.0, as well as the LGPL 3.0
 
-add_subdirectory(src/third_party/qcoro)
-
 set(QT_LIBRARIES
 	Qt6::Core
 	Qt6::Gui
@@ -382,6 +379,11 @@ if(WITH_GEOJSON)
 	set(QT_LIBRARIES ${QT_LIBRARIES} Qt6::LocationPrivate)
 endif()
 
+find_package(QCoro6Coro CONFIG REQUIRED)
+find_package(QCoro6Core CONFIG REQUIRED)
+find_package(QCoro6Qml CONFIG REQUIRED)
+find_package(magic_enum CONFIG REQUIRED)
+
 if(MSVC)
 	add_definitions(/FI"archimedes.h")
 else()
@@ -389,10 +391,11 @@ else()
 	add_definitions(-include archimedes.h)
 endif()
 
-find_package(magic_enum CONFIG REQUIRED)
-
 set(archimedes_LIBS
 	${QT_LIBRARIES}
+	QCoro6::Coro
+	QCoro6::Core
+	QCoro6::Qml
 	magic_enum::magic_enum
 )
 
@@ -429,7 +432,7 @@ set_target_properties(archimedes_test PROPERTIES
 )
 set_source_files_properties(${util_test_SRCS} PROPERTIES UNITY_GROUP "util_test")
 
-target_link_libraries(archimedes ${archimedes_LIBS} QCoro6Core QCoro6Qml)
+target_link_libraries(archimedes ${archimedes_LIBS})
 
 target_precompile_headers(archimedes_test REUSE_FROM archimedes)
 
