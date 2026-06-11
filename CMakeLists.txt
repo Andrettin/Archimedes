@@ -436,4 +436,4 @@ target_link_libraries(archimedes ${archimedes_LIBS})
 
 target_precompile_headers(archimedes_test REUSE_FROM archimedes)
 
-target_link_libraries(archimedes_test PUBLIC archimedes)
+target_link_libraries(archimedes_test PUBLIC archimedes Boost::unit_test_framework)
