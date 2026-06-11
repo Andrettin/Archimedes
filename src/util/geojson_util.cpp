@@ -45,6 +45,8 @@ std::vector<QVariantList> parse_folder(const std::filesystem::path &path)
 	return geojson_data_list;
 
 #else
+	Q_UNUSED(path);
+
 	throw std::runtime_error("GeoJSON support not enabled.");
 #endif
 }
