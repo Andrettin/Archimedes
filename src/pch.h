@@ -77,10 +77,10 @@
 #include <QVariant>
 #include <QVariantList>
 
-#include <qcoro/core/qcorofuture.h>
-#include <qcoro/core/qcorotimer.h>
-#include <qcoro/qcorotask.h>
-#include <qcoro/qml/qcoroqmltask.h>
+#include <QCoroFuture>
+#include <QCoroTimer>
+#include <QCoroTask>
+#include <QCoroQmlTask>
 #pragma warning(pop)
 
 #include "util/point_operators.h" //to ensure the / operator with an int as RHS is used instead of the Qt one with qreal (which uses rounding)
