@@ -164,6 +164,12 @@ constexpr int64_t fractional_int<N>::to_rounded_int64() const
 }
 
 template <int N>
+constexpr int fractional_int<N>::to_ceil_int() const
+{
+	return static_cast<int>(this->to_ceil_int64());
+}
+
+template <int N>
 constexpr int64_t fractional_int<N>::to_ceil_int64() const
 {
 	int64_t value = this->to_int64();
