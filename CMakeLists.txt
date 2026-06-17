@@ -361,6 +361,7 @@ find_package(Qt6 6.8 COMPONENTS Gui REQUIRED) #licensed under the GPL 2.0, as we
 find_package(Qt6 6.8 COMPONENTS Widgets REQUIRED) #licensed under the GPL 2.0, as well as the LGPL 3.0
 find_package(Qt6 6.8 COMPONENTS Multimedia REQUIRED) #licensed under the GPL 2.0, as well as the LGPL 3.0
 find_package(Qt6 6.8 COMPONENTS Location REQUIRED) #licensed under the GPL 2.0, as well as the LGPL 3.0
+find_package(Qt6 6.8 COMPONENTS LocationPrivate REQUIRED) #licensed under the GPL 2.0, as well as the LGPL 3.0
 find_package(Qt6 6.8 COMPONENTS Qml REQUIRED) #licensed under the GPL 2.0, as well as the LGPL 3.0
 find_package(Qt6 6.8 COMPONENTS Quick REQUIRED) #licensed under the GPL 2.0, as well as the LGPL 3.0
 
