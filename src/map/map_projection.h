@@ -23,20 +23,20 @@ public:
 
 	number_type get_latitude_size(const georectangle &georectangle) const;
 
-	number_type longitude_per_pixel(const number_type &lon_size, const QSize &size) const;
-	number_type longitude_per_pixel(const georectangle &georectangle, const QSize &size) const;
-	number_type latitude_per_pixel(const number_type &lat_size, const QSize &size) const;
-	number_type latitude_per_pixel(const georectangle &georectangle, const QSize &size) const;
+	double longitude_per_pixel(const number_type &lon_size, const QSize &size) const;
+	double longitude_per_pixel(const georectangle &georectangle, const QSize &size) const;
+	double latitude_per_pixel(const number_type &lat_size, const QSize &size) const;
+	double latitude_per_pixel(const georectangle &georectangle, const QSize &size) const;
 
-	int longitude_to_x(const number_type &longitude, const number_type &lon_per_pixel) const;
-	int latitude_to_y(const number_type &latitude, const number_type &lat_per_pixel) const;
-	number_type x_to_longitude(const int x, const number_type &lon_per_pixel) const;
-	number_type y_to_latitude(const int y, const number_type &lat_per_pixel) const;
+	int longitude_to_x(const number_type &longitude, const double lon_per_pixel) const;
+	int latitude_to_y(const number_type &latitude, const double lat_per_pixel) const;
+	number_type x_to_longitude(const int x, const double lon_per_pixel) const;
+	number_type y_to_latitude(const int y, const double lat_per_pixel) const;
 
-	QPoint geocoordinate_to_point(const geocoordinate &geocoordinate, const number_type &lon_per_pixel, const number_type &lat_per_pixel) const;
+	QPoint geocoordinate_to_point(const geocoordinate &geocoordinate, const double lon_per_pixel, const double lat_per_pixel) const;
 	QPoint geocoordinate_to_point(const geocoordinate &geocoordinate, const georectangle &georectangle, const QSize &area_size, const int x_offset = 0) const;
 
-	geocoordinate point_to_geocoordinate(const QPoint &point, const number_type &lon_per_pixel, const number_type &lat_per_pixel) const;
+	geocoordinate point_to_geocoordinate(const QPoint &point, const double lon_per_pixel, const double lat_per_pixel) const;
 	geocoordinate point_to_geocoordinate(const QPoint &point, const georectangle &georectangle, const QSize &area_size, const int x_offset = 0) const;
 
 	QPolygon geopolygon_to_polygon(const QGeoPolygon &geopolygon, const georectangle &map_georectangle, const QSize &map_size, const int x_offset) const;
