@@ -9,7 +9,6 @@
 #include "util/geopath_util.h"
 #include "util/georectangle.h"
 #include "util/path_util.h"
-#include "util/point_util.h"
 
 namespace archimedes::geoshape {
 
@@ -24,7 +23,7 @@ void write_image(const std::filesystem::path &filepath, color_map<std::vector<st
 	assert_throw(image.size() == image_size);
 
 	QTimer timer;
-	timer.setInterval(std::chrono::minutes(1));
+	timer.setInterval(std::chrono::minutes(15));
 	timer.start();
 
 	for (const auto &[color, geoshapes] : geodata_map) {
