@@ -423,12 +423,12 @@ enable_testing()
 target_precompile_headers(archimedes PRIVATE src/pch.h)
 
 set_target_properties(archimedes PROPERTIES
-	UNITY_BUILD_MODE GROUP
+	UNITY_BUILD_MODE BATCH
 	COMPILE_WARNING_AS_ERROR ON
 )
 
 set_target_properties(archimedes_test PROPERTIES
-	UNITY_BUILD_MODE GROUP
+	UNITY_BUILD_MODE BATCH
 	COMPILE_WARNING_AS_ERROR ON
 )
 set_source_files_properties(${util_test_SRCS} PROPERTIES UNITY_GROUP "util_test")
