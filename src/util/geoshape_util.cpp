@@ -8,6 +8,7 @@
 #include "util/geocircle_util.h"
 #include "util/geopath_util.h"
 #include "util/georectangle.h"
+#include "util/log_util.h"
 #include "util/path_util.h"
 
 namespace archimedes::geoshape {
@@ -64,6 +65,8 @@ void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &colo
 	if (georectangle != global_georectangle && !bounding_qgeorectangle.intersects(qgeorectangle)) {
 		return;
 	}
+
+	const std::chrono::milliseconds start_time = timer.intervalAsDuration() - timer.remainingTimeAsDuration();
 
 	switch (geoshape.type()) {
 		case QGeoShape::PathType: {
@@ -169,6 +172,13 @@ void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &colo
 				timer.start();
 			}
 		}
+	}
+
+	const std::chrono::milliseconds end_time = timer.intervalAsDuration() - timer.remainingTimeAsDuration();
+
+	const std::chrono::milliseconds duration = end_time - start_time;
+	if (duration >= std::chrono::minutes(1)) {
+		log_info(std::format("Wrote geoshape for color ({}, {}, {}) in {} minutes and {} seconds.", color.red(), color.green(), color.blue(), std::chrono::duration_cast<std::chrono::minutes>(duration).count(), (duration.count() / 1000) % 60));
 	}
 }
 
