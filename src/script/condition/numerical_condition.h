@@ -30,7 +30,7 @@ public:
 		}
 	}
 
-	virtual base_value_type get_scope_value(const scope_type *scope) const = 0;
+	virtual base_value_type get_scope_value(const scope_type *scope, const context_type &ctx) const = 0;
 
 	const base_value_type &get_base_value() const
 	{
@@ -68,24 +68,22 @@ public:
 
 	virtual bool check_assignment(const scope_type *scope, const context_type &ctx) const override
 	{
-		Q_UNUSED(ctx);
-
-		return this->check_greater_than_or_equality(scope);
+		return this->check_greater_than_or_equality(scope, ctx);
 	}
 
-	virtual bool check_equality(const scope_type *scope) const override
+	virtual bool check_equality(const scope_type *scope, const context_type &ctx) const override
 	{
-		return this->get_scope_value(scope) == this->get_value(scope);
+		return this->get_scope_value(scope, ctx) == this->get_value(scope);
 	}
 
-	virtual bool check_less_than(const scope_type *scope) const override
+	virtual bool check_less_than(const scope_type *scope, const context_type &ctx) const override
 	{
-		return this->get_scope_value(scope) < this->get_value(scope);
+		return this->get_scope_value(scope, ctx) < this->get_value(scope);
 	}
 
-	virtual bool check_greater_than(const scope_type *scope) const override
+	virtual bool check_greater_than(const scope_type *scope, const context_type &ctx) const override
 	{
-		return this->get_scope_value(scope) > this->get_value(scope);
+		return this->get_scope_value(scope, ctx) > this->get_value(scope);
 	}
 
 	virtual std::string get_value_name() const = 0;

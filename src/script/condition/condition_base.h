@@ -93,17 +93,17 @@ public:
 			case gsml_operator::assignment:
 				return this->check_assignment(scope, ctx);
 			case gsml_operator::equality:
-				return this->check_equality(scope);
+				return this->check_equality(scope, ctx);
 			case gsml_operator::inequality:
-				return this->check_inequality(scope);
+				return this->check_inequality(scope, ctx);
 			case gsml_operator::less_than:
-				return this->check_less_than(scope);
+				return this->check_less_than(scope, ctx);
 			case gsml_operator::less_than_or_equality:
-				return this->check_less_than_or_equality(scope);
+				return this->check_less_than_or_equality(scope, ctx);
 			case gsml_operator::greater_than:
-				return this->check_greater_than(scope);
+				return this->check_greater_than(scope, ctx);
 			case gsml_operator::greater_than_or_equality:
-				return this->check_greater_than_or_equality(scope);
+				return this->check_greater_than_or_equality(scope, ctx);
 			default:
 				throw std::runtime_error("Invalid condition operator: \"" + std::to_string(static_cast<int>(this->condition_operator)) + "\".");
 		}
@@ -111,40 +111,43 @@ public:
 
 	virtual bool check_assignment(const scope_type *scope, const context_type &ctx) const = 0;
 
-	virtual bool check_equality(const scope_type *scope) const
+	virtual bool check_equality(const scope_type *scope, const context_type &ctx) const
 	{
 		Q_UNUSED(scope);
+		Q_UNUSED(ctx);
 
 		throw std::runtime_error("The equality operator is not supported for \"" + this->get_class_identifier() + "\" conditions.");
 	}
 
-	virtual bool check_inequality(const scope_type *scope) const
+	virtual bool check_inequality(const scope_type *scope, const context_type &ctx) const
 	{
-		return !this->check_equality(scope);
+		return !this->check_equality(scope, ctx);
 	}
 
-	virtual bool check_less_than(const scope_type *scope) const
+	virtual bool check_less_than(const scope_type *scope, const context_type &ctx) const
 	{
 		Q_UNUSED(scope);
+		Q_UNUSED(ctx);
 
 		throw std::runtime_error("The less than operator is not supported for \"" + this->get_class_identifier() + "\" conditions.");
 	}
 
-	virtual bool check_less_than_or_equality(const scope_type *scope) const
+	virtual bool check_less_than_or_equality(const scope_type *scope, const context_type &ctx) const
 	{
-		return this->check_equality(scope) || this->check_less_than(scope);
+		return this->check_equality(scope, ctx) || this->check_less_than(scope, ctx);
 	}
 
-	virtual bool check_greater_than(const scope_type *scope) const
+	virtual bool check_greater_than(const scope_type *scope, const context_type &ctx) const
 	{
 		Q_UNUSED(scope);
+		Q_UNUSED(ctx);
 
 		throw std::runtime_error("The greater than operator is not supported for \"" + this->get_class_identifier() + "\" conditions.");
 	}
 
-	virtual bool check_greater_than_or_equality(const scope_type *scope) const
+	virtual bool check_greater_than_or_equality(const scope_type *scope, const context_type &ctx) const
 	{
-		return this->check_equality(scope) || this->check_greater_than(scope);
+		return this->check_equality(scope, ctx) || this->check_greater_than(scope, ctx);
 	}
 
 	std::string get_string(const size_t indent) const

@@ -20,8 +20,10 @@ public:
 		return class_identifier;
 	}
 
-	virtual int get_scope_value(const scope_type *scope) const override
+	virtual int get_scope_value(const scope_type *scope, const context_type &ctx) const override
 	{
+		Q_UNUSED(ctx);
+
 		return scope->get_game_data()->get_birth_date().year();
 	}
 
