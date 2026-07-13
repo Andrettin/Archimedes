@@ -55,6 +55,11 @@ public:
 		return this->tree_children;
 	}
 
+	std::vector<const named_data_entry *> &get_tree_children()
+	{
+		return this->tree_children;
+	}
+
 	void clear_tree_children()
 	{
 		this->tree_children.clear();
