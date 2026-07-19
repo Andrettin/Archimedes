@@ -177,7 +177,7 @@ void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &colo
 	const std::chrono::milliseconds end_time = timer.intervalAsDuration() - timer.remainingTimeAsDuration();
 
 	const std::chrono::milliseconds duration = end_time - start_time;
-	if (duration >= std::chrono::minutes(1)) {
+	if (duration >= std::chrono::seconds(30)) {
 		log_info(std::format("Wrote geoshape for color ({}, {}, {}) in {} minutes and {} seconds.", color.red(), color.green(), color.blue(), std::chrono::duration_cast<std::chrono::minutes>(duration).count(), (duration.count() / 1000) % 60));
 	}
 }
