@@ -10,6 +10,22 @@ bool contains(const std::vector<T> &vector, const U &value)
 	return std::find(vector.begin(), vector.end(), value) != vector.end();
 }
 
+template <typename T>
+bool intersects(const std::vector<T> &vector, const std::vector<T> &other_vector)
+{
+	if (other_vector.empty()) {
+		return false;
+	}
+
+	for (const T &element : vector) {
+		if (vector::contains(other_vector, element)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 template <typename T, typename U>
 void merge(std::vector<T> &vector, const U &other_container)
 {
