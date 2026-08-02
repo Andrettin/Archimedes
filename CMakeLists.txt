@@ -322,7 +322,7 @@ set(archimedes_HDRS
 	${util_HDRS}
 	${maskedmousearea_HDRS}
 	src/archimedes.h
-	src/pch.h
+	src/archimedes_pch.h
 )
 
 set(util_test_SRCS
@@ -420,7 +420,7 @@ add_executable(archimedes_test ${archimedes_test_SRCS})
 add_test(archimedes_test archimedes_test)
 enable_testing()
 
-target_precompile_headers(archimedes PRIVATE src/pch.h)
+target_precompile_headers(archimedes PRIVATE src/archimedes_pch.h)
 
 set_target_properties(archimedes PROPERTIES
 	UNITY_BUILD_MODE BATCH
