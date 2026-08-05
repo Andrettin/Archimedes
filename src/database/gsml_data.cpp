@@ -163,7 +163,7 @@ std::vector<const gsml_property *> gsml_data::try_get_properties(const std::stri
 {
 	std::vector<const gsml_property *> properties;
 
-	this->for_each_property([&](const gsml_property &property) {
+	this->for_each_property([&properties, &key](const gsml_property &property) {
 		if (property.get_key() == key) {
 			properties.push_back(&property);
 		}
@@ -375,10 +375,10 @@ void gsml_data::print_components(std::ostream &ostream, const size_t indentation
 	}
 
 	bool new_line = true;
-	this->for_each_element([&](const gsml_property &property) {
+	this->for_each_element([&ostream, indentation, &new_line](const gsml_property &property) {
 		property.print(ostream, indentation);
 		new_line = true;
-	}, [&](const gsml_data &child_data) {
+	}, [&ostream, indentation, &new_line](const gsml_data &child_data) {
 		child_data.print(ostream, indentation, new_line);
 		if (new_line && child_data.is_minor()) {
 			new_line = false;

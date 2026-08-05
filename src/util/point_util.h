@@ -242,7 +242,7 @@ inline std::optional<QPoint> find_adjacent_if(const QPoint &point, const functio
 {
 	std::optional<QPoint> result;
 
-	point::for_each_adjacent_until(point, [&](const QPoint &adjacent_point) {
+	point::for_each_adjacent_until(point, [&function](const QPoint &adjacent_point) {
 		if (function(adjacent_point)) {
 			result = adjacent_point;
 			return true;
@@ -259,7 +259,7 @@ inline std::vector<QPoint> get_adjacent_if(const QPoint &point, const function_t
 {
 	std::vector<QPoint> adjacent_points;
 
-	point::for_each_adjacent(point, [&](QPoint &&adjacent_point) {
+	point::for_each_adjacent(point, [&function](QPoint &&adjacent_point) {
 		if (function(adjacent_point)) {
 			adjacent_points.push_back(std::move(adjacent_point));
 		}

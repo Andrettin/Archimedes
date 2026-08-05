@@ -167,7 +167,7 @@ public:
 
 			const std::vector<gsml_data> &gsml_data_list = kv_pair.second;
 			for (const gsml_data &data : gsml_data_list) {
-				data.for_each_child([&](const gsml_data &data_entry) {
+				data.for_each_child([definition, data_module, &exceptions](const gsml_data &data_entry) {
 					try {
 						const std::string &identifier = data_entry.get_tag();
 

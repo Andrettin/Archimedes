@@ -145,11 +145,11 @@ void data_entry::load_history(const QDate &start_date, const timeline *current_t
 	std::map<QDate, std::vector<const gsml_data *>> history_entries;
 
 	for (const gsml_data &data : this->history_data) {
-		data.for_each_property([&](const gsml_property &property) {
+		data.for_each_property([this](const gsml_property &property) {
 			this->process_gsml_dated_property(property, QDate()); //properties outside of a date scope, to be applied regardless of start date
 		});
 
-		data.for_each_child([&](const gsml_data &history_entry) {
+		data.for_each_child([this, &start_date, current_timeline, game_rules, &history_entries](const gsml_data &history_entry) {
 			this->load_history_scope(history_entry, start_date, current_timeline, game_rules, history_entries);
 		});
 	}
@@ -216,14 +216,14 @@ void data_entry::load_history_scope(const gsml_data &history_scope, const QDate 
 			return;
 		}
 
-		history_scope.for_each_child([&](const gsml_data &timeline_entry) {
+		history_scope.for_each_child([&start_date, current_timeline, timeline, &history_entries](const gsml_data &timeline_entry) {
 			QDate date = string::to_date(timeline_entry.get_tag());
 			if (date::contains_date(start_date, current_timeline, date, timeline)) {
 				history_entries[date].push_back(&timeline_entry);
 			}
 		});
 	} else if (calendar != nullptr || game_rule != nullptr) {
-		history_scope.for_each_child([&](const gsml_data &history_subentry) {
+		history_scope.for_each_child([calendar, &start_date, current_timeline, &history_entries](const gsml_data &history_subentry) {
 			QDate date = string::to_date(history_subentry.get_tag());
 
 			if (calendar != nullptr) {
@@ -253,9 +253,9 @@ void data_entry::load_history_scope(const gsml_data &history_scope, const QDate 
 void data_entry::load_date_scope(const gsml_data &date_scope, const QDate &date)
 {
 	try {
-		date_scope.for_each_element([&](const gsml_property &property) {
+		date_scope.for_each_element([this, &date](const gsml_property &property) {
 			this->process_gsml_dated_property(property, date);
-		}, [&](const gsml_data &scope) {
+		}, [this, &date](const gsml_data &scope) {
 			this->process_gsml_dated_scope(scope, date);
 		});
 	} catch (...) {

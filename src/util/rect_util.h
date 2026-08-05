@@ -93,7 +93,7 @@ inline std::vector<QPoint> find_points_if(const QRect &rect, const function_type
 {
 	std::vector<QPoint> points;
 
-	rect::for_each_point(rect, [&](QPoint &&point) {
+	rect::for_each_point(rect, [&function](QPoint &&point) {
 		if (function(point)) {
 			points.push_back(std::move(point));
 		}
@@ -107,7 +107,7 @@ inline point_set find_point_set_if(const QRect &rect, const function_type &funct
 {
 	point_set points;
 
-	rect::for_each_point(rect, [&](QPoint &&point) {
+	rect::for_each_point(rect, [&function](QPoint &&point) {
 		if (function(point)) {
 			points.insert(std::move(point));
 		}

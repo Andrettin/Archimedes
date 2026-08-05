@@ -22,14 +22,14 @@ void calendar::process_gsml_scope(const gsml_data &scope)
 	const std::string &tag = scope.get_tag();
 
 	if (tag == "day_of_the_week_names") {
-		scope.for_each_property([&](const gsml_property &property) {
+		scope.for_each_property([this](const gsml_property &property) {
 			const std::string &key = property.get_key();
 			const std::string &value = property.get_value();
 
 			this->day_of_the_week_names[string_to_day_of_the_week(key)] = value;
 		});
 	} else if (tag == "month_names") {
-		scope.for_each_property([&](const gsml_property &property) {
+		scope.for_each_property([this](const gsml_property &property) {
 			const std::string &key = property.get_key();
 			const std::string &value = property.get_value();
 

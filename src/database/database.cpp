@@ -237,7 +237,7 @@ void database::process_gsml_scope_for_object(QObject *object, const gsml_data &s
 				}
 				return;
 			} else if (property_type == QMetaType::Type::QVariantList && scope.has_children()) {
-				scope.for_each_child([&](const gsml_data &child_scope) {
+				scope.for_each_child([object, property_name](const gsml_data &child_scope) {
 					database::modify_list_property_for_object(object, property_name, gsml_operator::addition, child_scope);
 				});
 				return;
