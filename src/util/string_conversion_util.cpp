@@ -3,6 +3,7 @@
 #include "util/string_conversion_util.h"
 
 #include "util/assert_util.h"
+#include "util/space_util.h"
 #include "util/string_util.h"
 #include "util/time_util.h"
 
@@ -137,6 +138,32 @@ std::chrono::seconds to_duration(const std::string &str)
 	}
 
 	return {};
+}
+
+int to_length(const std::string &str)
+{
+	const auto [number_str, unit_str] = string::to_number_string_and_unit_string(str);
+
+	const int number = std::stoi(number_str);
+
+	assert_throw(!unit_str.empty());
+
+	const auto find_iterator = space::length_units_by_short_name.find(unit_str);
+	assert_throw(find_iterator != space::length_units_by_short_name.end());
+
+	const space::length_unit length_unit = find_iterator->second;
+
+	switch (length_unit) {
+		case space::length_unit::feet:
+			return number;
+		case space::length_unit::yards:
+			return number * 3;
+		default:
+			assert_throw(false);
+			break;
+	}
+
+	return 0;
 }
 
 std::pair<std::string, std::string> to_number_string_and_unit_string(const std::string &str)

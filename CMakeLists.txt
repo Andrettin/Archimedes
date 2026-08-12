@@ -105,6 +105,7 @@ set(util_SRCS
 	src/util/qgeocoordinate_util.cpp
 	src/util/random.cpp
 	src/util/rect_util.cpp
+	src/util/space_util.cpp
 	src/util/string_conversion_util.cpp
 	src/util/string_util.cpp
 	src/util/text_processor_base.cpp
@@ -292,6 +293,7 @@ set(util_HDRS
 	src/util/singleton.h
 	src/util/size_operators.h
 	src/util/size_util.h
+	src/util/space_util.h
 	src/util/string_conversion_util.h
 	src/util/string_util.h
 	src/util/string_view_util.h
