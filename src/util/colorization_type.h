@@ -1,7 +1,5 @@
 #pragma once
 
-#include "util/enum_converter.h"
-
 namespace archimedes {
 
 enum class colorization_type {
@@ -15,7 +13,5 @@ enum class colorization_type {
 };
 
 }
-
-extern template class archimedes::enum_converter<archimedes::colorization_type>;
 
 Q_DECLARE_METATYPE(archimedes::colorization_type)

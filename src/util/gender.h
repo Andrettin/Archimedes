@@ -1,7 +1,5 @@
 #pragma once
 
-#include "util/enum_converter.h"
-
 namespace archimedes {
 
 enum class gender {
@@ -12,9 +10,7 @@ enum class gender {
 	count
 };
 
-extern template class enum_converter<gender>;
-
-inline std::string get_gender_name(const gender gender)
+inline std::string_view get_gender_name(const gender gender)
 {
 	switch (gender) {
 		case gender::none:
@@ -27,10 +23,10 @@ inline std::string get_gender_name(const gender gender)
 			break;
 	}
 
-	throw std::runtime_error("Invalid gender: \"" + std::to_string(static_cast<int>(gender)) + "\".");
+	throw std::runtime_error(std::format("Invalid gender: \"{}\".", std::to_underlying(gender)));
 }
 
-inline std::string get_gender_personal_pronoun(const gender gender)
+inline std::string_view get_gender_personal_pronoun(const gender gender)
 {
 	switch (gender) {
 		case gender::none:
@@ -43,10 +39,10 @@ inline std::string get_gender_personal_pronoun(const gender gender)
 			break;
 	}
 
-	throw std::runtime_error("Invalid gender: \"" + std::to_string(static_cast<int>(gender)) + "\".");
+	throw std::runtime_error(std::format("Invalid gender: \"{}\".", std::to_underlying(gender)));
 }
 
-inline std::string get_gender_possessive_pronoun(const gender gender)
+inline std::string_view get_gender_possessive_pronoun(const gender gender)
 {
 	switch (gender) {
 		case gender::none:
@@ -59,10 +55,10 @@ inline std::string get_gender_possessive_pronoun(const gender gender)
 			break;
 	}
 
-	throw std::runtime_error("Invalid gender: \"" + std::to_string(static_cast<int>(gender)) + "\".");
+	throw std::runtime_error(std::format("Invalid gender: \"{}\".", std::to_underlying(gender)));
 }
 
-inline std::string get_gender_oblique_pronoun(const gender gender)
+inline std::string_view get_gender_oblique_pronoun(const gender gender)
 {
 	switch (gender) {
 		case gender::none:
@@ -75,7 +71,7 @@ inline std::string get_gender_oblique_pronoun(const gender gender)
 			break;
 	}
 
-	throw std::runtime_error("Invalid gender: \"" + std::to_string(static_cast<int>(gender)) + "\".");
+	throw std::runtime_error(std::format("Invalid gender: \"{}\".", std::to_underlying(gender)));
 }
 
 }

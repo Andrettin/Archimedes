@@ -1,7 +1,5 @@
 #pragma once
 
-#include "util/enum_converter.h"
-
 namespace archimedes {
 
 enum class word_type {
@@ -17,8 +15,6 @@ enum class word_type {
 	numeral,
 	affix
 };
-
-extern template class enum_converter<word_type>;
 
 inline std::string word_type_to_name(const word_type type)
 {

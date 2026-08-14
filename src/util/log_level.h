@@ -1,7 +1,5 @@
 #pragma once
 
-#include "util/enum_converter.h"
-
 namespace archimedes {
 
 enum class log_level {
@@ -11,8 +9,6 @@ enum class log_level {
 	warning,
 	error
 };
-
-extern template class enum_converter<log_level>;
 
 inline std::string_view get_log_level_name(const log_level level)
 {

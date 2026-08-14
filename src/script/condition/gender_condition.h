@@ -1,8 +1,9 @@
 #pragma once
 
-#include "character/character_base.h"
 #include "script/condition/condition_base.h"
 #include "util/gender.h"
+
+#include <magic_enum/magic_enum.hpp>
 
 namespace archimedes {
 
@@ -13,7 +14,7 @@ public:
 	explicit gender_condition(const std::string &value, const gsml_operator condition_operator)
 		: condition_base<scope_type, context_type>(condition_operator)
 	{
-		this->gender = enum_converter<archimedes::gender>::to_enum(value);
+		this->gender = magic_enum::enum_cast<archimedes::gender>(value).value();
 	}
 
 	virtual const std::string &get_class_identifier() const override
@@ -33,7 +34,7 @@ public:
 	{
 		Q_UNUSED(indent);
 
-		return get_gender_name(this->gender);
+		return std::string(get_gender_name(this->gender));
 	}
 
 private:

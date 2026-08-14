@@ -48,7 +48,6 @@ set(language_SRCS
 	src/language/name_generator.cpp
 	src/language/name_variant.cpp
 	src/language/word.cpp
-	src/language/word_type.cpp
 )
 source_group(language FILES ${language_SRCS})
 set_source_files_properties(${language_SRCS} PROPERTIES UNITY_GROUP "language")
@@ -81,13 +80,10 @@ set(util_SRCS
 	src/util/assert_util.cpp
 	src/util/astronomy_util.cpp
 	src/util/color_container.cpp
-	src/util/colorization_type.cpp
 	src/util/date_util.cpp
 	src/util/dice.cpp
-	src/util/enum_converter.cpp
 	src/util/exception_util.cpp
 	src/util/fractional_int.cpp
-	src/util/gender.cpp
 	src/util/geocircle_util.cpp
 	src/util/geocoordinate.cpp
 	src/util/geojson_util.cpp
@@ -96,7 +92,6 @@ set(util_SRCS
 	src/util/geoshape_util.cpp
 	src/util/image_provider_base.cpp
 	src/util/image_util.cpp
-	src/util/log_level.cpp
 	src/util/log_util.cpp
 	src/util/markov_generator.cpp
 	src/util/number_util.cpp
@@ -256,7 +251,6 @@ set(util_HDRS
 	src/util/decimillesimal_int.h
 	src/util/dice.h
 	src/util/empty_image_provider.h
-	src/util/enum_converter.h
 	src/util/enum_util.h
 	src/util/exception_util.h
 	src/util/fractional_int.h
