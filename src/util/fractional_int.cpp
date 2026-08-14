@@ -138,6 +138,12 @@ fractional_int<N> fractional_int<N>::abs() const
 }
 
 template <int N>
+constexpr int fractional_int<N>::to_rounded_int() const
+{
+	return static_cast<int>(this->to_rounded_int64());
+}
+
+template <int N>
 constexpr int64_t fractional_int<N>::to_rounded_int64() const
 {
 	int64_t value = std::abs(this->value);

@@ -59,6 +59,7 @@ public:
 		return static_cast<int>(ret);
 	}
 
+	constexpr int to_rounded_int() const;
 	constexpr int64_t to_rounded_int64() const;
 	constexpr int to_ceil_int() const;
 	constexpr int64_t to_ceil_int64() const;
