@@ -166,6 +166,19 @@ int to_length(const std::string &str)
 	return 0;
 }
 
+std::string from_length(const int length_in_feet, const bool joined)
+{
+	int length = length_in_feet;
+	space::length_unit length_unit = space::length_unit::feet;
+
+	if (length >= 3) {
+		length /= 3;
+		length_unit = space::length_unit::yards;
+	}
+
+	return std::format("{}{}{}", length, joined ? "" : " ", space::get_length_unit_short_name(length_unit));
+}
+
 std::pair<std::string, std::string> to_number_string_and_unit_string(const std::string &str)
 {
 	size_t suffix_pos = std::string::npos;
