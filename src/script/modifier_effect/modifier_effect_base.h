@@ -1,8 +1,8 @@
 #pragma once
 
-#include "database/defines_base.h"
 #include "database/gsml_data.h"
 #include "database/gsml_property.h"
+#include "database/ui_defines_base.h"
 #include "util/centesimal_int.h"
 #include "util/number_util.h"
 #include "util/string_util.h"
@@ -61,7 +61,7 @@ public:
 	virtual std::string get_string(const scope_type *scope, const centesimal_int &multiplier, const bool ignore_decimals) const
 	{
 		const std::string number_str = this->get_number_string(multiplier, ignore_decimals);
-		const QColor &number_color = this->is_negative(multiplier) ? defines_base::get()->get_red_text_color() : defines_base::get()->get_green_text_color();
+		const QColor &number_color = this->is_negative(multiplier) ? ui_defines_base::get()->get_red_text_color() : ui_defines_base::get()->get_green_text_color();
 		const std::string colored_number_str = string::colored(number_str + (this->is_percent() ? "%" : ""), number_color);
 
 		return std::format("{}: {}", this->get_base_string(scope), colored_number_str);

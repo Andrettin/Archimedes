@@ -549,7 +549,7 @@ void database::load_predefines()
 
 void database::load_defines()
 {
-	if (this->defines == nullptr) {
+	if (this->defines.empty()) {
 		return;
 	}
 
@@ -558,7 +558,9 @@ void database::load_defines()
 		const data_module *data_module = kv_pair.second;
 
 		try {
-			this->defines->load(path);
+			for (defines_base *defines : this->defines) {
+				defines->load(path);
+			}
 		} catch (...) {
 			if (data_module != nullptr) {
 				std::throw_with_nested(std::runtime_error("Failed to load the defines for the \"" + data_module->get_identifier() + "\" module."));
@@ -601,8 +603,8 @@ void database::load_history(const QDate &start_date, const timeline *timeline, c
 
 void database::initialize()
 {
-	if (this->defines != nullptr) {
-		this->defines->initialize();
+	for (defines_base *defines : this->defines) {
+		defines->initialize();
 	}
 
 	//initialize data entries for each data type
@@ -626,9 +628,9 @@ void database::initialize()
 	this->initialized = true;
 
 	//check if the defines are valid
-	if (this->defines != nullptr) {
+	for (defines_base *defines : this->defines) {
 		try {
-			this->defines->check();
+			defines->check();
 		} catch (...) {
 			std::throw_with_nested(std::runtime_error("Error when checking the defines."));
 		}

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "util/singleton.h"
-
 namespace archimedes {
 
 class gsml_data;
@@ -11,23 +9,9 @@ class defines_base : public QObject
 {
 	Q_OBJECT
 
-	Q_PROPERTY(QColor green_text_color MEMBER green_text_color READ get_green_text_color NOTIFY changed)
-	Q_PROPERTY(QColor red_text_color MEMBER red_text_color READ get_red_text_color NOTIFY changed)
-
 public:
-	static const defines_base *get()
-	{
-		if (defines_base::instance == nullptr) {
-			throw std::runtime_error("Failed to get defines_base instance, since no defines object has been instantiated yet.");
-		}
+	virtual std::string_view get_file_name() const = 0;
 
-		return defines_base::instance;
-	}
-
-protected:
-	static inline const defines_base *instance = nullptr;
-
-public:
 	void load(const std::filesystem::path &base_path);
 
 	virtual void process_gsml_property(const gsml_property &property);
@@ -40,23 +24,6 @@ public:
 	virtual void check() const
 	{
 	}
-
-	const QColor &get_green_text_color() const
-	{
-		return this->green_text_color;
-	}
-
-	const QColor &get_red_text_color() const
-	{
-		return this->red_text_color;
-	}
-
-signals:
-	void changed();
-
-private:
-	QColor green_text_color;
-	QColor red_text_color;
 };
 
 }

@@ -10,7 +10,7 @@ namespace archimedes {
 
 void defines_base::load(const std::filesystem::path &data_path)
 {
-	std::filesystem::path defines_path(data_path / "defines.txt");
+	std::filesystem::path defines_path(data_path / this->get_file_name());
 
 	if (!std::filesystem::exists(defines_path)) {
 		return;

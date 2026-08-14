@@ -164,6 +164,7 @@ set(database_HDRS
 	src/database/gsml_property_visitor.h
 	src/database/named_data_entry.h
 	src/database/predefines.h
+	src/database/ui_defines_base.h
 )
 source_group(database FILES ${database_HDRS})
 

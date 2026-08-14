@@ -336,9 +336,9 @@ public:
 		this->current_module = data_module;
 	}
 
-	void set_defines(defines_base *defines)
+	void add_defines(defines_base *defines)
 	{
-		this->defines = defines;
+		this->defines.push_back(defines);
 	}
 
 	void register_string_to_qvariant_conversion(const std::string &class_name, std::function<QVariant(const std::string &)> &&function);
@@ -358,7 +358,7 @@ private:
 	const data_module *current_module = nullptr; //the module currently being processed
 	bool initialized = false;
 	std::string workshop_game_id;
-	defines_base *defines = nullptr;
+	std::vector<defines_base *> defines;
 	std::map<std::string, std::function<QVariant(const std::string &)>> string_to_qvariant_conversion_map; //conversions functions from string to QVariant, mapped to the respective class names
 	std::map<std::string, std::function<bool(QObject *object, const std::string &, const std::string &)>> list_property_function_map;
 	std::vector<std::function<void()>> on_initialization_functions;
