@@ -61,25 +61,31 @@ QQuickImageResponse *image_provider_base::requestImageResponse(const QString &id
 
 QCoro::Task<const QImage *> image_provider_base::get_image(const std::string &id)
 {
-	{
-		std::lock_guard lock(this->mutex);
+	try {
+		{
+			std::lock_guard lock(this->mutex);
 
-		const auto find_iterator = this->image_map.find(id);
+			const auto find_iterator = this->image_map.find(id);
 
-		if (find_iterator != this->image_map.end()) {
+			if (find_iterator != this->image_map.end()) {
+				co_return &find_iterator->second;
+			}
+		}
+
+		log_trace(std::format("Loading image for identifier \"{}\".", id));
+		co_await this->load_image(id);
+
+		{
+			std::lock_guard lock(this->mutex);
+
+			const auto find_iterator = this->image_map.find(id);
+			assert_throw(find_iterator != this->image_map.end());
 			co_return &find_iterator->second;
 		}
 	}
-
-	log_trace(std::format("Loading image for identifier \"{}\".", id));
-	co_await this->load_image(id);
-
-	{
-		std::lock_guard lock(this->mutex);
-
-		const auto find_iterator = this->image_map.find(id);
-		assert_throw(find_iterator != this->image_map.end());
-		co_return &find_iterator->second;
+	catch (...) {
+		exception::report(std::current_exception());
+		QApplication::exit(EXIT_FAILURE);
 	}
 }
 
