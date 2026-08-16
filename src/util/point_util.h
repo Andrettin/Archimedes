@@ -157,25 +157,31 @@ inline void for_each_adjacent_until(const QPoint &point, const function_type &fu
 }
 
 template <typename function_type>
-inline void for_each_cardinally_adjacent(const QPoint &point, const function_type &function, const bool x_first = true, const bool left_first = true)
+inline void for_each_cardinally_offset(const QPoint &point, const int offset, const function_type &function, const bool x_first = true, const bool left_first = true)
 {
 	if (!x_first) {
-		function(QPoint(point.x(), point.y() - 1));
-		function(QPoint(point.x(), point.y() + 1));
+		function(QPoint(point.x(), point.y() - offset));
+		function(QPoint(point.x(), point.y() + offset));
 	}
 
 	if (left_first) {
-		function(QPoint(point.x() - 1, point.y()));
-		function(QPoint(point.x() + 1, point.y()));
+		function(QPoint(point.x() - offset, point.y()));
+		function(QPoint(point.x() + offset, point.y()));
 	} else {
-		function(QPoint(point.x() + 1, point.y()));
-		function(QPoint(point.x() - 1, point.y()));
+		function(QPoint(point.x() + offset, point.y()));
+		function(QPoint(point.x() - offset, point.y()));
 	}
 
 	if (x_first) {
-		function(QPoint(point.x(), point.y() - 1));
-		function(QPoint(point.x(), point.y() + 1));
+		function(QPoint(point.x(), point.y() - offset));
+		function(QPoint(point.x(), point.y() + offset));
 	}
+}
+
+template <typename function_type>
+inline void for_each_cardinally_adjacent(const QPoint &point, const function_type &function, const bool x_first = true, const bool left_first = true)
+{
+	for_each_cardinally_offset(point, 1, function, x_first, left_first);
 }
 
 template <typename function_type>
