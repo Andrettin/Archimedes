@@ -109,6 +109,16 @@ public:
 		return max_result;
 	}
 
+	constexpr int64_t get_average(const int64_t multiplier) const
+	{
+		return ((this->get_count() * this->get_sides()) + this->get_count()) * multiplier / 2 + (this->get_modifier() * multiplier);
+	}
+
+	constexpr int get_average(const int multiplier = 1) const
+	{
+		return static_cast<int>(this->get_average(static_cast<int64_t>(multiplier)));
+	}
+
 	constexpr bool is_null() const
 	{
 		return this->get_count() == 0 && this->get_sides() == 0 && this->get_modifier() == 0;
