@@ -3,7 +3,7 @@
 #include "database/gsml_data.h"
 #include "database/gsml_property.h"
 #include "database/ui_defines_base.h"
-#include "util/centesimal_int.h"
+#include "util/decimillesimal_int.h"
 #include "util/number_util.h"
 #include "util/string_util.h"
 
@@ -17,7 +17,7 @@ public:
 	{
 	}
 
-	explicit modifier_effect_base(const std::string &value) : value(centesimal_int(value))
+	explicit modifier_effect_base(const std::string &value) : value(decimillesimal_int(value))
 	{
 	}
 
@@ -37,12 +37,12 @@ public:
 		throw std::runtime_error(std::format("Invalid scope for \"{}\" effect: \"{}\".", this->get_identifier(), scope.get_tag()));
 	}
 
-	centesimal_int get_multiplied_value(const centesimal_int &multiplier) const
+	decimillesimal_int get_multiplied_value(const decimillesimal_int &multiplier) const
 	{
 		return this->value * multiplier;
 	}
 
-	virtual void apply(scope_type *scope, const centesimal_int &multiplier) const
+	virtual void apply(scope_type *scope, const decimillesimal_int &multiplier) const
 	{
 		Q_UNUSED(scope);
 		Q_UNUSED(multiplier);
@@ -50,7 +50,7 @@ public:
 		throw std::runtime_error(std::format("The non-coroutine application function is not supported for \"{}\" modifier effects.", this->get_identifier()));
 	}
 
-	[[nodiscard]] virtual QCoro::Task<void> apply_coro(scope_type *scope, const centesimal_int &multiplier) const
+	[[nodiscard]] virtual QCoro::Task<void> apply_coro(scope_type *scope, const decimillesimal_int &multiplier) const
 	{
 		this->apply(scope, multiplier);
 		co_return;
@@ -58,7 +58,7 @@ public:
 
 	virtual std::string get_base_string(const scope_type *scope) const = 0;
 
-	virtual std::string get_string(const scope_type *scope, const centesimal_int &multiplier, const bool ignore_decimals) const
+	virtual std::string get_string(const scope_type *scope, const decimillesimal_int &multiplier, const bool ignore_decimals) const
 	{
 		const std::string number_str = this->get_number_string(multiplier, ignore_decimals);
 		const QColor &number_color = this->is_negative(multiplier) ? ui_defines_base::get()->get_red_text_color() : ui_defines_base::get()->get_green_text_color();
@@ -67,13 +67,13 @@ public:
 		return std::format("{}: {}", this->get_base_string(scope), colored_number_str);
 	}
 
-	virtual std::string get_number_string(const centesimal_int &multiplier, const bool ignore_decimals) const
+	virtual std::string get_number_string(const decimillesimal_int &multiplier, const bool ignore_decimals) const
 	{
-		const centesimal_int value = this->get_multiplied_value(multiplier);
+		const decimillesimal_int value = this->get_multiplied_value(multiplier);
 		return ignore_decimals && !this->are_decimals_relevant() ? number::to_signed_string(value.to_int()) : value.to_signed_string();
 	}
 
-	virtual bool is_negative(const centesimal_int &multiplier) const
+	virtual bool is_negative(const decimillesimal_int &multiplier) const
 	{
 		return (this->value * multiplier) < 0;
 	}
@@ -96,7 +96,7 @@ public:
 	}
 
 protected:
-	centesimal_int value;
+	decimillesimal_int value;
 };
 
 }
