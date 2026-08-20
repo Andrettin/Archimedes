@@ -58,8 +58,11 @@ public:
 
 	virtual std::string get_base_string(const scope_type *scope) const = 0;
 
-	virtual std::string get_string(const scope_type *scope, const decimillesimal_int &multiplier, const bool ignore_decimals) const
+	virtual std::string get_string(const scope_type *scope, const decimillesimal_int &multiplier, const size_t indent, const bool ignore_decimals, const std::string &separator) const
 	{
+		Q_UNUSED(indent);
+		Q_UNUSED(separator);
+
 		const std::string number_str = this->get_number_string(multiplier, ignore_decimals);
 		const QColor &number_color = this->is_negative(multiplier) ? ui_defines_base::get()->get_red_text_color() : ui_defines_base::get()->get_green_text_color();
 		const std::string colored_number_str = string::colored(number_str + (this->is_percent() ? "%" : ""), number_color);
