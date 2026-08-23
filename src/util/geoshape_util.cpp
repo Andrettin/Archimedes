@@ -13,9 +13,8 @@
 
 namespace archimedes::geoshape {
 
-void write_image(const std::filesystem::path &filepath, color_map<std::vector<std::unique_ptr<QGeoShape>>> &geodata_map, const georectangle &georectangle, const QSize &image_size, const map_projection *map_projection, const QImage &base_image, const int geocoordinate_x_offset)
+void write_image(QImage &image, const std::filesystem::path &filepath, color_map<std::vector<std::unique_ptr<QGeoShape>>> &geodata_map, const georectangle &georectangle, const QSize &image_size, const map_projection *map_projection, const int geocoordinate_x_offset)
 {
-	QImage image = base_image;
 	if (image.isNull()) {
 		image = QImage(image_size, QImage::Format_RGBA8888);
 		image.fill(Qt::transparent);
@@ -40,8 +39,6 @@ void write_image(const std::filesystem::path &filepath, color_map<std::vector<st
 			}
 		}
 	}
-
-	image.save(path::to_qstring(filepath));
 }
 
 void write_to_image(QImage &image, color_map<std::vector<std::unique_ptr<QGeoShape>>> &geodata_map, const georectangle &georectangle, const map_projection *map_projection, const int geocoordinate_x_offset, QTimer &timer, const std::filesystem::path &filepath)
