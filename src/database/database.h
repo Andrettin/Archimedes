@@ -43,6 +43,11 @@ public:
 		return database::get_documents_path() / "modules";
 	}
 
+	static std::filesystem::path get_documents_screenshots_path()
+	{
+		return database::get_documents_path() / "screenshots";
+	}
+
 	static std::filesystem::path get_documents_path();
 	static std::filesystem::path get_user_data_path();
 

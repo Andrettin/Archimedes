@@ -416,7 +416,7 @@ void database::ensure_path_exists(const std::filesystem::path &path)
 	if (!std::filesystem::exists(path)) {
 		const bool success = std::filesystem::create_directories(path);
 		if (!success) {
-			throw std::runtime_error("Failed to create path for Wyrmsun: \"" + path.string() + "\".");
+			throw std::runtime_error(std::format("Failed to create path for {}: \"{}\".", QApplication::applicationName().toStdString(), path::to_string(path)));
 		}
 	}
 }
