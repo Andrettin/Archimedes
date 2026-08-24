@@ -13,7 +13,7 @@
 
 namespace archimedes::geoshape {
 
-void write_image(QImage &image, const std::filesystem::path &filepath, color_map<std::vector<std::unique_ptr<QGeoShape>>> &geodata_map, const georectangle &georectangle, const QSize &image_size, const map_projection *map_projection, const int geocoordinate_x_offset)
+void write_image(QImage &image, const std::filesystem::path &filepath, color_map<std::vector<std::unique_ptr<QGeoShape>>> &geodata_map, const georectangle &georectangle, const QSize &image_size, const map_projection *map_projection, const int geocoordinate_x_offset, const int pen_width)
 {
 	if (image.isNull()) {
 		image = QImage(image_size, QImage::Format_RGBA8888);
@@ -30,7 +30,7 @@ void write_image(QImage &image, const std::filesystem::path &filepath, color_map
 		assert_throw(color.isValid());
 
 		for (const auto &geoshape : geoshapes) {
-			geoshape::write_to_image(*geoshape, image, color, georectangle, map_projection, geocoordinate_x_offset, timer, filepath);
+			geoshape::write_to_image(*geoshape, image, color, georectangle, map_projection, geocoordinate_x_offset, timer, filepath, pen_width);
 
 			if (timer.remainingTime() <= 0) {
 				//intermediate saving
@@ -41,18 +41,18 @@ void write_image(QImage &image, const std::filesystem::path &filepath, color_map
 	}
 }
 
-void write_to_image(QImage &image, color_map<std::vector<std::unique_ptr<QGeoShape>>> &geodata_map, const georectangle &georectangle, const map_projection *map_projection, const int geocoordinate_x_offset, QTimer &timer, const std::filesystem::path &filepath)
+void write_to_image(QImage &image, color_map<std::vector<std::unique_ptr<QGeoShape>>> &geodata_map, const georectangle &georectangle, const map_projection *map_projection, const int geocoordinate_x_offset, QTimer &timer, const std::filesystem::path &filepath, const int pen_width)
 {
 	for (const auto &[color, geoshapes] : geodata_map) {
 		assert_throw(color.isValid());
 
 		for (const auto &geoshape : geoshapes) {
-			geoshape::write_to_image(*geoshape, image, color, georectangle, map_projection, geocoordinate_x_offset, timer, filepath);
+			geoshape::write_to_image(*geoshape, image, color, georectangle, map_projection, geocoordinate_x_offset, timer, filepath, pen_width);
 		}
 	}
 }
 
-void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection, const int geocoordinate_x_offset, QTimer &timer, const std::filesystem::path &filepath)
+void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection, const int geocoordinate_x_offset, QTimer &timer, const std::filesystem::path &filepath, const int pen_width)
 {
 	const QGeoRectangle qgeorectangle = georectangle.to_qgeorectangle();
 	QGeoRectangle bounding_qgeorectangle = geoshape.boundingGeoRectangle();
@@ -68,7 +68,7 @@ void write_to_image(const QGeoShape &geoshape, QImage &image, const QColor &colo
 	switch (geoshape.type()) {
 		case QGeoShape::PathType: {
 			const QGeoPath &geopath = static_cast<const QGeoPath &>(geoshape);
-			geopath::write_to_image(geopath, image, color, georectangle, map_projection, geocoordinate_x_offset);
+			geopath::write_to_image(geopath, image, color, georectangle, map_projection, geocoordinate_x_offset, pen_width);
 
 			//if the geopath's width is 0, there is nothing further to do here, but otherwise, use the normal method of geoshape writing as well
 			if (geopath.width() == 0) {
