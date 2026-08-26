@@ -111,6 +111,15 @@ public:
 
 	constexpr int64_t get_average(const int64_t multiplier) const
 	{
+		if (this->get_min_value().has_value() && this->get_count() == 1 && this->get_sides() > 0) {
+			int64_t average = 0;
+			for (int i = 1; i <= this->get_sides(); ++i) {
+				average += std::max<int64_t>((i + this->get_modifier()) * multiplier, this->get_min_value().value());
+			}
+			average /= this->get_sides();
+			return average;
+		}
+
 		return ((this->get_count() * this->get_sides()) + this->get_count()) * multiplier / 2 + (this->get_modifier() * multiplier);
 	}
 
