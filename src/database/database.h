@@ -74,14 +74,12 @@ public:
 	database();
 	~database();
 
-	[[nodiscard]]
-	QCoro::Task<void> parse();
+	[[nodiscard]] QCoro::Task<void> parse();
 
-	[[nodiscard]]
-	QCoro::Task<void> load(const bool initial_definition);
+	[[nodiscard]] QCoro::Task<void> load(const bool initial_definition);
 
 	void load_predefines();
-	void load_defines();
+	void load_defines(const std::set<std::string> &loaded_data_types);
 	void load_history(const QDate &start_date, const timeline *timeline, const game_rules_base *game_rules = nullptr);
 
 	bool is_initialized() const

@@ -526,8 +526,16 @@ QCoro::Task<void> database::load(const bool initial_definition)
 
 	try {
 		//create or process data entries for each data type
+		std::set<std::string> loaded_data_types;
+
 		for (const std::unique_ptr<data_type_metadata> &metadata : this->metadata) {
 			metadata->get_processing_function()(initial_definition, this->gsml_data_to_process_by_data_type[metadata.get()]);
+			loaded_data_types.insert(metadata->get_class_identifier());
+
+			if (!initial_definition) {
+				//load any defines which depend on this data type and now have their dependencies fulfilled
+				this->load_defines(loaded_data_types);
+			}
 		}
 
 		if (!initial_definition) {
@@ -547,23 +555,38 @@ void database::load_predefines()
 	}
 }
 
-void database::load_defines()
+void database::load_defines(const std::set<std::string> &loaded_data_types)
 {
 	if (this->defines.empty()) {
 		return;
 	}
+
+	std::vector<defines_base *> defines_to_load = this->defines;
+	std::erase_if(defines_to_load, [&loaded_data_types](const defines_base *defines) {
+		if (defines->is_loaded()) {
+			return true;
+		}
+
+		for (const std::string &dependency_identifier : defines->get_database_dependencies()) {
+			if (!loaded_data_types.contains(dependency_identifier)) {
+				return true;
+			}
+		}
+
+		return false;
+	});
 
 	for (const auto &kv_pair : this->get_data_paths_with_module()) {
 		const std::filesystem::path &path = kv_pair.first;
 		const data_module *data_module = kv_pair.second;
 
 		try {
-			for (defines_base *defines : this->defines) {
+			for (defines_base *defines : defines_to_load) {
 				defines->load(path);
 			}
 		} catch (...) {
 			if (data_module != nullptr) {
-				std::throw_with_nested(std::runtime_error("Failed to load the defines for the \"" + data_module->get_identifier() + "\" module."));
+				std::throw_with_nested(std::runtime_error(std::format("Failed to load the defines for the \"{}\" module.", data_module->get_identifier())));
 			} else {
 				std::throw_with_nested(std::runtime_error("Failed to load defines."));
 			}

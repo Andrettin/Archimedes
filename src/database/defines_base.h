@@ -12,6 +12,12 @@ class defines_base : public QObject
 public:
 	virtual std::string_view get_file_name() const = 0;
 
+	virtual const std::set<std::string> &get_database_dependencies() const
+	{
+		static const std::set<std::string> empty_set;
+		return empty_set;
+	}
+
 	void load(const std::filesystem::path &base_path);
 
 	virtual void process_gsml_property(const gsml_property &property);
@@ -24,6 +30,14 @@ public:
 	virtual void check() const
 	{
 	}
+	
+	bool is_loaded() const
+	{
+		return this->loaded;
+	}
+
+private:
+	bool loaded = false;
 };
 
 }
