@@ -154,10 +154,12 @@ int to_length(const std::string &str)
 	const space::length_unit length_unit = find_iterator->second;
 
 	switch (length_unit) {
-		case space::length_unit::feet:
+		case space::length_unit::inches:
 			return number;
+		case space::length_unit::feet:
+			return number * 12;
 		case space::length_unit::yards:
-			return number * 3;
+			return number * 12 * 3;
 		default:
 			assert_throw(false);
 			break;
@@ -166,10 +168,15 @@ int to_length(const std::string &str)
 	return 0;
 }
 
-std::string from_length(const int length_in_feet, const bool joined)
+std::string from_length(const int length_in_inches, const bool joined)
 {
-	int length = length_in_feet;
-	space::length_unit length_unit = space::length_unit::feet;
+	int length = length_in_inches;
+	space::length_unit length_unit = space::length_unit::inches;
+
+	if (length >= 12) {
+		length /= 12;
+		length_unit = space::length_unit::feet;
+	}
 
 	if (length >= 3) {
 		length /= 3;

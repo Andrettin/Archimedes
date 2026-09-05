@@ -4,6 +4,7 @@ namespace archimedes::space {
 
 enum class length_unit
 {
+	inches,
 	feet,
 	yards
 };
@@ -11,6 +12,8 @@ enum class length_unit
 inline constexpr std::string_view get_length_unit_short_name(const length_unit unit)
 {
 	switch (unit) {
+		case length_unit::inches:
+			return "in";
 		case length_unit::feet:
 			return "ft";
 		case length_unit::yards:
