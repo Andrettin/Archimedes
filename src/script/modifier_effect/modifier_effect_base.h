@@ -42,6 +42,11 @@ public:
 		return this->value * multiplier;
 	}
 
+	const decimillesimal_int &get_value() const
+	{
+		return this->value;
+	}
+
 	virtual void apply(scope_type *scope, const decimillesimal_int &multiplier) const
 	{
 		Q_UNUSED(scope);
