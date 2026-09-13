@@ -6,7 +6,9 @@ enum class length_unit
 {
 	inches,
 	feet,
-	yards
+	yards,
+	centimeters,
+	meters
 };
 
 inline constexpr std::string_view get_length_unit_short_name(const length_unit unit)
@@ -18,6 +20,10 @@ inline constexpr std::string_view get_length_unit_short_name(const length_unit u
 			return "ft";
 		case length_unit::yards:
 			return "yd";
+		case length_unit::centimeters:
+			return "cm";
+		case length_unit::meters:
+			return "m";
 		default:
 			break;
 	}
@@ -32,7 +38,9 @@ enum class weight_unit
 	ounces,
 	pounds,
 	stones,
-	tons
+	tons,
+	grams,
+	kilograms
 };
 
 inline constexpr std::string_view get_weight_unit_short_name(const weight_unit unit)
@@ -46,6 +54,10 @@ inline constexpr std::string_view get_weight_unit_short_name(const weight_unit u
 			return "st";
 		case weight_unit::tons:
 			return "tn";
+		case weight_unit::grams:
+			return "g";
+		case weight_unit::kilograms:
+			return "kg";
 		default:
 			break;
 	}

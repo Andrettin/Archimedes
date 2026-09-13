@@ -168,7 +168,7 @@ int to_length(const std::string &str)
 	return 0;
 }
 
-std::string from_length(const int length_in_inches, const bool joined)
+std::string from_length(const int length_in_inches, const bool joined, const bool use_metric_measurements)
 {
 	int length = length_in_inches;
 	space::length_unit length_unit = space::length_unit::inches;
@@ -181,6 +181,32 @@ std::string from_length(const int length_in_inches, const bool joined)
 	if (length >= 3) {
 		length /= 3;
 		length_unit = space::length_unit::yards;
+	}
+
+	if (use_metric_measurements) {
+		switch (length_unit) {
+			case space::length_unit::inches:
+				length *= 25;
+				length /= 10;
+				length_unit = space::length_unit::centimeters;
+				break;
+			case space::length_unit::feet:
+				length *= 30;
+				length_unit = space::length_unit::centimeters;
+				break;
+			case space::length_unit::yards:
+				if (length >= 2) {
+					length *= 9;
+					length /= 10;
+					length_unit = space::length_unit::meters;
+				} else {
+					length *= 90;
+					length_unit = space::length_unit::centimeters;
+				}
+				break;
+			default:
+				break;
+		}
 	}
 
 	return std::format("{}{}{}", length, joined ? "" : " ", space::get_length_unit_short_name(length_unit));
@@ -216,7 +242,7 @@ int to_weight(const std::string &str)
 	return 0;
 }
 
-std::string from_weight(const int weight_in_ounces, const bool joined)
+std::string from_weight(const int weight_in_ounces, const bool joined, const bool use_metric_measurements)
 {
 	int weight = weight_in_ounces;
 	space::weight_unit weight_unit = space::weight_unit::ounces;
@@ -229,6 +255,27 @@ std::string from_weight(const int weight_in_ounces, const bool joined)
 	if (weight >= 2000) {
 		weight /= 2000;
 		weight_unit = space::weight_unit::tons;
+	}
+
+	if (use_metric_measurements) {
+		switch (weight_unit) {
+			case space::weight_unit::ounces:
+				weight *= 30;
+				weight_unit = space::weight_unit::grams;
+				break;
+			case space::weight_unit::pounds:
+				if (weight >= 2) {
+					weight *= 48;
+					weight /= 100;
+					weight_unit = space::weight_unit::kilograms;
+				} else {
+					weight *= 480;
+					weight_unit = space::weight_unit::grams;
+				}
+				break;
+			default:
+				break;
+		}
 	}
 
 	return std::format("{}{}{}", weight, joined ? "" : " ", space::get_weight_unit_short_name(weight_unit));
