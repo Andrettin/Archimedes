@@ -16,4 +16,14 @@ const std::map<std::string, length_unit> length_units_by_short_name = []() {
 	return map;
 }();
 
+const std::map<std::string, weight_unit> weight_units_by_short_name = []() {
+	std::map<std::string, weight_unit> map;
+
+	magic_enum::enum_for_each<weight_unit>([&map](const weight_unit unit) {
+		map[std::string(get_weight_unit_short_name(unit))] = unit;
+	});
+
+	return map;
+}();
+
 }

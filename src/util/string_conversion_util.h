@@ -37,6 +37,8 @@ extern QTime to_time(const std::string &time_str);
 extern std::chrono::seconds to_duration(const std::string &str);
 extern int to_length(const std::string &str); //the base unit for the result is inches
 extern std::string from_length(const int length_in_inches, const bool joined = true);
+extern int to_weight(const std::string &str); //the base unit for the result is ounces
+extern std::string from_weight(const int weight_in_ounces, const bool joined = true);
 extern std::pair<std::string, std::string> to_number_string_and_unit_string(const std::string &str);
 extern std::pair<int, int> to_numerator_and_denominator(const std::string &str);
 

@@ -186,6 +186,54 @@ std::string from_length(const int length_in_inches, const bool joined)
 	return std::format("{}{}{}", length, joined ? "" : " ", space::get_length_unit_short_name(length_unit));
 }
 
+int to_weight(const std::string &str)
+{
+	const auto [number_str, unit_str] = string::to_number_string_and_unit_string(str);
+
+	const int number = std::stoi(number_str);
+
+	assert_throw(!unit_str.empty());
+
+	const auto find_iterator = space::weight_units_by_short_name.find(unit_str);
+	assert_throw(find_iterator != space::weight_units_by_short_name.end());
+
+	const space::weight_unit weight_unit = find_iterator->second;
+
+	switch (weight_unit) {
+		case space::weight_unit::ounces:
+			return number;
+		case space::weight_unit::pounds:
+			return number * 16;
+		case space::weight_unit::stones:
+			return number * 16 * 14;
+		case space::weight_unit::tons:
+			return number * 16 * 2000;
+		default:
+			assert_throw(false);
+			break;
+	}
+
+	return 0;
+}
+
+std::string from_weight(const int weight_in_ounces, const bool joined)
+{
+	int weight = weight_in_ounces;
+	space::weight_unit weight_unit = space::weight_unit::ounces;
+
+	if (weight >= 16) {
+		weight /= 16;
+		weight_unit = space::weight_unit::pounds;
+	}
+
+	if (weight >= 2000) {
+		weight /= 2000;
+		weight_unit = space::weight_unit::tons;
+	}
+
+	return std::format("{}{}{}", weight, joined ? "" : " ", space::get_weight_unit_short_name(weight_unit));
+}
+
 std::pair<std::string, std::string> to_number_string_and_unit_string(const std::string &str)
 {
 	size_t suffix_pos = std::string::npos;
