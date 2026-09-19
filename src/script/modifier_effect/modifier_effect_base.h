@@ -17,7 +17,11 @@ public:
 	{
 	}
 
-	explicit modifier_effect_base(const std::string &value) : value(decimillesimal_int(value))
+	explicit modifier_effect_base(const decimillesimal_int &value) : value(value)
+	{
+	}
+
+	explicit modifier_effect_base(const std::string &value) : modifier_effect_base(decimillesimal_int(value))
 	{
 	}
 
