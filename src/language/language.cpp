@@ -16,6 +16,10 @@ namespace archimedes {
 void language::initialize()
 {
 	for (const word *word : this->get_words()) {
+		if (word->is_name()) {
+			this->name_words.push_back(word);
+		}
+
 		if (word->is_name_front_compound_element()) {
 			this->name_front_compound_elements.push_back(word);
 		}

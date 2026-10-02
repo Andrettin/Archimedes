@@ -122,6 +122,11 @@ public:
 		this->words.push_back(word);
 	}
 
+	const std::vector<const word *> &get_name_words() const
+	{
+		return this->name_words;
+	}
+
 	const std::vector<const word *> &get_name_front_compound_elements() const
 	{
 		return this->name_front_compound_elements;
@@ -149,6 +154,7 @@ public:
 	std::vector<language *> Dialects;							/// Dialects of this language
 private:
 	std::vector<word *> words;
+	std::vector<const word *> name_words;
 	std::vector<const word *> name_front_compound_elements;
 	std::vector<const word *> name_rear_compound_elements;
 public:

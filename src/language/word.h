@@ -25,6 +25,10 @@ class word final : public named_data_entry, public data_type<word>
 	Q_PROPERTY(archimedes::word* etymon READ get_etymon WRITE set_etymon NOTIFY changed)
 	Q_PROPERTY(bool name_front_compound_element MEMBER name_front_compound_element NOTIFY changed)
 	Q_PROPERTY(bool name_rear_compound_element MEMBER name_rear_compound_element NOTIFY changed)
+	Q_PROPERTY(bool given_name MEMBER given_name NOTIFY changed)
+	Q_PROPERTY(bool given_name_compound MEMBER given_name_compound NOTIFY changed)
+	Q_PROPERTY(bool surname MEMBER surname NOTIFY changed)
+	Q_PROPERTY(bool surname_compound MEMBER surname_compound NOTIFY changed)
 	Q_PROPERTY(const archimedes::word* name_generation_word MEMBER name_generation_word READ get_name_generation_word NOTIFY changed)
 	Q_PROPERTY(std::string df_word MEMBER df_word NOTIFY changed)
 	Q_PROPERTY(QStringList meanings READ get_meanings_qstring_list NOTIFY changed)
@@ -105,6 +109,11 @@ public:
 		etymon->reflexes.push_back(this);
 	}
 
+	bool is_name() const
+	{
+		return this->is_given_name() || this->is_surname();
+	}
+
 	bool is_name_front_compound_element() const
 	{
 		return this->name_front_compound_element || (this->get_name_generation_word() != nullptr && this->get_name_generation_word()->is_name_front_compound_element());
@@ -123,6 +132,26 @@ public:
 	void set_name_rear_compound_element(const bool value)
 	{
 		this->name_rear_compound_element = value;
+	}
+
+	bool is_given_name() const
+	{
+		return this->given_name || (this->get_name_generation_word() != nullptr && this->get_name_generation_word()->is_given_name());
+	}
+
+	bool is_given_name_compound() const
+	{
+		return this->given_name_compound || (this->get_name_generation_word() != nullptr && this->get_name_generation_word()->is_given_name_compound());
+	}
+
+	bool is_surname() const
+	{
+		return this->surname || (this->get_name_generation_word() != nullptr && this->get_name_generation_word()->is_surname());
+	}
+
+	bool is_surname_compound() const
+	{
+		return this->surname_compound || (this->get_name_generation_word() != nullptr && this->get_name_generation_word()->is_surname_compound());
 	}
 
 	const word *get_name_generation_word() const
@@ -193,6 +222,10 @@ private:
 	const archimedes::language *etymon_language = nullptr;
 	bool name_front_compound_element = false;
 	bool name_rear_compound_element = false;
+	bool given_name = false;
+	bool given_name_compound = false;
+	bool surname = false;
+	bool surname_compound = false;
 	const word *name_generation_word = nullptr; //the word from which this one will use the name generation properties
 	const archimedes::language *name_generation_word_language = nullptr;
 	std::string df_word;
