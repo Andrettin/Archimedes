@@ -44,6 +44,15 @@ void word::process_gsml_property(const gsml_property &property)
 			this->etymon_language = language::get(string_list.at(0));
 		}
 		this->set_etymon(word::get(string_list.back()));
+	} else if (key == "name_generation_word") {
+		assert_throw(property.get_operator() == gsml_operator::assignment);
+		const std::vector<std::string> string_list = string::split(value, ':');
+		assert_throw(!string_list.empty());
+		assert_throw(string_list.size() <= 2);
+		if (string_list.size() > 1) {
+			this->name_generation_word_language = language::get(string_list.at(0));
+		}
+		this->name_generation_word = word::get(string_list.back());
 	} else {
 		named_data_entry::process_gsml_property(property);
 	}
@@ -90,6 +99,10 @@ void word::check() const
 		if (this->etymon_language != nullptr && this->etymon_language != this->get_etymon()->get_language()) {
 			throw std::runtime_error(std::format("Word \"{}\" has etymon \"{}\" from language \"{}\", but that etymon actually belongs to a different language.", this->get_identifier(), this->get_etymon()->get_identifier(), this->etymon_language->get_identifier()));
 		}
+	}
+
+	if (this->get_name_generation_word() && this->name_generation_word_language != nullptr && this->name_generation_word_language != this->get_name_generation_word()->get_language()) {
+		throw std::runtime_error(std::format("Word \"{}\" has name generation word \"{}\" from language \"{}\", but that word actually belongs to a different language.", this->get_identifier(), this->get_name_generation_word()->get_identifier(), this->name_generation_word_language->get_identifier()));
 	}
 
 	if (this->get_type() != word_type::noun && this->is_uncountable()) {

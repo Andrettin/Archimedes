@@ -23,8 +23,9 @@ class word final : public named_data_entry, public data_type<word>
 	Q_PROPERTY(archimedes::word_type type MEMBER type READ get_type NOTIFY changed)
 	Q_PROPERTY(archimedes::grammatical_gender gender MEMBER gender READ get_gender NOTIFY changed)
 	Q_PROPERTY(archimedes::word* etymon READ get_etymon WRITE set_etymon NOTIFY changed)
-	Q_PROPERTY(bool name_front_compound_element MEMBER name_front_compound_element READ is_name_front_compound_element NOTIFY changed)
-	Q_PROPERTY(bool name_rear_compound_element MEMBER name_rear_compound_element READ is_name_rear_compound_element NOTIFY changed)
+	Q_PROPERTY(bool name_front_compound_element MEMBER name_front_compound_element NOTIFY changed)
+	Q_PROPERTY(bool name_rear_compound_element MEMBER name_rear_compound_element NOTIFY changed)
+	Q_PROPERTY(const archimedes::word* name_generation_word MEMBER name_generation_word READ get_name_generation_word NOTIFY changed)
 	Q_PROPERTY(std::string df_word MEMBER df_word NOTIFY changed)
 	Q_PROPERTY(QStringList meanings READ get_meanings_qstring_list NOTIFY changed)
 	Q_PROPERTY(bool uncountable MEMBER uncountable READ is_uncountable NOTIFY changed)
@@ -106,7 +107,7 @@ public:
 
 	bool is_name_front_compound_element() const
 	{
-		return this->name_front_compound_element;
+		return this->name_front_compound_element || (this->get_name_generation_word() != nullptr && this->get_name_generation_word()->is_name_front_compound_element());
 	}
 
 	void set_name_front_compound_element(const bool value)
@@ -116,12 +117,17 @@ public:
 
 	bool is_name_rear_compound_element() const
 	{
-		return this->name_rear_compound_element;
+		return this->name_rear_compound_element || (this->get_name_generation_word() != nullptr && this->get_name_generation_word()->is_name_rear_compound_element());
 	}
 
 	void set_name_rear_compound_element(const bool value)
 	{
 		this->name_rear_compound_element = value;
+	}
+
+	const word *get_name_generation_word() const
+	{
+		return this->name_generation_word;
 	}
 
 	const std::string &get_df_word() const
@@ -187,6 +193,8 @@ private:
 	const archimedes::language *etymon_language = nullptr;
 	bool name_front_compound_element = false;
 	bool name_rear_compound_element = false;
+	const word *name_generation_word = nullptr; //the word from which this one will use the name generation properties
+	const archimedes::language *name_generation_word_language = nullptr;
 	std::string df_word;
 	std::vector<const word *> reflexes; //words derived from this one
 public:
