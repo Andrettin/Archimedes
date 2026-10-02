@@ -111,9 +111,12 @@ std::string name_generator::generate_name(const std::map<std::string, int> &used
 	return get_name_variant_string(name_variant);
 }
 
-void name_generator::set_markov_chain_size(const size_t size)
+void name_generator::enable_markov_generation(const size_t markov_chain_size)
 {
-	this->markov_generator = std::make_unique<archimedes::markov_generator>(size);
+	assert_throw(markov_chain_size > 0);
+	assert_throw(this->markov_generator == nullptr);
+
+	this->markov_generator = std::make_unique<archimedes::markov_generator>(markov_chain_size);
 
 	for (const auto &name_variant : this->names) {
 		this->markov_generator->add_word(get_name_variant_string(name_variant));

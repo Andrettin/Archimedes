@@ -11,6 +11,7 @@ class name_generator final
 {
 public:
 	static constexpr size_t minimum_name_count = 10;
+	static constexpr size_t default_markov_chain_size = 2;
 
 	name_generator();
 	~name_generator();
@@ -36,12 +37,7 @@ public:
 	std::string generate_name() const;
 	std::string generate_name(const std::map<std::string, int> &used_name_counts) const;
 
-	bool uses_markov_generation() const
-	{
-		return this->markov_generator != nullptr;
-	}
-
-	void set_markov_chain_size(const size_t size);
+	void enable_markov_generation(const size_t markov_chain_size);
 
 private:
 	std::vector<name_variant> names; //name list for generation

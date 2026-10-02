@@ -19,8 +19,8 @@ gendered_name_generator::~gendered_name_generator()
 void gendered_name_generator::create_name_generator(const gender gender)
 {
 	auto name_generator = std::make_unique<archimedes::name_generator>();
-	if (this->markov_chain_size > 0) {
-		name_generator->set_markov_chain_size(this->markov_chain_size);
+	if (this->use_markov_generation) {
+		name_generator->enable_markov_generation(this->markov_chain_size);
 	}
 	this->name_generators[gender] = std::move(name_generator);
 }
@@ -90,14 +90,15 @@ void gendered_name_generator::propagate_ungendered_names_from(const gendered_nam
 	this->add_names(gender::female, find_iterator->second->get_names());
 }
 
-void gendered_name_generator::set_markov_chain_size(const size_t size)
+void gendered_name_generator::enable_markov_generation(const size_t markov_chain_size)
 {
-	assert_throw(size > 0);
+	assert_throw(markov_chain_size > 0);
 
-	this->markov_chain_size = size;
+	this->use_markov_generation = true;
+	this->markov_chain_size = markov_chain_size;
 
 	for (const auto &[gender, name_generator] : this->name_generators) {
-		name_generator->set_markov_chain_size(size);
+		name_generator->enable_markov_generation(this->markov_chain_size);
 	}
 }
 
