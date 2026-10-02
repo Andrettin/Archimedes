@@ -144,6 +144,11 @@ public:
 		return this->given_name_compound || (this->get_name_generation_word() != nullptr && this->get_name_generation_word()->is_given_name_compound());
 	}
 
+	void set_given_name_compound(const bool value)
+	{
+		this->given_name_compound = value;
+	}
+
 	bool is_surname() const
 	{
 		return this->surname || (this->get_name_generation_word() != nullptr && this->get_name_generation_word()->is_surname());
@@ -152,6 +157,11 @@ public:
 	bool is_surname_compound() const
 	{
 		return this->surname_compound || (this->get_name_generation_word() != nullptr && this->get_name_generation_word()->is_surname_compound());
+	}
+
+	void set_surname_compound(const bool value)
+	{
+		this->surname_compound = value;
 	}
 
 	const word *get_name_generation_word() const
