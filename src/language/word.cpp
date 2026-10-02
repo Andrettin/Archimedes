@@ -48,10 +48,8 @@ void word::process_gsml_property(const gsml_property &property)
 		assert_throw(property.get_operator() == gsml_operator::assignment);
 		const std::vector<std::string> string_list = string::split(value, ':');
 		assert_throw(!string_list.empty());
-		assert_throw(string_list.size() <= 2);
-		if (string_list.size() > 1) {
-			this->name_generation_word_language = language::get(string_list.at(0));
-		}
+		assert_throw(string_list.size() == 2);
+		this->name_generation_word_language = language::get(string_list.front());
 		this->name_generation_word = word::get(string_list.back());
 	} else {
 		named_data_entry::process_gsml_property(property);
