@@ -32,8 +32,8 @@ public:
 	bool has_name(const std::string &name) const;
 
 	void add_name(const name_variant &name);
-	void add_names(const std::vector<name_variant> &names);
 	void add_names(const std::vector<std::string> &names);
+	void add_names_from(const std::unique_ptr<name_generator> &source_name_generator);
 
 	std::string generate_name() const;
 	std::string generate_name(const std::map<std::string, int> &used_name_counts) const;

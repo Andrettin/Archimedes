@@ -63,17 +63,17 @@ void name_generator::add_name(const name_variant &name)
 	}
 }
 
-void name_generator::add_names(const std::vector<name_variant> &names)
-{
-	for (const auto &name_variant : names) {
-		this->add_name(name_variant);
-	}
-}
-
 void name_generator::add_names(const std::vector<std::string> &names)
 {
 	for (const std::string &name : names) {
 		this->add_name(name);
+	}
+}
+
+void name_generator::add_names_from(const std::unique_ptr<name_generator> &source_name_generator)
+{
+	for (const auto &name_variant : source_name_generator->get_names()) {
+		this->add_name(name_variant);
 	}
 }
 

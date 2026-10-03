@@ -29,9 +29,9 @@ public:
 	bool has_enough_data(const gender gender) const;
 
 	void add_name(const gender gender, const name_variant &name);
-	void add_names(const gender gender, const std::vector<name_variant> &names);
 	void add_names(const gender gender, const std::vector<std::string> &names);
 	void add_names_from(const std::unique_ptr<gendered_name_generator> &source_name_generator);
+	void add_names_from(const gender gender, const std::unique_ptr<name_generator> &source_name_generator);
 
 	void propagate_ungendered_names_from(const gendered_name_generator *source_name_generator);
 
