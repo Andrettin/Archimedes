@@ -11,7 +11,9 @@ extern int CclDefineLanguageWord(lua_State *l);
 namespace archimedes {
 
 class language;
+enum class grammatical_case;
 enum class grammatical_gender;
+enum class grammatical_number;
 enum class word_type;
 
 class word final : public named_data_entry, public data_type<word>
@@ -22,6 +24,7 @@ class word final : public named_data_entry, public data_type<word>
 	Q_PROPERTY(archimedes::language* language MEMBER language WRITE set_language NOTIFY changed)
 	Q_PROPERTY(archimedes::word_type type MEMBER type READ get_type NOTIFY changed)
 	Q_PROPERTY(archimedes::grammatical_gender gender MEMBER gender READ get_gender NOTIFY changed)
+	Q_PROPERTY(archimedes::grammatical_number number MEMBER number READ get_number NOTIFY changed)
 	Q_PROPERTY(archimedes::word* etymon READ get_etymon WRITE set_etymon NOTIFY changed)
 	Q_PROPERTY(bool name_front_compound_element MEMBER name_front_compound_element NOTIFY changed)
 	Q_PROPERTY(bool name_rear_compound_element MEMBER name_rear_compound_element NOTIFY changed)
@@ -40,6 +43,9 @@ public:
 	static constexpr const char database_folder[] = "words";
 
 	static bool compare(const word *lhs, const word *rhs);
+
+	static void process_noun_inflection_scope(std::map<grammatical_number, std::map<grammatical_case, std::string>> &inflections, const gsml_data &scope);
+	static void process_noun_inflection_scope(std::map<grammatical_case, std::string> &inflections, const gsml_data &scope);
 
 	explicit word(const std::string &identifier);
 
@@ -92,6 +98,11 @@ public:
 	grammatical_gender get_gender() const
 	{
 		return this->gender;
+	}
+
+	grammatical_number get_number() const
+	{
+		return this->number;
 	}
 
 	word *get_etymon() const
@@ -211,9 +222,9 @@ public:
 		return this->uncountable;
 	}
 
-	std::string GetNounInflection(int grammatical_number, int grammatical_case, int word_junction_type = -1);
+	std::string get_noun_inflection(const grammatical_number number, const grammatical_case grammatical_case, const int word_junction_type = -1);
 	const std::string &GetVerbInflection(int grammatical_number, int grammatical_person, int grammatical_tense, int grammatical_mood);
-	std::string GetAdjectiveInflection(int comparison_degree, int article_type, int grammatical_case, int grammatical_number, const grammatical_gender grammatical_gender);
+	std::string GetAdjectiveInflection(int comparison_degree, int article_type, const grammatical_case grammatical_case, const grammatical_number number, const grammatical_gender gender);
 	const std::string &GetParticiple(int grammatical_tense);
 
 signals:
@@ -224,8 +235,8 @@ private:
 	archimedes::language *language = nullptr;
 	word_type type;
 	grammatical_gender gender; //what is the gender of the word, if it is a noun or article
+	grammatical_number number{}; //whether the word is necessarily tied to a specific grammatical number (e.g. plural) or not
 public:
-	int GrammaticalNumber = -1;			/// Grammatical number (i.e. whether the word is necessarily plural or not)
 	bool Archaic = false;				/// Whether the word is archaic (whether it is used in current speech)
 private:
 	word *etymon = nullptr; //the word from which this one derives
@@ -240,10 +251,10 @@ private:
 	const archimedes::language *name_generation_word_language = nullptr;
 	std::string df_word;
 	std::vector<const word *> reflexes; //words derived from this one
+	std::map<grammatical_number, std::map<grammatical_case, std::string>> noun_inflections;
 public:
-	std::map<std::tuple<int, int>, std::string> NumberCaseInflections;	/// For nouns, mapped to grammatical number and grammatical case
 	std::map<std::tuple<int, int, int, int>, std::string> NumberPersonTenseMoodInflections;	/// For verbs, mapped to grammatical number, grammatical person, grammatical tense and grammatical mood
-	std::string ComparisonDegreeCaseInflections[MaxComparisonDegrees][MaxGrammaticalCases];	/// For adjectives
+	std::map<grammatical_case, std::string> ComparisonDegreeCaseInflections[MaxComparisonDegrees];	/// For adjectives
 	std::string Participles[MaxGrammaticalTenses];		/// For verbs
 private:
 	std::vector<std::string> meanings; //meanings of the word in English

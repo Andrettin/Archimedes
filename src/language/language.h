@@ -17,24 +17,6 @@ enum ArticleTypes {
 	MaxArticleTypes
 };
 
-enum GrammaticalCases {
-	GrammaticalCaseNoCase,
-	GrammaticalCaseNominative,
-	GrammaticalCaseAccusative,
-	GrammaticalCaseDative,
-	GrammaticalCaseGenitive,
-
-	MaxGrammaticalCases
-};
-
-enum GrammaticalNumbers {
-	GrammaticalNumberNoNumber,
-	GrammaticalNumberSingular,
-	GrammaticalNumberPlural,
-
-	MaxGrammaticalNumbers
-};
-
 enum GrammaticalPersons {
 	GrammaticalPersonFirstPerson,
 	GrammaticalPersonSecondPerson,
@@ -87,7 +69,9 @@ namespace archimedes {
 
 class language_family;
 class word;
+enum class grammatical_case;
 enum class grammatical_gender;
+enum class grammatical_number;
 enum class word_type;
 
 class language final : public named_data_entry, public data_type<language>
@@ -138,17 +122,17 @@ public:
 	}
 
 	word *GetWord(const std::string &word, const word_type word_type, const std::vector<std::string> &word_meanings) const;
-	const std::string &GetArticle(const grammatical_gender gender, int grammatical_case, int article_type, int grammatical_number);
-	std::string GetNounEnding(int grammatical_number, int grammatical_case, int word_junction_type = -1);
-	std::string GetAdjectiveEnding(int article_type, int grammatical_case, int grammatical_number, const grammatical_gender grammatical_gender);
+	const std::string &GetArticle(const grammatical_gender gender, const grammatical_case grammatical_case, int article_type, const grammatical_number number);
+	std::string GetNounEnding(const grammatical_number grammatical_number, const grammatical_case grammatical_case, int word_junction_type = -1);
+	std::string GetAdjectiveEnding(int article_type, const grammatical_case grammatical_case, const grammatical_number grammatical_number, const grammatical_gender grammatical_gender);
 
 	Q_INVOKABLE void print_df_words() const;
 
 private:
 	language_family *family = nullptr;
 public:
-	std::string NounEndings[MaxGrammaticalNumbers][MaxGrammaticalCases][MaxWordJunctionTypes];
-	std::map<grammatical_gender, std::string> AdjectiveEndings[MaxArticleTypes][MaxGrammaticalCases][MaxGrammaticalNumbers];
+	std::map<grammatical_number, std::map<grammatical_case, std::map<int, std::string>>> NounEndings;
+	std::map<grammatical_case, std::map<grammatical_number, std::map<grammatical_gender, std::string>>> AdjectiveEndings[MaxArticleTypes];
 	bool used_by_civilization_or_faction = false;
 	language *DialectOf = nullptr; ///of which language this is a dialect of (if at all); dialects inherit the words from the parent language unless specified otherwise
 	std::vector<language *> Dialects;							/// Dialects of this language
@@ -167,10 +151,6 @@ public:
 
 extern std::string GetArticleTypeNameById(int article_type);
 extern int GetArticleTypeIdByName(const std::string &article_type);
-extern std::string GetGrammaticalCaseNameById(int grammatical_case);
-extern int GetGrammaticalCaseIdByName(const std::string &grammatical_case);
-extern std::string GetGrammaticalNumberNameById(int grammatical_number);
-extern int GetGrammaticalNumberIdByName(const std::string &grammatical_number);
 extern std::string GetGrammaticalPersonNameById(int grammatical_person);
 extern int GetGrammaticalPersonIdByName(const std::string &grammatical_person);
 extern std::string GetGrammaticalTenseNameById(int grammatical_tense);

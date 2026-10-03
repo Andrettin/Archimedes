@@ -2,13 +2,17 @@
 
 #include "language/word.h"
 
+#include "language/grammatical_case.h"
 #include "language/grammatical_gender.h"
+#include "language/grammatical_number.h"
 #include "language/language.h"
 #include "language/word_type.h"
 #include "util/assert_util.h"
 #include "util/container_util.h"
 #include "util/string_util.h"
 #include "util/vector_util.h"
+
+#include <magic_enum/magic_enum.hpp>
 
 namespace archimedes {
 
@@ -23,6 +27,40 @@ bool word::compare(const word *lhs, const word *rhs)
 	}
 
 	return lhs->get_identifier() < rhs->get_identifier();
+}
+
+void word::process_noun_inflection_scope(std::map<grammatical_number, std::map<grammatical_case, std::string>> &inflections, const gsml_data &scope)
+{
+	scope.for_each_property([&inflections](const gsml_property &property) {
+		const std::string &key = property.get_key();
+		const std::string &value = property.get_value();
+
+		if (const std::optional<grammatical_number> number = magic_enum::enum_cast<grammatical_number>(key)) {
+			inflections[number.value()][grammatical_case::none] = value;
+		} else {
+			const grammatical_case grammatical_case = magic_enum::enum_cast<archimedes::grammatical_case>(key).value();
+			inflections[grammatical_number::none][grammatical_case] = value;
+		}
+	});
+
+	scope.for_each_child([&inflections](const gsml_data &child_scope) {
+		const std::string &child_tag = child_scope.get_tag();
+
+		const grammatical_number number = magic_enum::enum_cast<grammatical_number>(child_tag).value();
+
+		word::process_noun_inflection_scope(inflections[number], child_scope);
+	});
+}
+
+void word::process_noun_inflection_scope(std::map<grammatical_case, std::string> &inflections, const gsml_data &scope)
+{
+	scope.for_each_property([&inflections](const gsml_property &property) {
+		const std::string &key = property.get_key();
+		const std::string &value = property.get_value();
+
+		const grammatical_case grammatical_case = magic_enum::enum_cast<archimedes::grammatical_case>(key).value();
+		inflections[grammatical_case] = value;
+	});
 }
 
 word::word(const std::string &identifier)
@@ -61,7 +99,9 @@ void word::process_gsml_scope(const gsml_data &scope)
 	const std::string &tag = scope.get_tag();
 	const std::vector<std::string> &values = scope.get_values();
 
-	if (tag == "meaning_words") {
+	if (tag == "noun_inflections") {
+		word::process_noun_inflection_scope(this->noun_inflections, scope);
+	} else if (tag == "meaning_words") {
 		for (const std::string &value : values) {
 			this->meaning_words.push_back(word::get(value));
 		}
@@ -240,14 +280,23 @@ void word::remove_meaning(const std::string &meaning)
 	vector::remove_one(this->meanings, meaning);
 }
 
-std::string word::GetNounInflection(int grammatical_number, int grammatical_case, int word_junction_type)
+std::string word::get_noun_inflection(const grammatical_number number, const grammatical_case grammatical_case, const int word_junction_type)
 {
-	auto find_iterator = this->NumberCaseInflections.find(std::make_tuple(grammatical_number, grammatical_case));
-	if (find_iterator != this->NumberCaseInflections.end()) {
-		return find_iterator->second;
+	auto number_find_iterator = this->noun_inflections.find(number);
+	if (number_find_iterator == this->noun_inflections.end()) {
+		number_find_iterator = this->noun_inflections.find(grammatical_number::none);
+	}
+	if (number_find_iterator != this->noun_inflections.end()) {
+		auto case_find_iterator = number_find_iterator->second.find(grammatical_case);
+		if (case_find_iterator == number_find_iterator->second.end()) {
+			case_find_iterator = number_find_iterator->second.find(grammatical_case::none);
+		}
+		if (case_find_iterator != number_find_iterator->second.end()) {
+			return case_find_iterator->second;
+		}
 	}
 
-	return this->get_name() + this->language->GetNounEnding(grammatical_number, grammatical_case, word_junction_type);
+	return this->get_name() + this->language->GetNounEnding(number, grammatical_case, word_junction_type);
 }
 
 const std::string &word::GetVerbInflection(int grammatical_number, int grammatical_person, int grammatical_tense, int grammatical_mood)
@@ -260,24 +309,20 @@ const std::string &word::GetVerbInflection(int grammatical_number, int grammatic
 	return this->get_name();
 }
 
-std::string word::GetAdjectiveInflection(int comparison_degree, int article_type, int grammatical_case, int grammatical_number, const grammatical_gender grammatical_gender)
+std::string word::GetAdjectiveInflection(int comparison_degree, int article_type, const grammatical_case grammatical_case, const grammatical_number number, const grammatical_gender gender)
 {
 	std::string inflected_word;
 
-	if (grammatical_case == -1) {
-		grammatical_case = GrammaticalCaseNoCase;
-	}
-
 	if (!this->ComparisonDegreeCaseInflections[comparison_degree][grammatical_case].empty()) {
 		inflected_word = this->ComparisonDegreeCaseInflections[comparison_degree][grammatical_case];
-	} else if (!this->ComparisonDegreeCaseInflections[comparison_degree][GrammaticalCaseNoCase].empty()) {
-		inflected_word = this->ComparisonDegreeCaseInflections[comparison_degree][GrammaticalCaseNoCase];
+	} else if (!this->ComparisonDegreeCaseInflections[comparison_degree][grammatical_case::none].empty()) {
+		inflected_word = this->ComparisonDegreeCaseInflections[comparison_degree][grammatical_case::none];
 	} else {
 		inflected_word = this->get_name();
 	}
 
-	if (article_type != -1 && grammatical_case != GrammaticalCaseNoCase && this->ComparisonDegreeCaseInflections[comparison_degree][grammatical_case].empty()) {
-		inflected_word += this->language->GetAdjectiveEnding(article_type, grammatical_case, grammatical_number, grammatical_gender);
+	if (article_type != -1 && grammatical_case != grammatical_case::none && this->ComparisonDegreeCaseInflections[comparison_degree][grammatical_case].empty()) {
+		inflected_word += this->language->GetAdjectiveEnding(article_type, grammatical_case, number, gender);
 	}
 
 	return inflected_word;

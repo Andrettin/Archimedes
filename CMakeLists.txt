@@ -173,7 +173,9 @@ source_group(game FILES ${game_HDRS})
 
 set(language_HDRS
 	src/language/gendered_name_generator.h
+	src/language/grammatical_case.h
 	src/language/grammatical_gender.h
+	src/language/grammatical_number.h
 	src/language/language.h
 	src/language/language_family.h
 	src/language/name_generator.h
