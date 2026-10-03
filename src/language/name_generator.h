@@ -21,17 +21,23 @@ public:
 		return this->names;
 	}
 
-	size_t get_name_count() const
+	size_t get_name_count(const bool include_additional) const
 	{
-		return this->names.size();
+		size_t count = this->names.size();
+		if (include_additional) {
+			count += this->additional_names.size();
+		}
+		return count;
 	}
 
-	bool has_enough_base_data() const;
+	bool has_enough_base_data(const bool include_additional) const;
 	bool has_enough_data() const;
 
 	bool has_name(const std::string &name) const;
 
 	void add_name(const name_variant &name);
+	void add_additional_name(const name_variant &name);
+	void add_name_to_markov_generator(const name_variant &name);
 	void add_names(const std::vector<std::string> &names);
 	void add_names_from(const std::unique_ptr<name_generator> &source_name_generator);
 
@@ -42,6 +48,7 @@ public:
 
 private:
 	std::vector<name_variant> names; //name list for generation
+	std::vector<name_variant> additional_names; //names which should only be used if there is not sufficient base name variety
 	std::unique_ptr<archimedes::markov_generator> markov_generator;
 };
 
