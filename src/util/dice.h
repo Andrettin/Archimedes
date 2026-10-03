@@ -51,6 +51,11 @@ public:
 		return this->count;
 	}
 
+	void set_count(const int count)
+	{
+		this->count = count;
+	}
+
 	constexpr int get_sides() const
 	{
 		return this->sides;
