@@ -26,6 +26,7 @@ public:
 		return this->names.size();
 	}
 
+	bool has_enough_base_data() const;
 	bool has_enough_data() const;
 
 	bool has_name(const std::string &name) const;
@@ -37,7 +38,7 @@ public:
 	std::string generate_name() const;
 	std::string generate_name(const std::map<std::string, int> &used_name_counts) const;
 
-	void enable_markov_generation(const size_t markov_chain_size);
+	void set_markov_chain_size(const size_t markov_chain_size);
 
 private:
 	std::vector<name_variant> names; //name list for generation

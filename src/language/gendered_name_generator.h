@@ -45,11 +45,10 @@ public:
 		this->propagate_ungendered_names_from(this);
 	}
 
-	void enable_markov_generation(const size_t markov_chain_size);
+	void set_markov_chain_size(const size_t markov_chain_size);
 
 private:
 	std::map<gender, std::unique_ptr<name_generator>> name_generators;
-	bool use_markov_generation = false;
 	size_t markov_chain_size = 0;
 };
 

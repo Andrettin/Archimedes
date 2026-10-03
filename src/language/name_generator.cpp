@@ -19,9 +19,14 @@ name_generator::~name_generator()
 {
 }
 
+bool name_generator::has_enough_base_data() const
+{
+	return this->get_name_count() >= name_generator::minimum_name_count;
+}
+
 bool name_generator::has_enough_data() const
 {
-	return this->get_name_count() >= name_generator::minimum_name_count || (this->markov_generator != nullptr && this->markov_generator->get_possible_word_count() >= name_generator::minimum_name_count);
+	return this->has_enough_base_data() || (this->markov_generator != nullptr && this->markov_generator->get_possible_word_count() >= name_generator::minimum_name_count);
 }
 
 bool name_generator::has_name(const std::string &name) const
@@ -76,7 +81,8 @@ std::string name_generator::generate_name() const
 {
 	assert_throw(!this->names.empty());
 
-	if (this->markov_generator != nullptr) {
+	//only use markov generation if there is not enough base data to have sufficient name diversity
+	if (this->markov_generator != nullptr && !this->has_enough_base_data()) {
 		return this->markov_generator->generate_word();
 	}
 
@@ -111,7 +117,7 @@ std::string name_generator::generate_name(const std::map<std::string, int> &used
 	return get_name_variant_string(name_variant);
 }
 
-void name_generator::enable_markov_generation(const size_t markov_chain_size)
+void name_generator::set_markov_chain_size(const size_t markov_chain_size)
 {
 	assert_throw(markov_chain_size > 0);
 	assert_throw(this->markov_generator == nullptr);
