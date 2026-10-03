@@ -99,12 +99,22 @@ void word::check() const
 		}
 	}
 
-	if (this->get_name_generation_word() && this->name_generation_word_language != nullptr && this->name_generation_word_language != this->get_name_generation_word()->get_language()) {
-		throw std::runtime_error(std::format("Word \"{}\" has name generation word \"{}\" from language \"{}\", but that word actually belongs to a different language.", this->get_identifier(), this->get_name_generation_word()->get_identifier(), this->name_generation_word_language->get_identifier()));
+	if (this->get_name_generation_word() != nullptr) {
+		if (this->name_generation_word_language != nullptr && this->name_generation_word_language != this->get_name_generation_word()->get_language()) {
+			throw std::runtime_error(std::format("Word \"{}\" has name generation word \"{}\" from language \"{}\", but that word actually belongs to a different language.", this->get_identifier(), this->get_name_generation_word()->get_identifier(), this->name_generation_word_language->get_identifier()));
+		}
+
+		if (!this->get_name_generation_word()->is_given_name() && !this->get_name_generation_word()->is_given_name_compound() && !this->get_name_generation_word()->is_surname() && !this->get_name_generation_word()->is_surname_compound()) {
+			throw std::runtime_error(std::format("Word \"{}\" has name generation word \"{}\", but the latter does not have any name generation settings.", this->get_identifier(), this->get_name_generation_word()->get_identifier()));
+		}
 	}
 
 	if (this->get_type() != word_type::noun && this->is_uncountable()) {
 		throw std::runtime_error(std::format("Word \"{}\" is uncountable, but is not a noun.", this->get_identifier()));
+	}
+
+	if ((this->is_given_name_compound() || this->is_surname_compound()) && !this->is_name_front_compound_element() && !this->is_name_rear_compound_element()) {
+		throw std::runtime_error(std::format("Word \"{}\" is set to be a name compound, but is not defined to be either a front or rear compound element.", this->get_identifier(), this->get_name_generation_word()->get_identifier()));
 	}
 }
 
