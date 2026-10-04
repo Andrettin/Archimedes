@@ -25,6 +25,17 @@ void gendered_name_generator::create_name_generator(const gender gender)
 	this->name_generators[gender] = std::move(name_generator);
 }
 
+size_t gendered_name_generator::get_name_count(const gender gender) const
+{
+	const name_generator *name_generator = this->get_name_generator(gender);
+
+	if (name_generator != nullptr) {
+		return name_generator->get_name_count(true);
+	}
+
+	return 0;
+}
+
 bool gendered_name_generator::has_enough_data() const
 {
 	return this->has_enough_data(gender::female) && this->has_enough_data(gender::male);
