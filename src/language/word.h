@@ -262,7 +262,7 @@ private:
 	std::vector<const word *> compound_elements; //from which compound elements is this word formed
 	std::vector<const word *> compound_element_of; //which words are formed from this word as a compound element
 
-	// noun-specific variables
+	//noun-specific variables
 	bool uncountable = false;
 
 public:
