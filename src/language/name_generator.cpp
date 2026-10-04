@@ -101,7 +101,7 @@ void name_generator::add_names_from(const std::unique_ptr<name_generator> &sourc
 
 std::string name_generator::generate_name() const
 {
-	assert_throw(this->get_name_count(true) > 0);
+	assert_throw(this->has_data());
 
 	//only use markov generation if there is not enough base data to have sufficient name diversity
 	if (this->markov_generator != nullptr && !this->has_enough_base_data(true)) {
@@ -118,7 +118,7 @@ std::string name_generator::generate_name() const
 
 std::string name_generator::generate_name(const std::map<std::string, int> &used_name_counts) const
 {
-	if (this->get_name_count(true) == 0) {
+	if (!this->has_data()) {
 		return std::string();
 	}
 

@@ -30,6 +30,11 @@ public:
 		return count;
 	}
 
+	bool has_data() const
+	{
+		return this->get_name_count(true) > 0;
+	}
+
 	bool has_enough_base_data(const bool include_additional) const;
 	bool has_enough_data() const;
 
