@@ -10,7 +10,7 @@ enum class gender;
 class name_generator final
 {
 public:
-	static constexpr size_t minimum_name_count = 10;
+	static constexpr size_t minimum_name_count = 100;
 	static constexpr size_t default_markov_chain_size = 2;
 
 	name_generator();
