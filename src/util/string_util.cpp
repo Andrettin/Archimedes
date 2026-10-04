@@ -38,20 +38,45 @@ void anglicize(std::string &str)
 {
 	string::normalize(str);
 
-	string::replace(str, "\u00E1", "a");
-	string::replace(str, "\u00E9", "e");
-	string::replace(str, "\u00ED", "i");
-	string::replace(str, "\u00F3", "o");
-	string::replace(str, "\u00FA", "u");
-	string::replace(str, "\u00F1", "n");
 	string::replace(str, "\u00C1", "A");
+	string::replace(str, "\u00C2", "A");
 	string::replace(str, "\u00C9", "E");
+	string::replace(str, "\u00CA", "E");
 	string::replace(str, "\u00CD", "I");
-	string::replace(str, "\u00D3", "O");
-	string::replace(str, "\u00DA", "U");
+	string::replace(str, "\u00CE", "I");
 	string::replace(str, "\u00D1", "N");
+	string::replace(str, "\u00D3", "O");
+	string::replace(str, "\u00D4", "O");
+	string::replace(str, "\u00DA", "U");
+	string::replace(str, "\u00DB", "U");
 	string::replace(str, "\u00DE", "Th");
+	string::replace(str, "\u00E1", "a");
+	string::replace(str, "\u00E2", "a");
+	string::replace(str, "\u00E9", "e");
+	string::replace(str, "\u00EA", "e");
+	string::replace(str, "\u00ED", "i");
+	string::replace(str, "\u00EE", "i");
+	string::replace(str, "\u00F1", "n");
+	string::replace(str, "\u00F3", "o");
+	string::replace(str, "\u00F4", "o");
+	string::replace(str, "\u00FA", "u");
+	string::replace(str, "\u00FB", "u");
 	string::replace(str, "\u00FE", "th");
+	string::replace(str, "\u0100", "A");
+	string::replace(str, "\u0101", "a");
+	string::replace(str, "\u0112", "E");
+	string::replace(str, "\u0113", "e");
+	string::replace(str, "\u012A", "I");
+	string::replace(str, "\u012B", "i");
+	string::replace(str, "\u014C", "O");
+	string::replace(str, "\u014D", "o");
+	string::replace(str, "\u014E", "O");
+	string::replace(str, "\u014F", "o");
+	string::replace(str, "\u0154", "R");
+	string::replace(str, "\u0155", "r");
+	string::replace(str, "\u02B7", "w");
+	string::replace(str, "\u0394", "D");
+	string::replace(str, "\u03B4", "d");
 }
 
 std::string get_indefinite_article(const std::string &str)
