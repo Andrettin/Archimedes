@@ -144,7 +144,7 @@ void word::check() const
 			throw std::runtime_error(std::format("Word \"{}\" has name generation word \"{}\" from language \"{}\", but that word actually belongs to a different language.", this->get_identifier(), this->get_name_generation_word()->get_identifier(), this->name_generation_word_language->get_identifier()));
 		}
 
-		if (!this->get_name_generation_word()->is_given_name() && !this->get_name_generation_word()->is_given_name_compound() && !this->get_name_generation_word()->is_surname() && !this->get_name_generation_word()->is_surname_compound()) {
+		if (!this->get_name_generation_word()->given_name && !this->get_name_generation_word()->given_name_compound && !this->get_name_generation_word()->surname && !this->get_name_generation_word()->surname_compound) {
 			throw std::runtime_error(std::format("Word \"{}\" has name generation word \"{}\", but the latter does not have any name generation settings.", this->get_identifier(), this->get_name_generation_word()->get_identifier()));
 		}
 	}
