@@ -48,6 +48,10 @@ bool name_generator::has_name(const std::string &name) const
 
 void name_generator::add_name(const name_variant &name)
 {
+	if (vector::contains(this->names, name)) {
+		return;
+	}
+
 	this->names.push_back(name);
 
 	this->add_name_to_markov_generator(name);
@@ -55,6 +59,10 @@ void name_generator::add_name(const name_variant &name)
 
 void name_generator::add_additional_name(const name_variant &name)
 {
+	if (vector::contains(this->additional_names, name)) {
+		return;
+	}
+
 	this->additional_names.push_back(name);
 
 	this->add_name_to_markov_generator(name);
