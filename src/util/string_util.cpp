@@ -78,9 +78,13 @@ void anglicize(std::string &str)
 	string::replace(str, "\u014F", "o");
 	string::replace(str, "\u0154", "R");
 	string::replace(str, "\u0155", "r");
+	string::replace(str, "\u0160", "S");
+	string::replace(str, "\u0161", "s");
 	string::replace(str, "\u02B7", "w");
 	string::replace(str, "\u0394", "D");
 	string::replace(str, "\u03B4", "d");
+	string::replace(str, "\u1E2A", "H");
+	string::replace(str, "\u1E2B", "h");
 }
 
 std::string get_indefinite_article(const std::string &str)
