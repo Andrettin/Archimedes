@@ -23,9 +23,9 @@ public:
 
 	size_t get_name_count(const bool include_additional) const
 	{
-		size_t count = this->names.size();
+		size_t count = this->unique_name_count;
 		if (include_additional) {
-			count += this->additional_names.size();
+			count += this->unique_additional_name_count;
 		}
 		return count;
 	}
@@ -54,6 +54,8 @@ public:
 private:
 	std::vector<name_variant> names; //name list for generation
 	std::vector<name_variant> additional_names; //names which should only be used if there is not sufficient base name variety
+	size_t unique_name_count = 0;
+	size_t unique_additional_name_count = 0;
 	std::unique_ptr<archimedes::markov_generator> markov_generator;
 };
 

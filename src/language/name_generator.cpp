@@ -3,7 +3,6 @@
 #include "language/name_generator.h"
 
 #include "util/assert_util.h"
-#include "util/gender.h"
 #include "util/markov_generator.h"
 #include "util/string_util.h"
 #include "util/vector_random_util.h"
@@ -48,8 +47,8 @@ bool name_generator::has_name(const std::string &name) const
 
 void name_generator::add_name(const name_variant &name)
 {
-	if (vector::contains(this->names, name)) {
-		return;
+	if (!vector::contains(this->names, name)) {
+		++this->unique_name_count;
 	}
 
 	this->names.push_back(name);
@@ -59,8 +58,8 @@ void name_generator::add_name(const name_variant &name)
 
 void name_generator::add_additional_name(const name_variant &name)
 {
-	if (vector::contains(this->additional_names, name)) {
-		return;
+	if (!vector::contains(this->additional_names, name)) {
+		++this->unique_additional_name_count;
 	}
 
 	this->additional_names.push_back(name);
