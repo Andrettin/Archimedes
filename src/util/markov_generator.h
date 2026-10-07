@@ -12,12 +12,12 @@ public:
 
 	size_t get_possible_word_count();
 	size_t calculate_possible_word_count();
-	size_t calculate_possible_word_count(const std::string &prefix, const size_t word_length);
+	size_t calculate_possible_word_count(const std::string &prefix, const size_t word_length, std::vector<std::unordered_map<std::string, size_t>> &cache);
 
 private:
 	size_t chain_size = 2;
 	size_t max_length = 0;
-	std::map<std::string, std::string> prefixes;
+	std::unordered_map<std::string, std::string> prefixes;
 	size_t possible_word_count = 0;
 };
 

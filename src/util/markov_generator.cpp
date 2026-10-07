@@ -77,10 +77,14 @@ size_t markov_generator::get_possible_word_count()
 
 size_t markov_generator::calculate_possible_word_count()
 {
-	return this->calculate_possible_word_count("", 0);
+	assert_throw(!this->prefixes.empty());
+	assert_throw(this->chain_size > 0);
+
+	std::vector<std::unordered_map<std::string, size_t>> cache(this->max_length + 2);
+	return this->calculate_possible_word_count("", 0, cache);
 }
 
-size_t markov_generator::calculate_possible_word_count(const std::string &prefix, const size_t word_length)
+size_t markov_generator::calculate_possible_word_count(const std::string &prefix, const size_t word_length, std::vector<std::unordered_map<std::string, size_t>> &cache)
 {
 	assert_throw(!this->prefixes.empty());
 	assert_throw(this->chain_size > 0);
@@ -94,10 +98,17 @@ size_t markov_generator::calculate_possible_word_count(const std::string &prefix
 		return 1;
 	}
 
-	size_t word_count = 0;
+	auto &cache_level = cache[word_length];
+	const auto cache_iterator = cache_level.find(prefix);
+	if (cache_iterator != cache_level.end()) {
+		return cache_iterator->second;
+	}
 
-	std::array<bool, std::numeric_limits<unsigned char>::max()> checked_values{};
-	checked_values.fill(false);
+	size_t word_count = 0;
+	std::string new_prefix;
+	new_prefix.reserve(this->chain_size + 1);
+
+	std::array<bool, std::numeric_limits<unsigned char>::max() + 1> checked_values{};
 
 	for (const char c : it->second) {
 		if (checked_values[static_cast<unsigned char>(c)]) {
@@ -111,15 +122,17 @@ size_t markov_generator::calculate_possible_word_count(const std::string &prefix
 			continue;
 		}
 
-		std::string new_prefix = prefix;
+		new_prefix = prefix;
 
 		new_prefix.push_back(c);
 		while (new_prefix.size() > this->chain_size) {
 			new_prefix.erase(new_prefix.begin());
 		}
 
-		word_count += this->calculate_possible_word_count(new_prefix, word_length + 1);
+		word_count += this->calculate_possible_word_count(new_prefix, word_length + 1, cache);
 	}
+
+	cache_level.emplace(prefix, word_count);
 
 	return word_count;
 }
