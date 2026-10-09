@@ -2,6 +2,9 @@
 
 #include "language/word.h"
 
+#include "database/gsml_data.h"
+#include "database/gsml_operator.h"
+#include "database/gsml_property.h"
 #include "language/grammatical_case.h"
 #include "language/grammatical_gender.h"
 #include "language/grammatical_number.h"

@@ -4,6 +4,8 @@
 
 #include "database/data_entry.h"
 #include "database/database.h"
+#include "database/gsml_data.h"
+#include "database/gsml_operator.h"
 
 namespace archimedes {
 

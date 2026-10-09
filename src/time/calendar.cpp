@@ -2,6 +2,8 @@
 
 #include "time/calendar.h"
 
+#include "database/gsml_data.h"
+#include "database/gsml_property.h"
 #include "time/day_of_the_week.h"
 #include "time/month.h"
 

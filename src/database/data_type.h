@@ -3,8 +3,6 @@
 #include "database/data_module_container.h"
 #include "database/data_type_metadata.h"
 #include "database/database_util.h"
-#include "database/gsml_data.h"
-#include "database/gsml_operator.h"
 #include "util/aggregate_exception.h"
 #include "util/qunique_ptr.h"
 
@@ -13,6 +11,7 @@ namespace archimedes {
 class data_entry;
 class data_module;
 class game_rules_base;
+class gsml_data;
 
 class data_type_base
 {
