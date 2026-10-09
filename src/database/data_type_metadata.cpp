@@ -8,8 +8,11 @@ namespace archimedes {
 
 data_type_metadata::data_type_metadata(
 	const std::string &class_identifier,
+	const QMetaType &meta_type,
+	const std::string &database_folder,
 	const std::set<std::string> &database_dependencies,
 	const std::set<std::string> &history_database_dependencies,
+	const instance_creation_function_type &instance_creation_function,
 	const parsing_function_type &parsing_function,
 	const processing_function_type &processing_function,
 	const std::function<void()> &initialization_function,
@@ -18,8 +21,11 @@ data_type_metadata::data_type_metadata(
 	const std::function<void()> &clearing_function,
 	const history_loading_function_type &history_loading_function
 ) : class_identifier(class_identifier),
+	meta_type(meta_type),
+	database_folder(database_folder),
 	database_dependencies(database_dependencies), 
 	history_database_dependencies(history_database_dependencies),
+	instance_creation_function(instance_creation_function),
 	parsing_function(parsing_function),
 	processing_function(processing_function),
 	initialization_function(initialization_function),
@@ -33,6 +39,16 @@ data_type_metadata::data_type_metadata(
 const std::string &data_type_metadata::get_class_identifier() const
 {
 	return this->class_identifier;
+}
+
+const QMetaType &data_type_metadata::get_meta_type() const
+{
+	return this->meta_type;
+}
+
+const std::string &data_type_metadata::get_database_folder() const
+{
+	return this->database_folder;
 }
 
 bool data_type_metadata::has_database_dependency_on(const std::unique_ptr<data_type_metadata> &metadata) const
@@ -78,6 +94,11 @@ bool data_type_metadata::has_history_database_dependency_on(const data_type_meta
 size_t data_type_metadata::get_history_database_dependency_count() const
 {
 	return this->history_database_dependencies.size();
+}
+
+const data_type_metadata::instance_creation_function_type &data_type_metadata::get_instance_creation_function() const
+{
+	return this->instance_creation_function;
 }
 
 const data_type_metadata::parsing_function_type &data_type_metadata::get_parsing_function() const

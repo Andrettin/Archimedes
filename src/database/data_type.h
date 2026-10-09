@@ -23,19 +23,26 @@ public:
 	static inline const std::set<std::string> history_database_dependencies;
 
 protected:
-	static data_entry *try_get(const QMetaType &meta_type, const std::string &identifier);
+	static data_entry *get(const std::string &identifier, const data_type_metadata *metadata);
+	static data_entry *get(const std::string &identifier, const std::string &class_identifier);
+	static data_entry *try_get(const std::string &identifier, const QMetaType &meta_type);
 
 	static const std::vector<data_entry *> &get_all(const QMetaType &meta_type);
 	static std::vector<data_entry *> &get_all_modifiable(const QMetaType &meta_type);
 
 	static bool exists(const QMetaType &meta_type, const std::string &identifier);
 
-	static data_entry *add(const QMetaType &meta_type, const std::string &identifier, const data_module *data_module, const std::string_view &class_identifier, qunique_ptr<data_entry> &&instance);
+	static data_entry *add(const std::string &identifier, const data_module *data_module, const data_type_metadata *metadata);
+	static data_entry *add(const std::string &identifier, const data_module *data_module, const std::string &class_identifier);
 
 	static void add_instance_alias(const QMetaType &meta_type, data_entry *instance, const std::string &alias, const std::string_view &class_identifier);
 
 	static void remove(const QMetaType &meta_type, data_entry *instance);
 	static void clear(const QMetaType &meta_type);
+
+	[[nodiscard]] static QCoro::Task<std::vector<gsml_data>> parse_database(const std::filesystem::path &data_path, const data_type_metadata *metadata);
+
+	static void process_database(const bool definition, const data_module_map<std::vector<gsml_data>> &gsml_data_to_process, const data_type_metadata *metadata);
 
 private:
 	static std::map<int, std::vector<data_entry *>> instances;
@@ -58,22 +65,12 @@ public:
 
 	static T *get(const std::string &identifier)
 	{
-		if (identifier == "none") {
-			return nullptr;
-		}
-
-		T *instance = T::try_get(identifier);
-
-		if (instance == nullptr) {
-			throw std::runtime_error("Invalid " + std::string(T::class_identifier) + " instance: \"" + identifier + "\".");
-		}
-
-		return instance;
+		return static_cast<T *>(data_type_base::get(identifier, T::class_identifier));
 	}
 
 	static T *try_get(const std::string &identifier)
 	{
-		return static_cast<T *>(data_type_base::try_get(QMetaType::fromType<T>(), identifier));
+		return static_cast<T *>(data_type_base::try_get(identifier, QMetaType::fromType<T>()));
 	}
 
 	static T *get_or_add(const std::string &identifier, const data_module *data_module)
@@ -105,10 +102,14 @@ public:
 		return data_type_base::exists(QMetaType::fromType<T>(), identifier);
 	}
 
+	static qunique_ptr<data_entry> create(const std::string &identifier)
+	{
+		return make_qunique<T>(identifier);
+	}
+
 	static T *add(const std::string &identifier, const data_module *data_module)
 	{
-		auto instance = make_qunique<T>(identifier);
-		return static_cast<T *>(data_type_base::add(QMetaType::fromType<T>(), identifier, data_module, T::class_identifier, std::move(instance)));
+		return static_cast<T *>(data_type_base::add(identifier, data_module, T::class_identifier));
 	}
 
 	static void remove(data_entry *instance)
@@ -131,95 +132,6 @@ public:
 	{
 		std::vector<T *> &instances = reinterpret_cast<std::vector<T *> &>(data_type_base::get_all_modifiable(QMetaType::fromType<T>()));
 		std::sort(instances.begin(), instances.end(), function);
-	}
-
-	[[nodiscard]]
-	static QCoro::Task<std::vector<gsml_data>> parse_database(const std::filesystem::path &data_path)
-	{
-		std::vector<gsml_data> gsml_data_to_process;
-
-		if (std::string(T::database_folder).empty()) {
-			co_return gsml_data_to_process;
-		}
-
-		const std::filesystem::path database_path(data_path / T::database_folder);
-
-		if (!std::filesystem::exists(database_path)) {
-			co_return gsml_data_to_process;
-		}
-
-		co_await database_util::parse_folder(database_path, gsml_data_to_process);
-		co_return gsml_data_to_process;
-	}
-
-	static void process_database(const bool definition, const data_module_map<std::vector<gsml_data>> &gsml_data_to_process)
-	{
-		if (std::string(T::database_folder).empty()) {
-			return;
-		}
-
-		std::vector<std::exception_ptr> exceptions;
-
-		for (const auto &kv_pair : gsml_data_to_process) {
-			const data_module *data_module = kv_pair.first;
-
-			database_util::set_current_module(data_module);
-
-			const std::vector<gsml_data> &gsml_data_list = kv_pair.second;
-			for (const gsml_data &data : gsml_data_list) {
-				data.for_each_child([definition, data_module, &exceptions](const gsml_data &data_entry) {
-					try {
-						const std::string &identifier = data_entry.get_tag();
-
-						T *instance = nullptr;
-						if (definition) {
-							if (data_entry.get_operator() != gsml_operator::addition) {
-								//addition operators for data entry scopes mean modifying already-defined entries
-								instance = T::add(identifier, data_module);
-							} else {
-								instance = T::get(identifier);
-							}
-
-							for (const gsml_property *alias_property : data_entry.try_get_properties("aliases")) {
-								if (alias_property->get_operator() != gsml_operator::addition) {
-									throw std::runtime_error("Only the addition operator is supported for data entry aliases.");
-								}
-
-								const std::string &alias = alias_property->get_value();
-								T::add_instance_alias(QMetaType::fromType<T>(), instance, alias, T::class_identifier);
-
-								//for backwards compatibility, change instances of "_" in the identifier with "-" and add that as a further alias, and do the opposite as well
-								if (alias.find("_") != std::string::npos) {
-									std::string other_alias = alias;
-									std::replace(other_alias.begin(), other_alias.end(), '_', '-');
-									T::add_instance_alias(QMetaType::fromType<T>(), instance, other_alias, T::class_identifier);
-								} else if (alias.find("-") != std::string::npos) {
-									std::string other_alias = alias;
-									std::replace(other_alias.begin(), other_alias.end(), '-', '_');
-									T::add_instance_alias(QMetaType::fromType<T>(), instance, other_alias, T::class_identifier);
-								}
-							}
-						} else {
-							try {
-								instance = T::get(identifier);
-								instance->process_gsml_data(data_entry);
-								instance->set_defined(true);
-							} catch (...) {
-								std::throw_with_nested(std::runtime_error("Error processing or loading data for " + std::string(T::class_identifier) + " instance \"" + identifier + "\"."));
-							}
-						}
-					} catch (...) {
-						exceptions.push_back(std::current_exception());
-					}
-				});
-			}
-		}
-
-		if (!exceptions.empty()) {
-			throw aggregate_exception(std::format("The database processing for {} instances failed.", T::class_identifier), std::move(exceptions));
-		}
-
-		database_util::set_current_module(nullptr);
 	}
 
 	static void load_history_database(const QDate &start_date, const timeline *timeline, const game_rules_base *game_rules)
@@ -318,7 +230,7 @@ private:
 	static inline bool initialize_class()
 	{
 		//initialize the metadata (including database parsing/processing functions) for this data type
-		auto metadata = std::make_unique<data_type_metadata>(T::class_identifier, T::database_dependencies, T::history_database_dependencies, T::parse_database, T::process_database, T::initialize_all, T::process_all_text, T::check_all, T::clear, T::load_history_database);
+		auto metadata = std::make_unique<data_type_metadata>(T::class_identifier, QMetaType::fromType<T>(), T::database_folder, T::database_dependencies, T::history_database_dependencies, T::create, T::parse_database, T::process_database, T::initialize_all, T::process_all_text, T::check_all, T::clear, T::load_history_database);
 		database_util::register_metadata(std::move(metadata));
 
 		database_util::register_string_to_qvariant_conversion(T::property_class_identifier, [](const std::string &value) {

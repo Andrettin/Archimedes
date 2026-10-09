@@ -34,21 +34,23 @@ public:
 		return nullptr;
 	}
 
-	static T *add(const std::string &identifier, const data_module *data_module)
-	{
-		T *instance = data_type<T>::add(identifier, data_module);
-
-		const enum_type value = magic_enum::enum_cast<enum_type>(identifier).value();
-
-		enum_data_type::instances_by_enum_value[value] = instance;
-
-		return instance;
-	}
-
 	static void clear()
 	{
 		data_type<T>::clear();
 		enum_data_type::instances_by_enum_value.clear();
+	}
+
+	static void process_database(const bool definition, const data_module_map<std::vector<gsml_data>> &gsml_data_to_process, const data_type_metadata *metadata)
+	{
+		data_type<T>::process_database(definition, gsml_data_to_process, metadata);
+
+		if (definition) {
+			for (T *enum_data_entry : T::get_all()) {
+				const enum_type value = magic_enum::enum_cast<enum_type>(enum_data_entry->get_identifier()).value();
+
+				enum_data_type::instances_by_enum_value[value] = enum_data_entry;
+			}
+		}
 	}
 
 private:

@@ -489,7 +489,7 @@ QCoro::Task<void> database::parse()
 
 		//parse the files in each data type's folder
 		for (const std::unique_ptr<data_type_metadata> &metadata : this->metadata) {
-			QCoro::Task<std::vector<gsml_data>> task = metadata->get_parsing_function()(path);
+			QCoro::Task<std::vector<gsml_data>> task = metadata->get_parsing_function()(path, metadata.get());
 			tasks.push_back(std::move(task));
 		}
 
@@ -529,7 +529,7 @@ QCoro::Task<void> database::load(const bool initial_definition)
 		std::set<std::string> loaded_data_types;
 
 		for (const std::unique_ptr<data_type_metadata> &metadata : this->metadata) {
-			metadata->get_processing_function()(initial_definition, this->gsml_data_to_process_by_data_type[metadata.get()]);
+			metadata->get_processing_function()(initial_definition, this->gsml_data_to_process_by_data_type[metadata.get()], metadata.get());
 			loaded_data_types.insert(metadata->get_class_identifier());
 
 			if (!initial_definition) {
