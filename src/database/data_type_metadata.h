@@ -29,8 +29,8 @@ public:
 		const instance_creation_function_type &instance_creation_function,
 		const parsing_function_type &parsing_function,
 		const processing_function_type &processing_function,
-		const std::function<void()> &initialization_function,
-		const std::function<void()> &text_processing_function,
+		const std::function<void(const data_type_metadata *)> &initialization_function,
+		const std::function<void(const data_type_metadata *)> &text_processing_function,
 		const std::function<void(const data_type_metadata *)> &checking_function,
 		const std::function<void()> &clearing_function,
 		const history_loading_function_type &history_loading_function
@@ -49,8 +49,8 @@ public:
 	const instance_creation_function_type &get_instance_creation_function() const;
 	const parsing_function_type &get_parsing_function() const;
 	const processing_function_type &get_processing_function() const;
-	const std::function<void()> &get_initialization_function() const;
-	const std::function<void()> &get_text_processing_function() const;
+	const std::function<void(const data_type_metadata *)> &get_initialization_function() const;
+	const std::function<void(const data_type_metadata *)> &get_text_processing_function() const;
 	const std::function<void(const data_type_metadata *)> &get_checking_function() const;
 	const std::function<void()> &get_clearing_function() const;
 	const history_loading_function_type &get_history_loading_function() const;
@@ -64,8 +64,8 @@ private:
 	instance_creation_function_type instance_creation_function;
 	parsing_function_type parsing_function;
 	processing_function_type processing_function;
-	std::function<void()> initialization_function; //functions to initialize entries
-	std::function<void()> text_processing_function; //functions to process text for entries
+	std::function<void(const data_type_metadata *)> initialization_function; //functions to initialize entries
+	std::function<void(const data_type_metadata *)> text_processing_function; //functions to process text for entries
 	std::function<void(const data_type_metadata *)> checking_function; //functions to check if data entries are valid
 	std::function<void()> clearing_function; //functions to clear the data entries
 	history_loading_function_type history_loading_function;

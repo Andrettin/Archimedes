@@ -17,7 +17,7 @@ public:
 	static constexpr const char property_class_identifier[] = "archimedes::era*";
 	static constexpr const char database_folder[] = "eras";
 
-	static void initialize_all();
+	static void initialize_all(const data_type_metadata *metadata);
 
 	explicit era(const std::string &identifier) : named_data_entry(identifier)
 	{

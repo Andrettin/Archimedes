@@ -15,8 +15,8 @@ data_type_metadata::data_type_metadata(
 	const instance_creation_function_type &instance_creation_function,
 	const parsing_function_type &parsing_function,
 	const processing_function_type &processing_function,
-	const std::function<void()> &initialization_function,
-	const std::function<void()> &text_processing_function,
+	const std::function<void(const data_type_metadata *)> &initialization_function,
+	const std::function<void(const data_type_metadata *)> &text_processing_function,
 	const std::function<void(const data_type_metadata *)> &checking_function,
 	const std::function<void()> &clearing_function,
 	const history_loading_function_type &history_loading_function
@@ -111,12 +111,12 @@ const data_type_metadata::processing_function_type &data_type_metadata::get_proc
 	return this->processing_function;
 }
 
-const std::function<void()> &data_type_metadata::get_initialization_function() const
+const std::function<void(const data_type_metadata *)> &data_type_metadata::get_initialization_function() const
 {
 	return this->initialization_function;
 }
 
-const std::function<void()> &data_type_metadata::get_text_processing_function() const
+const std::function<void(const data_type_metadata *)> &data_type_metadata::get_text_processing_function() const
 {
 	return this->text_processing_function;
 }

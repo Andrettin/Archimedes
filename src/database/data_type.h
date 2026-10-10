@@ -41,6 +41,8 @@ protected:
 	[[nodiscard]] static QCoro::Task<std::vector<gsml_data>> parse_database(const std::filesystem::path &data_path, const data_type_metadata *metadata);
 	static void process_database(const bool definition, const data_module_map<std::vector<gsml_data>> &gsml_data_to_process, const data_type_metadata *metadata);
 
+	static void initialize_all(const data_type_metadata *metadata);
+	static void process_all_text(const data_type_metadata *metadata);
 	static void check_all(const data_type_metadata *metadata);
 
 private:
@@ -154,36 +156,6 @@ public:
 		}
 	}
 
-	static void initialize_all()
-	{
-		for (T *instance : T::get_all()) {
-			if (instance->is_initialized()) {
-				continue; //the instance might have been initialized already, e.g. in the initialization function of another instance which needs it to be initialized
-			}
-
-			try {
-				instance->initialize();
-			} catch (...) {
-				std::throw_with_nested(std::runtime_error("Failed to initialize the " + std::string(T::class_identifier) + " instance \"" + instance->get_identifier() + "\"."));
-			}
-
-			if (!instance->is_initialized()) {
-				throw std::runtime_error("The " + std::string(T::class_identifier) + " instance \"" + instance->get_identifier() + "\" is not marked as initialized despite the initialization function having been called for it.");
-			}
-		}
-	}
-
-	static void process_all_text()
-	{
-		for (T *instance : T::get_all()) {
-			try {
-				instance->process_text();
-			} catch (...) {
-				std::throw_with_nested(std::runtime_error("Failed to process text for the " + std::string(T::class_identifier) + " instance \"" + instance->get_identifier() + "\"."));
-			}
-		}
-	}
-
 	static std::vector<T *> get_encyclopedia_entries()
 	{
 		std::vector<T *> entries;
@@ -228,7 +200,7 @@ private:
 			return QMetaObject::invokeMethod(object, method_name.c_str(), Qt::ConnectionType::DirectConnection, QArgument<const T *>(("const " + std::string(T::class_identifier) + " *").c_str(), value));
 		};
 
-		database_util::register_data_type(std::move(metadata), T::property_class_identifier, std::move(list_property_function), std::move(const_list_property_function));
+		database_util::register_data_type(std::move(metadata), T::property_class_identifier, list_property_function, const_list_property_function);
 
 		return true;
 	}

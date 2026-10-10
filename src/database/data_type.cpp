@@ -223,6 +223,36 @@ void data_type_base::process_database(const bool definition, const data_module_m
 	database_util::set_current_module(nullptr);
 }
 
+void data_type_base::initialize_all(const data_type_metadata *metadata)
+{
+	for (data_entry *instance : data_type_base::get_all(metadata->get_meta_type())) {
+		if (instance->is_initialized()) {
+			continue; //the instance might have been initialized already, e.g. in the initialization function of another instance which needs it to be initialized
+		}
+
+		try {
+			instance->initialize();
+		} catch (...) {
+			std::throw_with_nested(std::runtime_error("Failed to initialize the " + metadata->get_class_identifier() + " instance \"" + instance->get_identifier() + "\"."));
+		}
+
+		if (!instance->is_initialized()) {
+			throw std::runtime_error("The " + metadata->get_class_identifier() + " instance \"" + instance->get_identifier() + "\" is not marked as initialized despite the initialization function having been called for it.");
+		}
+	}
+}
+
+void data_type_base::process_all_text(const data_type_metadata *metadata)
+{
+	for (data_entry *instance : data_type_base::get_all(metadata->get_meta_type())) {
+		try {
+			instance->process_text();
+		} catch (...) {
+			std::throw_with_nested(std::runtime_error("Failed to process text for the " + metadata->get_class_identifier() + " instance \"" + instance->get_identifier() + "\"."));
+		}
+	}
+}
+
 void data_type_base::check_all(const data_type_metadata *metadata)
 {
 	std::vector<std::exception_ptr> exceptions;

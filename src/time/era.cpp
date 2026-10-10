@@ -7,9 +7,9 @@
 
 namespace archimedes {
 	
-void era::initialize_all()
+void era::initialize_all(const data_type_metadata *metadata)
 {
-	data_type::initialize_all();
+	data_type::initialize_all(metadata);
 
 	era::sort_instances([](const era *lhs, const era *rhs) {
 		if (lhs->get_start_date() != rhs->get_start_date()) {
