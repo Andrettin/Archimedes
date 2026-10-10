@@ -662,7 +662,7 @@ void database::initialize()
 	//check if data entries are valid for each data type
 	for (const std::unique_ptr<data_type_metadata> &metadata : this->metadata) {
 		try {
-			metadata->get_checking_function()();
+			metadata->get_checking_function()(metadata.get());
 		} catch (...) {
 			std::throw_with_nested(std::runtime_error("Error when checking the instances of the " + metadata->get_class_identifier() + " class."));
 		}
@@ -782,11 +782,11 @@ void database::register_string_to_qvariant_conversion(const std::string &class_n
 	this->string_to_qvariant_conversion_map[class_name] = std::move(function);
 }
 
-void database::register_list_property_function(const std::string &class_name, std::function<bool(QObject *object, const std::string &, const std::string &)> &&function)
+void database::register_list_property_function(const std::string &class_name, const std::function<bool(QObject *object, const std::string &, const std::string &)> &function)
 {
 	assert_throw(!this->list_property_function_map.contains(class_name));
 
-	this->list_property_function_map[class_name] = std::move(function);
+	this->list_property_function_map[class_name] = function;
 }
 
 }

@@ -345,7 +345,7 @@ public:
 	}
 
 	void register_string_to_qvariant_conversion(const std::string &class_name, std::function<QVariant(const std::string &)> &&function);
-	void register_list_property_function(const std::string &class_name, std::function<bool(QObject *object, const std::string &, const std::string &)> &&function);
+	void register_list_property_function(const std::string &class_name, const std::function<bool(QObject *object, const std::string &, const std::string &)> &function);
 
 	void register_on_initialization_function(std::function<void()> &&function)
 	{

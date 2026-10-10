@@ -3,7 +3,6 @@
 #include "database/data_module_container.h"
 #include "database/data_type_metadata.h"
 #include "database/database_util.h"
-#include "util/aggregate_exception.h"
 #include "util/qunique_ptr.h"
 
 namespace archimedes {
@@ -40,8 +39,9 @@ protected:
 	static void clear(const QMetaType &meta_type);
 
 	[[nodiscard]] static QCoro::Task<std::vector<gsml_data>> parse_database(const std::filesystem::path &data_path, const data_type_metadata *metadata);
-
 	static void process_database(const bool definition, const data_module_map<std::vector<gsml_data>> &gsml_data_to_process, const data_type_metadata *metadata);
+
+	static void check_all(const data_type_metadata *metadata);
 
 private:
 	static std::map<int, std::vector<data_entry *>> instances;
@@ -184,27 +184,6 @@ public:
 		}
 	}
 
-	static void check_all()
-	{
-		std::vector<std::exception_ptr> exceptions;
-
-		for (const T *instance : T::get_all()) {
-			try {
-				try {
-					instance->check();
-				} catch (...) {
-					std::throw_with_nested(std::runtime_error(std::format("The validity check for the {} instance \"{}\" failed.", T::class_identifier, instance->get_identifier())));
-				}
-			} catch (...) {
-				exceptions.push_back(std::current_exception());
-			}
-		}
-
-		if (!exceptions.empty()) {
-			throw aggregate_exception(std::format("The validity check for {} instances failed.", T::class_identifier), std::move(exceptions));
-		}
-	}
-
 	static std::vector<T *> get_encyclopedia_entries()
 	{
 		std::vector<T *> entries;
@@ -230,7 +209,6 @@ private:
 	{
 		//initialize the metadata (including database parsing/processing functions) for this data type
 		auto metadata = std::make_unique<data_type_metadata>(T::class_identifier, QMetaType::fromType<T>(), T::database_folder, T::database_dependencies, T::history_database_dependencies, T::create, T::parse_database, T::process_database, T::initialize_all, T::process_all_text, T::check_all, T::clear, T::load_history_database);
-		database_util::register_metadata(std::move(metadata));
 
 		database_util::register_string_to_qvariant_conversion(T::property_class_identifier, [](const std::string &value) {
 			return QVariant::fromValue(T::get(value));
@@ -245,16 +223,12 @@ private:
 			return QMetaObject::invokeMethod(object, method_name.c_str(), Qt::ConnectionType::DirectConnection, QArgument<T *>((std::string(T::class_identifier) + " *").c_str(), value));
 		};
 
-		database_util::register_list_property_function(std::format("std::vector<{}>", T::property_class_identifier), list_property_function);
-		database_util::register_list_property_function(std::format("std::vector<{},std::allocator<{}>>", T::property_class_identifier, T::property_class_identifier), list_property_function);
-
 		const auto const_list_property_function = [](QObject *object, const std::string &method_name, const std::string &value_str) {
 			const T *value = T::get(value_str);
 			return QMetaObject::invokeMethod(object, method_name.c_str(), Qt::ConnectionType::DirectConnection, QArgument<const T *>(("const " + std::string(T::class_identifier) + " *").c_str(), value));
 		};
 
-		database_util::register_list_property_function(std::format("std::vector<const {}>", T::property_class_identifier), const_list_property_function);
-		database_util::register_list_property_function(std::format("std::vector<const {},std::allocator<const {}>>", T::property_class_identifier, T::property_class_identifier), const_list_property_function);
+		database_util::register_data_type(std::move(metadata), T::property_class_identifier, std::move(list_property_function), std::move(const_list_property_function));
 
 		return true;
 	}

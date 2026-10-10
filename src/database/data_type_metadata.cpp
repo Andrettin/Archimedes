@@ -17,7 +17,7 @@ data_type_metadata::data_type_metadata(
 	const processing_function_type &processing_function,
 	const std::function<void()> &initialization_function,
 	const std::function<void()> &text_processing_function,
-	const std::function<void()> &checking_function,
+	const std::function<void(const data_type_metadata *)> &checking_function,
 	const std::function<void()> &clearing_function,
 	const history_loading_function_type &history_loading_function
 ) : class_identifier(class_identifier),
@@ -121,7 +121,7 @@ const std::function<void()> &data_type_metadata::get_text_processing_function() 
 	return this->text_processing_function;
 }
 
-const std::function<void()> &data_type_metadata::get_checking_function() const
+const std::function<void(const data_type_metadata *)> &data_type_metadata::get_checking_function() const
 {
 	return this->checking_function;
 }

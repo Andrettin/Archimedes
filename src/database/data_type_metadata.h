@@ -31,7 +31,7 @@ public:
 		const processing_function_type &processing_function,
 		const std::function<void()> &initialization_function,
 		const std::function<void()> &text_processing_function,
-		const std::function<void()> &checking_function,
+		const std::function<void(const data_type_metadata *)> &checking_function,
 		const std::function<void()> &clearing_function,
 		const history_loading_function_type &history_loading_function
 	);
@@ -51,7 +51,7 @@ public:
 	const processing_function_type &get_processing_function() const;
 	const std::function<void()> &get_initialization_function() const;
 	const std::function<void()> &get_text_processing_function() const;
-	const std::function<void()> &get_checking_function() const;
+	const std::function<void(const data_type_metadata *)> &get_checking_function() const;
 	const std::function<void()> &get_clearing_function() const;
 	const history_loading_function_type &get_history_loading_function() const;
 
@@ -66,7 +66,7 @@ private:
 	processing_function_type processing_function;
 	std::function<void()> initialization_function; //functions to initialize entries
 	std::function<void()> text_processing_function; //functions to process text for entries
-	std::function<void()> checking_function; //functions to check if data entries are valid
+	std::function<void(const data_type_metadata *)> checking_function; //functions to check if data entries are valid
 	std::function<void()> clearing_function; //functions to clear the data entries
 	history_loading_function_type history_loading_function;
 };

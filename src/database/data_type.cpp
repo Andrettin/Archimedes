@@ -6,6 +6,7 @@
 #include "database/database.h"
 #include "database/gsml_data.h"
 #include "database/gsml_operator.h"
+#include "util/aggregate_exception.h"
 
 namespace archimedes {
 
@@ -220,6 +221,27 @@ void data_type_base::process_database(const bool definition, const data_module_m
 	}
 
 	database_util::set_current_module(nullptr);
+}
+
+void data_type_base::check_all(const data_type_metadata *metadata)
+{
+	std::vector<std::exception_ptr> exceptions;
+
+	for (const data_entry *instance : data_type_base::get_all(metadata->get_meta_type())) {
+		try {
+			try {
+				instance->check();
+			} catch (...) {
+				std::throw_with_nested(std::runtime_error(std::format("The validity check for the {} instance \"{}\" failed.", metadata->get_class_identifier(), instance->get_identifier())));
+			}
+		} catch (...) {
+			exceptions.push_back(std::current_exception());
+		}
+	}
+
+	if (!exceptions.empty()) {
+		throw aggregate_exception(std::format("The validity check for {} instances failed.", metadata->get_class_identifier()), std::move(exceptions));
+	}
 }
 
 }
