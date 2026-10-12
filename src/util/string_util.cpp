@@ -86,6 +86,8 @@ void anglicize(std::string &str)
 	string::replace(str, "\u0161", "s");
 	string::replace(str, "\u017D", "Z");
 	string::replace(str, "\u017E", "z");
+	string::replace(str, "\u01EA", "O");
+	string::replace(str, "\u01EB", "o");
 	string::replace(str, "\u02B7", "w");
 	string::replace(str, "\u0394", "D");
 	string::replace(str, "\u03B4", "d");
