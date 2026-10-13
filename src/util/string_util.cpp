@@ -38,6 +38,7 @@ void anglicize(std::string &str)
 {
 	string::normalize(str);
 
+	string::replace(str, "\u00C0", "A");
 	string::replace(str, "\u00C1", "A");
 	string::replace(str, "\u00C2", "A");
 	string::replace(str, "\u00C6", "Ae");
@@ -52,6 +53,7 @@ void anglicize(std::string &str)
 	string::replace(str, "\u00DA", "U");
 	string::replace(str, "\u00DB", "U");
 	string::replace(str, "\u00DE", "Th");
+	string::replace(str, "\u00E0", "a");
 	string::replace(str, "\u00E1", "a");
 	string::replace(str, "\u00E2", "a");
 	string::replace(str, "\u00E6", "ae");
@@ -84,6 +86,8 @@ void anglicize(std::string &str)
 	string::replace(str, "\u0155", "r");
 	string::replace(str, "\u0160", "S");
 	string::replace(str, "\u0161", "s");
+	string::replace(str, "\u016E", "U");
+	string::replace(str, "\u016F", "u");
 	string::replace(str, "\u017D", "Z");
 	string::replace(str, "\u017E", "z");
 	string::replace(str, "\u01EA", "O");
@@ -93,6 +97,7 @@ void anglicize(std::string &str)
 	string::replace(str, "\u03B4", "d");
 	string::replace(str, "\u1E2A", "H");
 	string::replace(str, "\u1E2B", "h");
+	string::replace(str, "~", "");
 }
 
 std::string get_indefinite_article(const std::string &str)
