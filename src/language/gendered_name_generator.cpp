@@ -36,6 +36,17 @@ size_t gendered_name_generator::get_name_count(const gender gender) const
 	return 0;
 }
 
+size_t gendered_name_generator::get_markov_name_count(const gender gender) const
+{
+	const name_generator *name_generator = this->get_name_generator(gender);
+
+	if (name_generator != nullptr) {
+		return name_generator->get_markov_name_count();
+	}
+
+	return 0;
+}
+
 bool gendered_name_generator::has_enough_data() const
 {
 	return this->has_enough_data(gender::female) && this->has_enough_data(gender::male);

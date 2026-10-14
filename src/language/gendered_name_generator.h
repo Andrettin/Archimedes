@@ -26,6 +26,7 @@ public:
 	void create_name_generator(const gender gender);
 
 	size_t get_name_count(const gender gender) const;
+	size_t get_markov_name_count(const gender gender) const;
 	bool has_enough_data() const;
 	bool has_enough_data(const gender gender) const;
 

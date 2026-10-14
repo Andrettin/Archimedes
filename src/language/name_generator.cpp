@@ -18,6 +18,15 @@ name_generator::~name_generator()
 {
 }
 
+size_t name_generator::get_markov_name_count() const
+{
+	if (this->markov_generator != nullptr) {
+		return this->markov_generator->get_possible_word_count();
+	}
+
+	return 0;
+}
+
 bool name_generator::has_enough_base_data(const bool include_additional) const
 {
 	return this->get_name_count(include_additional) >= name_generator::minimum_name_count;
@@ -25,7 +34,7 @@ bool name_generator::has_enough_base_data(const bool include_additional) const
 
 bool name_generator::has_enough_data() const
 {
-	return this->has_enough_base_data(true) || (this->markov_generator != nullptr && this->markov_generator->get_possible_word_count() >= name_generator::minimum_name_count);
+	return this->has_enough_base_data(true) || this->get_markov_name_count() >= name_generator::minimum_name_count;
 }
 
 bool name_generator::has_name(const std::string &name) const

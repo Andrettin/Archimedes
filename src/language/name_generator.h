@@ -30,6 +30,8 @@ public:
 		return count;
 	}
 
+	size_t get_markov_name_count() const;
+
 	bool has_data() const
 	{
 		return this->get_name_count(true) > 0;
