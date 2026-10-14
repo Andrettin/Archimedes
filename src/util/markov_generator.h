@@ -16,6 +16,7 @@ public:
 
 private:
 	size_t chain_size = 2;
+	size_t min_length = std::numeric_limits<size_t>::max();
 	size_t max_length = 0;
 	std::unordered_map<std::string, std::string> prefixes;
 	size_t possible_word_count = 0;

@@ -16,6 +16,7 @@ void markov_generator::add_word(const std::string &word)
 {
 	assert_throw(this->chain_size > 0);
 
+	this->min_length = std::min(this->min_length, word.size());
 	this->max_length = std::max(this->max_length, word.size());
 
 	for (size_t i = 0; i <= word.size(); ++i) {
@@ -39,11 +40,25 @@ std::string markov_generator::generate_word() const
 	while (word.size() <= this->max_length) {
 		const auto it = this->prefixes.find(prefix);
 		if (it == this->prefixes.end() || it->second.empty()) {
+			if (word.size() < this->min_length) {
+				//start over if the word ended up being too short
+				word.clear();
+				prefix.clear();
+				continue;
+			}
+
 			return word;
 		}
 
 		const char c = it->second[random::get()->generate(it->second.size())];
 		if (c == 0) {
+			if (word.size() < this->min_length) {
+				//start over if the word ended up being too short
+				word.clear();
+				prefix.clear();
+				continue;
+			}
+
 			return word;
 		}
 
@@ -95,6 +110,10 @@ size_t markov_generator::calculate_possible_word_count(const std::string &prefix
 
 	const auto it = this->prefixes.find(prefix);
 	if (it == this->prefixes.end() || it->second.empty()) {
+		if (word_length < this->min_length) {
+			return 0;
+		}
+
 		return 1;
 	}
 
@@ -118,7 +137,10 @@ size_t markov_generator::calculate_possible_word_count(const std::string &prefix
 		checked_values[static_cast<unsigned char>(c)] = true;
 
 		if (c == 0) {
-			++word_count;
+			if (word_length >= this->min_length) {
+				++word_count;
+			}
+
 			continue;
 		}
 
