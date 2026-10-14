@@ -44,6 +44,8 @@ void anglicize(std::string &str)
 	string::replace(str, "\u00C6", "Ae");
 	string::replace(str, "\u00C9", "E");
 	string::replace(str, "\u00CA", "E");
+	string::replace(str, "\u00CB", "E");
+	string::replace(str, "\u00CC", "I");
 	string::replace(str, "\u00CD", "I");
 	string::replace(str, "\u00CE", "I");
 	string::replace(str, "\u00D0", "D");
@@ -52,6 +54,7 @@ void anglicize(std::string &str)
 	string::replace(str, "\u00D4", "O");
 	string::replace(str, "\u00DA", "U");
 	string::replace(str, "\u00DB", "U");
+	string::replace(str, "\u00DD", "Y");
 	string::replace(str, "\u00DE", "Th");
 	string::replace(str, "\u00E0", "a");
 	string::replace(str, "\u00E1", "a");
@@ -59,6 +62,8 @@ void anglicize(std::string &str)
 	string::replace(str, "\u00E6", "ae");
 	string::replace(str, "\u00E9", "e");
 	string::replace(str, "\u00EA", "e");
+	string::replace(str, "\u00EB", "e");
+	string::replace(str, "\u00EC", "i");
 	string::replace(str, "\u00ED", "i");
 	string::replace(str, "\u00EE", "i");
 	string::replace(str, "\u00F0", "d");
@@ -67,6 +72,7 @@ void anglicize(std::string &str)
 	string::replace(str, "\u00F4", "o");
 	string::replace(str, "\u00FA", "u");
 	string::replace(str, "\u00FB", "u");
+	string::replace(str, "\u00FD", "y");
 	string::replace(str, "\u00FE", "th");
 	string::replace(str, "\u0100", "A");
 	string::replace(str, "\u0101", "a");
@@ -97,8 +103,14 @@ void anglicize(std::string &str)
 	string::replace(str, "\u02B7", "w");
 	string::replace(str, "\u0394", "D");
 	string::replace(str, "\u03B4", "d");
+	string::replace(str, "\u1E24", "H");
+	string::replace(str, "\u1E25", "h");
 	string::replace(str, "\u1E2A", "H");
 	string::replace(str, "\u1E2B", "h");
+	string::replace(str, "\u1E62", "S");
+	string::replace(str, "\u1E63", "s");
+	string::replace(str, "\u1E76", "U");
+	string::replace(str, "\u1E77", "u");
 	string::replace(str, "~", "");
 }
 
