@@ -56,9 +56,7 @@ bool name_generator::has_name(const std::string &name) const
 
 void name_generator::add_name(const name_variant &name)
 {
-	if (!vector::contains(this->names, name)) {
-		++this->unique_name_count;
-	}
+	this->unique_names.insert(get_name_variant_string(name));
 
 	this->names.push_back(name);
 
@@ -67,9 +65,7 @@ void name_generator::add_name(const name_variant &name)
 
 void name_generator::add_additional_name(const name_variant &name)
 {
-	if (!vector::contains(this->additional_names, name)) {
-		++this->unique_additional_name_count;
-	}
+	this->unique_additional_names.insert(get_name_variant_string(name));
 
 	this->additional_names.push_back(name);
 
