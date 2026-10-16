@@ -39,19 +39,7 @@ bool name_generator::has_enough_data() const
 
 bool name_generator::has_name(const std::string &name) const
 {
-	for (const name_variant &name_variant : this->names) {
-		if (get_name_variant_string(name_variant) == name) {
-			return true;
-		}
-	}
-
-	for (const name_variant &name_variant : this->additional_names) {
-		if (get_name_variant_string(name_variant) == name) {
-			return true;
-		}
-	}
-
-	return false;
+	return this->unique_names.contains(name) || this->unique_additional_names.contains(name);
 }
 
 void name_generator::add_name(const name_variant &name)
