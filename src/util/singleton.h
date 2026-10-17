@@ -24,8 +24,8 @@ private:
 		std::unique_ptr<T> instance = std::make_unique<T>();
 
 		if constexpr (std::is_base_of_v<QObject, T>) {
-			if (QApplication::instance()->thread() != QThread::currentThread()) {
-				instance->moveToThread(QApplication::instance()->thread());
+			if (QCoreApplication::instance()->thread() != QThread::currentThread()) {
+				instance->moveToThread(QCoreApplication::instance()->thread());
 			}
 		}
 

@@ -49,8 +49,8 @@
 #include <SDKDDKVer.h>
 #endif
 
-#include <QApplication>
 #include <QColor>
+#include <QCoreApplication>
 #include <QDate>
 #include <QDateTime>
 #include <QDebug>
@@ -61,19 +61,14 @@
 #include <QGeoPolygon>
 #include <QGeoRectangle>
 #include <QImage>
-#include <QJsonDocument>
 #include <QMetaProperty>
 #include <QObject>
-#include <QPainter>
 #include <QPoint>
-#include <QQuickFramebufferObject>
-#include <QStandardPaths>
 #include <QString>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QThread>
 #include <QTime>
 #include <QTimer>
-#include <QTranslator>
 #include <QVariant>
 #include <QVariantList>
 

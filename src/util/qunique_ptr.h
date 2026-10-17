@@ -22,7 +22,7 @@ template <typename T, class... ARGS>
 inline qunique_ptr<T> make_qunique(ARGS&&... args)
 {
 	auto ptr = qunique_ptr<T>(new T(std::forward<ARGS>(args)...));
-	ptr->setParent(QApplication::instance()); //to ensure that the object isn't deleted by QML if provided to it as a pointer
+	ptr->setParent(QCoreApplication::instance()); //to ensure that the object isn't deleted by QML if provided to it as a pointer
 	return ptr;
 }
 

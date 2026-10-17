@@ -1,5 +1,7 @@
 #pragma once
 
+class QUrl;
+
 namespace archimedes::path {
 
 inline std::string to_string(const std::filesystem::path &path)
@@ -47,9 +49,6 @@ inline std::filesystem::path from_qstring(const QString &path_str)
 #endif
 }
 
-inline std::filesystem::path from_qurl(const QUrl &url)
-{
-	return path::from_qstring(url.toLocalFile());
-}
+extern std::filesystem::path from_qurl(const QUrl &url);
 
 }

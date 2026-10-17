@@ -8,6 +8,10 @@
 #pragma warning(pop)
 #endif
 
+#pragma warning(push, 0)
+#include <QJsonDocument>
+#pragma warning(pop)
+
 namespace archimedes::geojson {
 
 std::vector<QVariantList> parse_folder(const std::filesystem::path &path)

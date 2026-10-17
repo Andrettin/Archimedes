@@ -106,7 +106,7 @@ void data_entry::initialize()
 
 	if (this->parent() == nullptr) {
 		QMetaObject::invokeMethod(this, [this]() {
-			this->setParent(QApplication::instance()); //to ensure that the object isn't deleted by QML
+			this->setParent(QCoreApplication::instance()); //to ensure that the object isn't deleted by QML
 		}, Qt::QueuedConnection);
 	}
 

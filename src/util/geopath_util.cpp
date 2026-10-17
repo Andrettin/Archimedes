@@ -9,6 +9,10 @@
 #include "util/geoshape_util.h"
 #include "util/point_util.h"
 
+#pragma warning(push, 0)
+#include <QPainter>
+#pragma warning(pop)
+
 namespace archimedes::geopath {
 
 void write_to_image(const QGeoPath &geopath, QImage &image, const QColor &color, const georectangle &georectangle, const map_projection *map_projection, const int x_offset, const int pen_width)

@@ -88,6 +88,7 @@ set(util_SRCS
 	src/util/log_util.cpp
 	src/util/markov_generator.cpp
 	src/util/number_util.cpp
+	src/util/path_util.cpp
 	src/util/point_container.cpp
 	src/util/point_util.cpp
 	src/util/qgeocoordinate_util.cpp

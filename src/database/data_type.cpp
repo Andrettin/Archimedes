@@ -83,7 +83,7 @@ data_entry *data_type_base::add(const std::string &identifier, const data_module
 	data_type_base::instances_by_identifier[metadata->get_meta_type().id()][identifier] = std::move(instance);
 
 	data_type_base::instances[metadata->get_meta_type().id()].push_back(instance_ptr);
-	instance_ptr->moveToThread(QApplication::instance()->thread());
+	instance_ptr->moveToThread(QCoreApplication::instance()->thread());
 	instance_ptr->set_module(data_module);
 
 	//for backwards compatibility, change instances of "_" in the identifier with "-" and add that as an alias, and do the opposite as well

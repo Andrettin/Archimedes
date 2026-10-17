@@ -26,6 +26,10 @@
 #include "util/string_util.h"
 #include "util/string_conversion_util.h"
 
+#pragma warning(push, 0)
+#include <QStandardPaths>
+#pragma warning(pop)
+
 namespace archimedes {
 
 /**
@@ -387,7 +391,7 @@ std::filesystem::path database::get_documents_path()
 		throw std::runtime_error("No documents path found.");
 	}
 
-	documents_path /= QApplication::applicationName().toStdString();
+	documents_path /= QCoreApplication::applicationName().toStdString();
 
 	return documents_path;
 }
@@ -400,7 +404,7 @@ std::filesystem::path database::get_user_data_path()
 	}
 
 	//ignore the organization name for the user data path, e.g. the path should be "[AppName]" and not "[OrganizationName]/[AppName]"
-	if (path::to_string(path.parent_path().filename()) == QApplication::organizationName().toStdString()) {
+	if (path::to_string(path.parent_path().filename()) == QCoreApplication::organizationName().toStdString()) {
 		path = path.parent_path().parent_path() / path.filename();
 	}
 
@@ -416,7 +420,7 @@ void database::ensure_path_exists(const std::filesystem::path &path)
 	if (!std::filesystem::exists(path)) {
 		const bool success = std::filesystem::create_directories(path);
 		if (!success) {
-			throw std::runtime_error(std::format("Failed to create path for {}: \"{}\".", QApplication::applicationName().toStdString(), path::to_string(path)));
+			throw std::runtime_error(std::format("Failed to create path for {}: \"{}\".", QCoreApplication::applicationName().toStdString(), path::to_string(path)));
 		}
 	}
 }
@@ -466,7 +470,7 @@ QCoro::Task<void> database::parse_folder(const std::filesystem::path &path, std:
 	} catch (...) {
 		exception::report(std::current_exception());
 		log::log_error(std::format("Failed to parse folder: {}", path::to_string(path)));
-		QApplication::exit(EXIT_FAILURE);
+		QCoreApplication::exit(EXIT_FAILURE);
 	}
 }
 

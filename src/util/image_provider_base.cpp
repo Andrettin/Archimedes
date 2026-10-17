@@ -31,7 +31,7 @@ public:
 			emit finished();
 		} catch (...) {
 			exception::report(std::current_exception());
-			QApplication::exit(EXIT_FAILURE);
+			QCoreApplication::exit(EXIT_FAILURE);
 		}
 	}
 
@@ -54,7 +54,7 @@ QQuickImageResponse *image_provider_base::requestImageResponse(const QString &id
 		return response;
 	} catch (...) {
 		exception::report(std::current_exception());
-		QApplication::exit(EXIT_FAILURE);
+		QCoreApplication::exit(EXIT_FAILURE);
 		return nullptr;
 	}
 }
@@ -85,7 +85,7 @@ QCoro::Task<const QImage *> image_provider_base::get_image(const std::string &id
 	}
 	catch (...) {
 		exception::report(std::current_exception());
-		QApplication::exit(EXIT_FAILURE);
+		QCoreApplication::exit(EXIT_FAILURE);
 	}
 }
 
