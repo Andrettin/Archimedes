@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18.0)
+cmake_minimum_required(VERSION 3.25.0)
 
 set(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo" CACHE STRING "" FORCE)
 
@@ -424,6 +424,6 @@ set_target_properties(archimedes_test PROPERTIES
 
 target_link_libraries(archimedes ${archimedes_LIBS})
 
-target_precompile_headers(archimedes_test PRIVATE src/archimedes_pch.h)
+target_precompile_headers(archimedes_test REUSE_FROM archimedes)
 
 target_link_libraries(archimedes_test PUBLIC archimedes Boost::unit_test_framework)

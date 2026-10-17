@@ -90,6 +90,9 @@
 #include "util/point_operators.h" //to ensure the / operator with an int as RHS is used instead of the Qt one with qreal (which uses rounding)
 #include "util/size_operators.h" //as above
 
+//widely-used, seldomly-changed own headers
+#include "database/data_type.h"
+
 //metatype definitions
 Q_DECLARE_METATYPE(std::filesystem::path)
 Q_DECLARE_METATYPE(std::string)
