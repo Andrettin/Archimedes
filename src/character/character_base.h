@@ -3,6 +3,7 @@
 #include "database/named_data_entry.h"
 
 Q_MOC_INCLUDE("time/calendar.h")
+Q_MOC_INCLUDE("util/gender.h")
 
 namespace archimedes {
 

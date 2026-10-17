@@ -53,5 +53,3 @@ inline std::filesystem::path from_qurl(const QUrl &url)
 }
 
 }
-
-Q_DECLARE_METATYPE(std::filesystem::path)
