@@ -81,6 +81,10 @@
 #include <QCoroTimer>
 #include <QCoroTask>
 #include <QCoroQmlTask>
+
+#define MAGIC_ENUM_RANGE_MIN -1
+#define MAGIC_ENUM_RANGE_MAX 64
+#include <magic_enum/magic_enum.hpp>
 #pragma warning(pop)
 
 #include "util/point_operators.h" //to ensure the / operator with an int as RHS is used instead of the Qt one with qreal (which uses rounding)

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <magic_enum/magic_enum.hpp>
-
 namespace archimedes::database_util {
 	template <typename enum_type>
 	void register_enum()

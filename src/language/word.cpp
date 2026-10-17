@@ -15,8 +15,6 @@
 #include "util/string_util.h"
 #include "util/vector_util.h"
 
-#include <magic_enum/magic_enum.hpp>
-
 namespace archimedes {
 
 bool word::compare(const word *lhs, const word *rhs)

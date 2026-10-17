@@ -2,8 +2,6 @@
 
 #include "script/special_target_type.h"
 
-#include <magic_enum/magic_enum.hpp>
-
 namespace archimedes {
 
 enum class special_target_type;

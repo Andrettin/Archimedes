@@ -7,8 +7,6 @@
 #include "time/day_of_the_week.h"
 #include "time/month.h"
 
-#include <magic_enum/magic_enum.hpp>
-
 namespace archimedes {
 
 calendar::calendar(const std::string &identifier) : named_data_entry(identifier)

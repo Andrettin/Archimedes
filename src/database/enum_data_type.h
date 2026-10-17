@@ -2,8 +2,6 @@
 
 #include "database/data_type.h"
 
-#include <magic_enum/magic_enum.hpp>
-
 namespace archimedes {
 
 template <typename T, typename enum_type>

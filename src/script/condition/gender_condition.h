@@ -3,8 +3,6 @@
 #include "script/condition/condition_base.h"
 #include "util/gender.h"
 
-#include <magic_enum/magic_enum.hpp>
-
 namespace archimedes {
 
 template <typename scope_type, typename context_type>
