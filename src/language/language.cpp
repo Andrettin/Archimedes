@@ -113,7 +113,7 @@ std::string language::GetAdjectiveEnding(int article_type, const grammatical_cas
 
 void language::print_df_words() const
 {
-	static const std::set<std::string> df_words = {
+	static const std::set<std::string_view> df_words = {
 		"BOOK",
 		"CHURCH",
 		"GRAIN",
@@ -2323,7 +2323,7 @@ void language::print_df_words() const
 	ofstream << "\n\n" << "[OBJECT:LANGUAGE]";
 	ofstream << "\n\n" << std::format("[TRANSLATION:{}]", string::uppered(this->get_identifier()));
 
-	std::map<std::string, std::vector<const word *>> df_words_to_words;
+	std::map<std::string_view, std::vector<const word *>> df_words_to_words;
 
 	for (const word *word : this->words) {
 		const std::vector<std::string> word_df_words = word->get_df_words();
@@ -2357,7 +2357,7 @@ void language::print_df_words() const
 	assert_throw(!df_words_to_words.empty());
 
 	//if we don't have enough words from the database, generate the rest
-	for (const std::string &df_word : df_words) {
+	for (const std::string_view &df_word : df_words) {
 		if (df_words_to_words.contains(df_word)) {
 			continue;
 		}
