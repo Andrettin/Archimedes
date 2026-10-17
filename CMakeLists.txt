@@ -331,7 +331,7 @@ set(archimedes_test_SRCS
 	test/main.cpp
 )
 
-option(WITH_GEOJSON "Compile with support for generating map data from GeoJSON files" OFF)
+option(WITH_GEOJSON "Compile with support for generating map data from GeoJSON files" ON)
 
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.18.0")
 	#unity builds using defined groups require CMake 3.18
