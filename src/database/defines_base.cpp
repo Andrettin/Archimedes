@@ -34,3 +34,5 @@ void defines_base::process_gsml_scope(const gsml_data &scope)
 }
 
 }
+
+#include "moc_defines_base.cpp"

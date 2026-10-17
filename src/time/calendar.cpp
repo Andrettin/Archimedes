@@ -64,3 +64,5 @@ void calendar::initialize()
 }
 
 }
+
+#include "moc_calendar.cpp"

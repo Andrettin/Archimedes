@@ -26,3 +26,5 @@ void era::check() const
 }
 
 }
+
+#include "moc_era.cpp"

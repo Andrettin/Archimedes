@@ -278,3 +278,5 @@ std::string data_entry::get_link_name() const
 }
 
 }
+
+#include "moc_data_entry.cpp"

@@ -218,3 +218,5 @@ QDate character_base::generate_death_date_from_birth_date(const QDate &birth_dat
 }
 
 }
+
+#include "moc_character_base.cpp"

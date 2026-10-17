@@ -13,3 +13,5 @@ QVariantList game_rule_group::get_rules_qvariant_list() const
 }
 
 }
+
+#include "moc_game_rule_group.cpp"

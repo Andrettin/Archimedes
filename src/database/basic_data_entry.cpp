@@ -28,3 +28,5 @@ QString basic_data_entry::get_class_name() const
 }
 
 }
+
+#include "moc_basic_data_entry.cpp"

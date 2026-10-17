@@ -12,3 +12,5 @@ void timeline::check() const
 }
 
 }
+
+#include "moc_timeline.cpp"

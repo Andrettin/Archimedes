@@ -210,3 +210,5 @@ bool named_data_entry::is_hidden_in_tree() const
 }
 
 }
+
+#include "moc_named_data_entry.cpp"

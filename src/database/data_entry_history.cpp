@@ -21,3 +21,5 @@ void data_entry_history::process_gsml_scope(const gsml_data &scope, const QDate 
 }
 
 }
+
+#include "moc_data_entry_history.cpp"

@@ -46,3 +46,5 @@ bool data_module::is_enabled() const
 }
 
 }
+
+#include "moc_data_module.cpp"

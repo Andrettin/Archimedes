@@ -339,3 +339,5 @@ const std::string &word::GetParticiple(int grammatical_tense)
 }
 
 }
+
+#include "moc_word.cpp"

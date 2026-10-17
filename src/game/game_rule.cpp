@@ -43,3 +43,5 @@ int game_rule::get_requirement_depth() const
 }
 
 }
+
+#include "moc_game_rule.cpp"

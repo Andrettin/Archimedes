@@ -2551,3 +2551,5 @@ int GetWordJunctionTypeIdByName(const std::string &word_junction_type)
 
 	return -1;
 }
+
+#include "moc_language.cpp"
