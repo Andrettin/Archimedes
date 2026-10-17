@@ -11,7 +11,6 @@ set(character_SRCS
 	src/character/character_base.cpp
 )
 source_group(character FILES ${character_SRCS})
-set_source_files_properties(${character_SRCS} PROPERTIES UNITY_GROUP "character")
 
 set(database_SRCS
 	src/database/basic_data_entry.cpp
@@ -31,7 +30,6 @@ set(database_SRCS
 	src/database/predefines.cpp
 )
 source_group(database FILES ${database_SRCS})
-set_source_files_properties(${database_SRCS} PROPERTIES UNITY_GROUP "database")
 
 set(game_SRCS
 	src/game/game_rule.cpp
@@ -39,7 +37,6 @@ set(game_SRCS
 	src/game/game_rule_group.cpp
 )
 source_group(game FILES ${game_SRCS})
-set_source_files_properties(${game_SRCS} PROPERTIES UNITY_GROUP "game")
 
 set(language_SRCS
 	src/language/gendered_name_generator.cpp
@@ -50,7 +47,6 @@ set(language_SRCS
 	src/language/word.cpp
 )
 source_group(language FILES ${language_SRCS})
-set_source_files_properties(${language_SRCS} PROPERTIES UNITY_GROUP "language")
 
 set(map_SRCS
 	src/map/central_cylindrical_map_projection.cpp
@@ -60,12 +56,10 @@ set(map_SRCS
 	src/map/miller_map_projection.cpp
 )
 source_group(map FILES ${map_SRCS})
-set_source_files_properties(${map_SRCS} PROPERTIES UNITY_GROUP "map")
 
 set(script_SRCS
 )
 source_group(script FILES ${script_SRCS})
-set_source_files_properties(${script_SRCS} PROPERTIES UNITY_GROUP "script")
 
 set(time_SRCS
 	src/time/calendar.cpp
@@ -73,7 +67,6 @@ set(time_SRCS
 	src/time/timeline.cpp
 )
 source_group(time FILES ${time_SRCS})
-set_source_files_properties(${time_SRCS} PROPERTIES UNITY_GROUP "time")
 
 set(util_SRCS
 	src/util/angle_util.cpp
@@ -107,13 +100,11 @@ set(util_SRCS
 	src/util/time_util.cpp
 )
 source_group(util FILES ${util_SRCS})
-set_source_files_properties(${util_SRCS} PROPERTIES UNITY_GROUP "util")
 
 set(maskedmousearea_SRCS
 	src/third_party/maskedmousearea/maskedmousearea.cpp
 )
 source_group(maskedmousearea FILES ${maskedmousearea_SRCS})
-set_source_files_properties(${maskedmousearea_SRCS} PROPERTIES UNITY_GROUP "maskedmousearea")
 if(MSVC)
 	set_source_files_properties(${maskedmousearea_SRCS} PROPERTIES
 		COMPILE_FLAGS "/wd4244"
@@ -430,7 +421,6 @@ set_target_properties(archimedes_test PROPERTIES
 	UNITY_BUILD_MODE BATCH
 	COMPILE_WARNING_AS_ERROR ON
 )
-set_source_files_properties(${util_test_SRCS} PROPERTIES UNITY_GROUP "util_test")
 
 target_link_libraries(archimedes ${archimedes_LIBS})
 
