@@ -100,6 +100,8 @@ void anglicize(std::string &str)
 	string::replace(str, "\u016B", "u");
 	string::replace(str, "\u016E", "U");
 	string::replace(str, "\u016F", "u");
+	string::replace(str, "\u0176", "Y");
+	string::replace(str, "\u0177", "y");
 	string::replace(str, "\u017B", "Z");
 	string::replace(str, "\u017C", "z");
 	string::replace(str, "\u017D", "Z");
