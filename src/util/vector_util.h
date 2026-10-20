@@ -27,6 +27,12 @@ bool intersects(const std::vector<T> &vector, const std::vector<T> &other_vector
 }
 
 template <typename T, typename U>
+void merge(std::vector<T> &vector, const std::vector<U> &other_vector)
+{
+	vector.insert(vector.end(), other_vector.begin(), other_vector.end());
+}
+
+template <typename T, typename U>
 void merge(std::vector<T> &vector, const U &other_container)
 {
 	for (const typename U::value_type &element : other_container) {
