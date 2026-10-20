@@ -4,19 +4,21 @@ namespace archimedes::point {
 
 static constexpr QPoint invalid_point = QPoint(-1, -1);
 
-inline constexpr int to_index(const int x, const int y, const int width)
+template <typename number_type>
+inline constexpr number_type to_index(const number_type x, const number_type y, const number_type width)
 {
 	return x + y * width;
+}
+
+template <typename number_type>
+inline constexpr number_type to_index(const QPoint &point, const number_type width)
+{
+	return point::to_index(static_cast<number_type>(point.x()), static_cast<number_type>(point.y()), width);
 }
 
 inline constexpr int to_index(const int x, const int y, const QSize &size)
 {
 	return point::to_index(x, y, size.width());
-}
-
-inline constexpr int to_index(const QPoint &point, const int width)
-{
-	return point::to_index(point.x(), point.y(), width);
 }
 
 inline constexpr int to_index(const QPoint &point, const QSize &size)
