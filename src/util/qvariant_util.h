@@ -2,6 +2,7 @@
 
 #include "util/centesimal_int.h"
 #include "util/container_util.h"
+#include "util/decimillesimal_int.h"
 #include "util/path_util.h"
 #include "util/type_traits.h"
 
@@ -32,6 +33,8 @@ static QVariant from_value(const T &value)
 			return qvariant::from_value(variant_value);
 		}, value);
 	} else if constexpr (std::is_same_v<T, centesimal_int>) {
+		return value.to_int();
+	} else if constexpr (std::is_same_v<T, decimillesimal_int>) {
 		return value.to_int();
 	} else {
 		return QVariant::fromValue(value);
