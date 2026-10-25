@@ -40,6 +40,7 @@ public:
 			} else if constexpr (std::is_integral_v<typename map_type::key_type>) {
 				key_str = std::to_string(key);
 			} else if constexpr (std::is_same_v<typename map_type::key_type, centesimal_int> || std::is_same_v<typename map_type::key_type, decimillesimal_int>) {
+				key_str = key.to_string();
 			} else {
 				static_assert(false);
 			}
@@ -205,6 +206,7 @@ public:
 			} else if constexpr (std::is_same_v<typename map_type::key_type, int64_t>) {
 				key = std::stoll(key_str);
 			} else if constexpr (std::is_same_v<typename map_type::key_type, centesimal_int> || std::is_same_v<typename map_type::key_type, decimillesimal_int>) {
+				key = typename map_type::key_type(key_str);
 			} else {
 				static_assert(false);
 			}
