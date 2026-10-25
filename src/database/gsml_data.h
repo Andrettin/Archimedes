@@ -18,6 +18,37 @@ public:
 	static gsml_data from_size(const QSize &point, const std::string &tag = std::string());
 	static gsml_data from_rect(const QRect &rect, const std::string &tag = std::string());
 
+	template <typename map_type>
+	static gsml_data from_map(const map_type &map, const std::string &tag)
+	{
+		gsml_data data(tag);
+
+		for (const auto &[key, value] : map) {
+			std::string key_str;
+			std::string value_str;
+
+			if constexpr (std::is_base_of_v<data_entry, typename map_type::key_type>) {
+				key_str = key->get_identifier();
+			} else if constexpr (std::is_enum_v<typename map_type::key_type>) {
+				key_str = std::string(magic_enum::enum_name(key));
+			} else if constexpr (std::is_integral_v<typename map_type::key_type>) {
+				key_str = std::to_string(key);
+			}
+
+			if constexpr (std::is_base_of_v<data_entry, typename map_type::mapped_type>) {
+				value_str = value->get_identifier();
+			} else if constexpr (std::is_enum_v<typename map_type::mapped_type>) {
+				value_str = std::string(magic_enum::enum_name(value));
+			} else if constexpr (std::is_integral_v<typename map_type::mapped_type>) {
+				value_str = std::to_string(value);
+			}
+
+			data.add_property(key_str, value_str);
+		}
+
+		return data;
+	}
+
 	explicit gsml_data(std::string &&tag = std::string());
 
 	explicit gsml_data(std::string &&tag, const gsml_operator scope_operator)
