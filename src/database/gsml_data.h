@@ -27,23 +27,27 @@ public:
 			std::string key_str;
 			std::string value_str;
 
-			if constexpr (std::is_base_of_v<data_entry, typename map_type::key_type>) {
+			if constexpr (std::is_base_of_v<data_entry, std::remove_const_t<std::remove_pointer_t<typename map_type::key_type>>>) {
 				key_str = key->get_identifier();
 			} else if constexpr (std::is_enum_v<typename map_type::key_type>) {
 				key_str = std::string(magic_enum::enum_name(key));
 			} else if constexpr (std::is_integral_v<typename map_type::key_type>) {
 				key_str = std::to_string(key);
+			} else {
+				static_assert(false);
 			}
 
-			if constexpr (std::is_base_of_v<data_entry, typename map_type::mapped_type>) {
+			if constexpr (std::is_base_of_v<data_entry, std::remove_const_t<std::remove_pointer_t<typename map_type::mapped_type>>>) {
 				value_str = value->get_identifier();
 			} else if constexpr (std::is_enum_v<typename map_type::mapped_type>) {
 				value_str = std::string(magic_enum::enum_name(value));
 			} else if constexpr (std::is_integral_v<typename map_type::mapped_type>) {
 				value_str = std::to_string(value);
+			} else {
+				static_assert(false);
 			}
 
-			data.add_property(key_str, value_str);
+			data.add_property(std::move(key_str), std::move(value_str));
 		}
 
 		return data;
@@ -172,6 +176,40 @@ public:
 	QSize to_size() const;
 	geocoordinate to_geocoordinate() const;
 	QRect to_rect() const;
+
+	template <typename map_type>
+	void to_map(map_type &map) const
+	{
+		this->for_each_property([&map](const gsml_property &property) {
+			const std::string &key_str = property.get_key();
+			const std::string &value_str = property.get_value();
+
+			typename map_type::key_type key;
+			typename map_type::mapped_type value;
+
+			if constexpr (std::is_base_of_v<data_type_base, std::remove_const_t<std::remove_pointer_t<typename map_type::key_type>>>) {
+				key = std::remove_const_t<std::remove_pointer_t<typename map_type::key_type>>::get(key_str);
+			} else if constexpr (std::is_enum_v<typename map_type::key_type>) {
+				key = magic_enum::enum_cast<typename map_type::key_type>(key_str).value();
+			} else if constexpr (std::is_same_v<typename map_type::key_type, int>) {
+				key = std::stoi(key_str);
+			} else {
+				static_assert(false);
+			}
+
+			if constexpr (std::is_base_of_v<data_type_base, std::remove_const_t<std::remove_pointer_t<typename map_type::mapped_type>>>) {
+				value = std::remove_const_t<std::remove_pointer_t<typename map_type::mapped_type>>::get(value_str);
+			} else if constexpr (std::is_enum_v<typename map_type::mapped_type>) {
+				value = magic_enum::enum_cast<typename map_type::mapped_type>(value_str).value();
+			} else if constexpr (std::is_same_v<typename map_type::mapped_type, int>) {
+				value = std::stoi(value_str);
+			} else {
+				static_assert(false);
+			}
+
+			map[std::move(key)] = std::move(value);
+		});
+	}
 
 	void print_to_file(const std::filesystem::path &filepath) const;
 	void print_to_dir(const std::filesystem::path &directory) const;
