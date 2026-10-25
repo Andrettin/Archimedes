@@ -10,6 +10,12 @@ namespace archimedes {
 class geocoordinate;
 class gsml_parser;
 
+template <int N>
+class fractional_int;
+
+using centesimal_int = fractional_int<2>;
+using decimillesimal_int = fractional_int<4>;
+
 //grand strategy markup language data
 class gsml_data final
 {
@@ -33,6 +39,7 @@ public:
 				key_str = std::string(magic_enum::enum_name(key));
 			} else if constexpr (std::is_integral_v<typename map_type::key_type>) {
 				key_str = std::to_string(key);
+			} else if constexpr (std::is_same_v<typename map_type::key_type, centesimal_int> || std::is_same_v<typename map_type::key_type, decimillesimal_int>) {
 			} else {
 				static_assert(false);
 			}
@@ -43,6 +50,8 @@ public:
 				value_str = std::string(magic_enum::enum_name(value));
 			} else if constexpr (std::is_integral_v<typename map_type::mapped_type>) {
 				value_str = std::to_string(value);
+			} else if constexpr (std::is_same_v<typename map_type::mapped_type, centesimal_int> || std::is_same_v<typename map_type::mapped_type, decimillesimal_int>) {
+				value_str = value.to_string();
 			} else {
 				static_assert(false);
 			}
@@ -193,6 +202,9 @@ public:
 				key = magic_enum::enum_cast<typename map_type::key_type>(key_str).value();
 			} else if constexpr (std::is_same_v<typename map_type::key_type, int>) {
 				key = std::stoi(key_str);
+			} else if constexpr (std::is_same_v<typename map_type::key_type, int64_t>) {
+				key = std::stoll(key_str);
+			} else if constexpr (std::is_same_v<typename map_type::key_type, centesimal_int> || std::is_same_v<typename map_type::key_type, decimillesimal_int>) {
 			} else {
 				static_assert(false);
 			}
@@ -203,6 +215,10 @@ public:
 				value = magic_enum::enum_cast<typename map_type::mapped_type>(value_str).value();
 			} else if constexpr (std::is_same_v<typename map_type::mapped_type, int>) {
 				value = std::stoi(value_str);
+			} else if constexpr (std::is_same_v<typename map_type::mapped_type, int64_t>) {
+				value = std::stoll(value_str);
+			} else if constexpr (std::is_same_v<typename map_type::mapped_type, centesimal_int> || std::is_same_v<typename map_type::mapped_type, decimillesimal_int>) {
+				value = typename map_type::mapped_type(value_str);
 			} else {
 				static_assert(false);
 			}
