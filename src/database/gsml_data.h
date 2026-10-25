@@ -34,7 +34,7 @@ public:
 			std::string value_str;
 
 			if constexpr (std::is_base_of_v<data_entry, std::remove_const_t<std::remove_pointer_t<typename map_type::key_type>>>) {
-				key_str = key->get_identifier();
+				key_str = key != nullptr ? key->get_identifier() : "none";
 			} else if constexpr (std::is_enum_v<typename map_type::key_type>) {
 				key_str = std::string(magic_enum::enum_name(key));
 			} else if constexpr (std::is_integral_v<typename map_type::key_type>) {
@@ -46,7 +46,7 @@ public:
 			}
 
 			if constexpr (std::is_base_of_v<data_entry, std::remove_const_t<std::remove_pointer_t<typename map_type::mapped_type>>>) {
-				value_str = value->get_identifier();
+				value_str = value != nullptr ? value->get_identifier() : "none";
 			} else if constexpr (std::is_enum_v<typename map_type::mapped_type>) {
 				value_str = std::string(magic_enum::enum_name(value));
 			} else if constexpr (std::is_integral_v<typename map_type::mapped_type>) {
