@@ -33,9 +33,9 @@ static QVariant from_value(const T &value)
 			return qvariant::from_value(variant_value);
 		}, value);
 	} else if constexpr (std::is_same_v<T, centesimal_int>) {
-		return value.to_int();
+		return value.to_int64();
 	} else if constexpr (std::is_same_v<T, decimillesimal_int>) {
-		return value.to_int();
+		return value.to_int64();
 	} else {
 		return QVariant::fromValue(value);
 	}
