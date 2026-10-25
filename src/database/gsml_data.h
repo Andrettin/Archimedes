@@ -25,9 +25,9 @@ public:
 	static gsml_data from_rect(const QRect &rect, const std::string &tag = std::string());
 
 	template <typename map_type>
-	static gsml_data from_map(const map_type &map, const std::string &tag)
+	static gsml_data from_map(const map_type &map, std::string &&tag)
 	{
-		gsml_data data(tag);
+		gsml_data data(std::move(tag));
 
 		for (const auto &[key, value] : map) {
 			std::string key_str;
@@ -53,6 +53,9 @@ public:
 				value_str = std::to_string(value);
 			} else if constexpr (std::is_same_v<typename map_type::mapped_type, centesimal_int> || std::is_same_v<typename map_type::mapped_type, decimillesimal_int>) {
 				value_str = value.to_string();
+			} else if constexpr (is_specialization_of_v<typename map_type::mapped_type, std::map>) {
+				data.add_child(gsml_data::from_map(value, std::move(key_str)));
+				continue;
 			} else {
 				static_assert(false);
 			}
@@ -61,6 +64,24 @@ public:
 		}
 
 		return data;
+	}
+
+	template <typename key_type>
+	static key_type key_string_to_key(const std::string &key_str)
+	{
+		if constexpr (std::is_base_of_v<data_type_base, std::remove_const_t<std::remove_pointer_t<key_type>>>) {
+			return std::remove_const_t<std::remove_pointer_t<key_type>>::get(key_str);
+		} else if constexpr (std::is_enum_v<key_type>) {
+			return magic_enum::enum_cast<key_type>(key_str).value();
+		} else if constexpr (std::is_same_v<key_type, int>) {
+			return std::stoi(key_str);
+		} else if constexpr (std::is_same_v<key_type, int64_t>) {
+			return std::stoll(key_str);
+		} else if constexpr (std::is_same_v<key_type, centesimal_int> || std::is_same_v<key_type, decimillesimal_int>) {
+			return key_type(key_str);
+		} else {
+			static_assert(false);
+		}
 	}
 
 	explicit gsml_data(std::string &&tag = std::string());
@@ -190,26 +211,12 @@ public:
 	template <typename map_type>
 	void to_map(map_type &map) const
 	{
-		this->for_each_property([&map](const gsml_property &property) {
+		this->for_each_element([&map](const gsml_property &property) {
 			const std::string &key_str = property.get_key();
 			const std::string &value_str = property.get_value();
 
-			typename map_type::key_type key;
+			typename map_type::key_type key = gsml_data::key_string_to_key<typename map_type::key_type>(key_str);
 			typename map_type::mapped_type value;
-
-			if constexpr (std::is_base_of_v<data_type_base, std::remove_const_t<std::remove_pointer_t<typename map_type::key_type>>>) {
-				key = std::remove_const_t<std::remove_pointer_t<typename map_type::key_type>>::get(key_str);
-			} else if constexpr (std::is_enum_v<typename map_type::key_type>) {
-				key = magic_enum::enum_cast<typename map_type::key_type>(key_str).value();
-			} else if constexpr (std::is_same_v<typename map_type::key_type, int>) {
-				key = std::stoi(key_str);
-			} else if constexpr (std::is_same_v<typename map_type::key_type, int64_t>) {
-				key = std::stoll(key_str);
-			} else if constexpr (std::is_same_v<typename map_type::key_type, centesimal_int> || std::is_same_v<typename map_type::key_type, decimillesimal_int>) {
-				key = typename map_type::key_type(key_str);
-			} else {
-				static_assert(false);
-			}
 
 			if constexpr (std::is_base_of_v<data_type_base, std::remove_const_t<std::remove_pointer_t<typename map_type::mapped_type>>>) {
 				value = std::remove_const_t<std::remove_pointer_t<typename map_type::mapped_type>>::get(value_str);
@@ -221,8 +228,21 @@ public:
 				value = std::stoll(value_str);
 			} else if constexpr (std::is_same_v<typename map_type::mapped_type, centesimal_int> || std::is_same_v<typename map_type::mapped_type, decimillesimal_int>) {
 				value = typename map_type::mapped_type(value_str);
+			} else if constexpr (is_specialization_of_v<typename map_type::mapped_type, std::map>) {
+				throw std::runtime_error("GSML data representing a map of maps should not have any properties.");
 			} else {
 				static_assert(false);
+			}
+
+			map[std::move(key)] = std::move(value);
+		}, [&map](const gsml_data &child_data) {
+			typename map_type::key_type key = gsml_data::key_string_to_key<typename map_type::key_type>(child_data.get_tag());
+			typename map_type::mapped_type value{};
+
+			if constexpr (is_specialization_of_v<typename map_type::mapped_type, std::map>) {
+				child_data.to_map(value);
+			} else {
+				throw std::runtime_error("gsml_data::to_map() only supports GSML child data representing submaps.");
 			}
 
 			map[std::move(key)] = std::move(value);
