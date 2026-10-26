@@ -6,6 +6,7 @@
 #include "util/decimal_int.h"
 #include "util/decimillesimal_int.h"
 #include "util/millesimal_int.h"
+#include "util/millionesimal_int.h"
 #include "util/number_util.h"
 
 namespace archimedes {
@@ -527,5 +528,6 @@ template class fractional_int<1>;
 template class fractional_int<2>;
 template class fractional_int<3>;
 template class fractional_int<4>;
+template class fractional_int<6>;
 
 }

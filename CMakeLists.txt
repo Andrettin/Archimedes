@@ -267,6 +267,7 @@ set(util_HDRS
 	src/util/map_util.h
 	src/util/markov_generator.h
 	src/util/millesimal_int.h
+	src/util/millionesimal_int.h
 	src/util/number_util.h
 	src/util/path_util.h
 	src/util/point_container.h
