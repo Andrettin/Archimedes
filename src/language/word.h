@@ -36,6 +36,7 @@ class word final : public named_data_entry, public data_type<word>
 	Q_PROPERTY(std::string df_word MEMBER df_word NOTIFY changed)
 	Q_PROPERTY(QStringList meanings READ get_meanings_qstring_list NOTIFY changed)
 	Q_PROPERTY(bool uncountable MEMBER uncountable READ is_uncountable NOTIFY changed)
+	Q_PROPERTY(int numerical_quantity MEMBER numerical_quantity READ get_numerical_quantity NOTIFY changed)
 
 public:
 	static constexpr const char class_identifier[] = "word";
@@ -227,6 +228,11 @@ public:
 	std::string GetAdjectiveInflection(int comparison_degree, int article_type, const grammatical_case grammatical_case, const grammatical_number number, const grammatical_gender gender);
 	const std::string &GetParticiple(int grammatical_tense);
 
+	int get_numerical_quantity() const
+	{
+		return this->numerical_quantity;
+	}
+
 signals:
 	void changed();
 
@@ -275,9 +281,11 @@ public:
 	//article-specific variables
 	int ArticleType = -1;				/// Which article type this article belongs to
 
+private:
 	//numeral-specific variables
-	int Number = -1;
+	int numerical_quantity = 0;
 
+public:
 	friend int ::CclDefineLanguageWord(lua_State *l);
 };
 

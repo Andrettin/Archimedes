@@ -45,7 +45,7 @@ inline std::string word_type_to_name(const word_type type)
 			break;
 	}
 
-	throw std::runtime_error("Invalid word type: \"" + std::to_string(static_cast<int>(type)) + "\".");
+	throw std::runtime_error(std::format("Invalid word type: \"{}\".", std::to_underlying(type)));
 }
 
 }
