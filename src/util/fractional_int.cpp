@@ -112,7 +112,7 @@ fractional_int<N>::fractional_int(const std::string &str)
 				fraction *= -1;
 			}
 		} else {
-			integer = std::stoi(str);
+			integer = std::stoll(str);
 		}
 
 		for (int i = 0; i < N; ++i) {
