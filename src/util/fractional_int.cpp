@@ -94,13 +94,13 @@ fractional_int<N>::fractional_int(const std::string &str)
 {
 	try {
 		size_t decimal_point_pos = str.find('.');
-		int integer = 0;
-		int fraction = 0;
+		int64_t integer = 0;
+		int64_t fraction = 0;
 		if (decimal_point_pos != std::string::npos) {
-			integer = std::stoi(str.substr(0, decimal_point_pos));
+			integer = std::stoll(str.substr(0, decimal_point_pos));
 			const size_t decimal_pos = decimal_point_pos + 1;
 			const size_t decimal_places = std::min(str.length() - decimal_pos, static_cast<size_t>(N));
-			fraction = std::stoi(str.substr(decimal_pos, decimal_places));
+			fraction = std::stoll(str.substr(decimal_pos, decimal_places));
 			if (decimal_places < N) {
 				for (int i = static_cast<int>(decimal_places); i < N; ++i) {
 					fraction *= 10;
