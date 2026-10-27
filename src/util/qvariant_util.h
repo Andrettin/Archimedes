@@ -23,9 +23,13 @@ static QVariant from_value(const T &value)
 	} else if constexpr (std::is_same_v<T, std::string>) {
 		return QVariant::fromValue(QString::fromStdString(value));
 	} else if constexpr (std::is_pointer_v<T>) {
+		using pointed_type = std::remove_const_t<std::remove_pointer_t<T>>;
+
+		static_assert(std::is_base_of_v<QObject, pointed_type>, "The pointer to be converted to a QVariant must point to a type derived from QObject.");
+
 		return QVariant::fromValue(value);
 	} else if constexpr (is_specialization_of_v<T, std::unique_ptr>) {
-		return QVariant::fromValue(value.get());
+		return qvariant::from_value(value.get());
 	} else if constexpr (is_specialization_of_v<T, std::vector>) {
 		return container::to_qvariant_list(value);
 	} else if constexpr (is_specialization_of_v<T, std::variant>) {
