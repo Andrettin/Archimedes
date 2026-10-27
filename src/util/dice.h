@@ -2,6 +2,11 @@
 
 namespace archimedes {
 
+template <int N>
+class fractional_int;
+
+using decimillesimal_int = fractional_int<4>;
+
 class dice final
 {
 public:
@@ -114,24 +119,8 @@ public:
 		return max_result;
 	}
 
-	constexpr int64_t get_average(const int64_t multiplier) const
-	{
-		if (this->get_min_value().has_value() && this->get_count() == 1 && this->get_sides() > 0) {
-			int64_t average = 0;
-			for (int i = 1; i <= this->get_sides(); ++i) {
-				average += std::max<int64_t>((i + this->get_modifier()) * multiplier, this->get_min_value().value());
-			}
-			average /= this->get_sides();
-			return average;
-		}
-
-		return ((this->get_count() * this->get_sides()) + this->get_count()) * multiplier / 2 + (this->get_modifier() * multiplier);
-	}
-
-	constexpr int get_average(const int multiplier = 1) const
-	{
-		return static_cast<int>(this->get_average(static_cast<int64_t>(multiplier)));
-	}
+	decimillesimal_int get_average(const decimillesimal_int &multiplier) const;
+	int get_average(const int multiplier = 1) const;
 
 	constexpr bool is_null() const
 	{
