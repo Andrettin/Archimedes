@@ -2,6 +2,7 @@
 
 #include "script/condition/condition_base.h"
 #include "util/centesimal_int.h"
+#include "util/decimillesimal_int.h"
 
 namespace archimedes {
 
@@ -23,7 +24,7 @@ public:
 	explicit numerical_condition(const std::string &value, const gsml_operator condition_operator)
 		: numerical_condition(condition_operator)
 	{
-		if constexpr (std::is_same_v<base_value_type, centesimal_int>) {
+		if constexpr (std::is_same_v<base_value_type, centesimal_int> || std::is_same_v<base_value_type, decimillesimal_int>) {
 			this->base_value = base_value_type(value);
 		} else {
 			this->base_value = std::stoi(value);
