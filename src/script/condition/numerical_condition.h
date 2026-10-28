@@ -41,7 +41,7 @@ public:
 	{
 		std::string str;
 
-		if constexpr (std::is_same_v<base_value_type, centesimal_int>) {
+		if constexpr (std::is_same_v<base_value_type, centesimal_int> || std::is_same_v<base_value_type, decimillesimal_int>) {
 			str = this->base_value.to_string();
 		} else {
 			str = std::to_string(this->base_value);
