@@ -87,6 +87,7 @@
 
 //widely-used, seldomly-changed own headers
 #include "database/data_type.h"
+#include "util/decimillesimal_int.h"
 
 //metatype definitions
 Q_DECLARE_METATYPE(std::filesystem::path)
