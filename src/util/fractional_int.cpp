@@ -260,8 +260,15 @@ std::string fractional_int<N>::to_percent_string() const
 	static constexpr int N2 = (N > 2) ? (N - 2) : 0;
 
 	const int64_t percent_value = this->value * 100;
-	std::string number_str = std::to_string(percent_value / fractional_int<N2>::divisor);
-	number_str += fractional_int<N2>::to_rest_string(percent_value % fractional_int<N2>::divisor);
+	std::string number_str;
+
+	if constexpr (N2 > 0) {
+		number_str = std::to_string(percent_value / fractional_int<N2>::divisor);
+		number_str += fractional_int<N2>::to_rest_string(percent_value % fractional_int<N2>::divisor);
+	} else {
+		number_str = std::to_string(percent_value);
+	}
+
 	return number_str;
 }
 

@@ -7,6 +7,8 @@ template <int N>
 class fractional_int final
 {
 public:
+	static_assert(N >= 1);
+
 	static const int64_t divisor;
 
 	static fractional_int from_value(const int64_t value);
