@@ -149,19 +149,13 @@ constexpr int64_t fractional_int<N>::to_rounded_int64() const
 {
 	int64_t value = std::abs(this->value);
 
-	int64_t divisor = 10;
-	for (int i = 0; i < N; ++i) {
-		const int64_t number = value % divisor;
-		if (number > 0) {
-			if (number >= (5 * number::pow(10, i))) {
-				value += divisor;
-			}
-			value -= number;
-		}
-		divisor *= 10;
+	value /= (fractional_int::divisor / 10);
+
+	if (value % 10 >= 5) {
+		value += 10;
 	}
 
-	value /= fractional_int::divisor;
+	value /= 10;
 
 	if (this->value < 0) {
 		value *= -1;
