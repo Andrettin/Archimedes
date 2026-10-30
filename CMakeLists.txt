@@ -245,7 +245,6 @@ set(util_HDRS
 	src/util/decimillesimal_int.h
 	src/util/dice.h
 	src/util/empty_image_provider.h
-	src/util/enum_util.h
 	src/util/exception_util.h
 	src/util/fractional_int.h
 	src/util/gender.h
