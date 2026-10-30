@@ -42,4 +42,14 @@ extern std::string from_weight(const int weight_in_ounces, const bool joined, co
 extern std::pair<std::string, std::string> to_number_string_and_unit_string(const std::string &str);
 extern std::pair<int, int> to_numerator_and_denominator(const std::string &str);
 
+template <typename enum_type>
+inline enum_type to_enum(const std::string &str)
+{
+	try {
+		return magic_enum::enum_cast<enum_type>(str).value();
+	} catch (const std::bad_optional_access &) {
+		std::throw_with_nested(std::runtime_error(std::format("Invalid value for enum {}: {}.", magic_enum::enum_type_name<enum_type>(), str)));
+	}
+}
+
 }
