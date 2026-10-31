@@ -133,6 +133,10 @@ public:
 	{
 		std::vector<T *> &instances = reinterpret_cast<std::vector<T *> &>(data_type_base::get_all_modifiable(QMetaType::fromType<T>()));
 		std::sort(instances.begin(), instances.end(), function);
+
+		for (size_t i = 0; i < instances.size(); ++i) {
+			instances[i]->set_index(i);
+		}
 	}
 
 	static void load_history_database(const QDate &start_date, const timeline *timeline, const game_rules_base *game_rules)

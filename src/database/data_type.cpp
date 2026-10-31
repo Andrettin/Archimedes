@@ -82,7 +82,9 @@ data_entry *data_type_base::add(const std::string &identifier, const data_module
 	data_entry *instance_ptr = instance.get();
 	data_type_base::instances_by_identifier[metadata->get_meta_type().id()][identifier] = std::move(instance);
 
-	data_type_base::instances[metadata->get_meta_type().id()].push_back(instance_ptr);
+	std::vector<data_entry *> &instances_vector = data_type_base::instances[metadata->get_meta_type().id()];
+	instance_ptr->set_index(instances_vector.size());
+	instances_vector.push_back(instance_ptr);
 	instance_ptr->moveToThread(QCoreApplication::instance()->thread());
 	instance_ptr->set_module(data_module);
 

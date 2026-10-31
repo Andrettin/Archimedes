@@ -22,6 +22,9 @@ public:
 	explicit data_entry(const std::string &identifier);
 	virtual ~data_entry();
 
+	size_t get_index() const;
+	void set_index(const size_t index);
+
 	const std::string &get_identifier() const;
 	QString get_identifier_qstring() const;
 	const std::set<std::string> &get_aliases() const;
@@ -56,6 +59,7 @@ signals:
 	void changed();
 
 private:
+	size_t index = 0;
 	std::string identifier;
 	std::set<std::string> aliases;
 	bool defined = false; //whether the data entry's definition has been concluded (with its data having been processed)

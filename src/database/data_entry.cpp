@@ -23,6 +23,16 @@ data_entry::~data_entry()
 {
 }
 
+size_t data_entry::get_index() const
+{
+	return this->index;
+}
+
+void data_entry::set_index(const size_t index)
+{
+	this->index = index;
+}
+
 const std::string &data_entry::get_identifier() const
 {
 	return this->identifier;
