@@ -23,7 +23,7 @@ data_entry *data_type_base::get(const std::string &identifier, const data_type_m
 	data_entry *instance = data_type_base::try_get(identifier, metadata->get_meta_type());
 
 	if (instance == nullptr) {
-		throw std::runtime_error("Invalid " + metadata->get_class_identifier() + " instance: \"" + identifier + "\".");
+		throw std::runtime_error(std::format("Invalid {} instance: \"{}\".", metadata->get_class_identifier(), identifier));
 	}
 
 	return instance;
@@ -71,11 +71,11 @@ bool data_type_base::exists(const QMetaType &meta_type, const std::string &ident
 data_entry *data_type_base::add(const std::string &identifier, const data_module *data_module, const data_type_metadata *metadata)
 {
 	if (identifier.empty()) {
-		throw std::runtime_error("Tried to add a " + metadata->get_class_identifier() + " instance with an empty string identifier.");
+		throw std::runtime_error(std::format("Tried to add a {} instance with an empty string identifier.", metadata->get_class_identifier()));
 	}
 
 	if (data_type_base::exists(metadata->get_meta_type(), identifier)) {
-		throw std::runtime_error("Tried to add a " + metadata->get_class_identifier() + " instance with the already-used \"" + identifier + "\" string identifier.");
+		throw std::runtime_error(std::format("Tried to add a {} instance with the already-used \"{}\" string identifier.", metadata->get_class_identifier(), identifier));
 	}
 
 	auto instance = metadata->get_instance_creation_function()(identifier);
@@ -110,11 +110,11 @@ data_entry *data_type_base::add(const std::string &identifier, const data_module
 void data_type_base::add_instance_alias(const QMetaType &meta_type, data_entry *instance, const std::string &alias, const std::string_view &class_identifier)
 {
 	if (alias.empty()) {
-		throw std::runtime_error("Tried to add a " + std::string(class_identifier) + " instance empty alias.");
+		throw std::runtime_error(std::format("Tried to add a {} instance empty alias.", class_identifier));
 	}
 
 	if (data_type_base::exists(meta_type, alias)) {
-		throw std::runtime_error("Tried to add a " + std::string(class_identifier) + " alias with the already-used \"" + alias + "\" string identifier.");
+		throw std::runtime_error(std::format("Tried to add a {} alias with the already-used \"{}\" string identifier.", class_identifier, alias));
 	}
 
 	data_type_base::instances_by_alias[meta_type.id()][alias] = instance;
@@ -206,7 +206,7 @@ void data_type_base::process_database(const bool definition, const data_module_m
 							instance->process_gsml_data(data_entry);
 							instance->set_defined(true);
 						} catch (...) {
-							std::throw_with_nested(std::runtime_error("Error processing or loading data for " + metadata->get_class_identifier() + " instance \"" + identifier + "\"."));
+							std::throw_with_nested(std::runtime_error(std::format("Error processing or loading data for {} instance \"{}\".", metadata->get_class_identifier(), identifier)));
 						}
 					}
 				} catch (...) {
@@ -233,11 +233,11 @@ void data_type_base::initialize_all(const data_type_metadata *metadata)
 		try {
 			instance->initialize();
 		} catch (...) {
-			std::throw_with_nested(std::runtime_error("Failed to initialize the " + metadata->get_class_identifier() + " instance \"" + instance->get_identifier() + "\"."));
+			std::throw_with_nested(std::runtime_error(std::format("Failed to initialize the {} instance \"{}\".", metadata->get_class_identifier(), instance->get_identifier())));
 		}
 
 		if (!instance->is_initialized()) {
-			throw std::runtime_error("The " + metadata->get_class_identifier() + " instance \"" + instance->get_identifier() + "\" is not marked as initialized despite the initialization function having been called for it.");
+			throw std::runtime_error(std::format("The {} instance \"{}\" is not marked as initialized despite the initialization function having been called for it.", metadata->get_class_identifier(), instance->get_identifier()));
 		}
 	}
 }
@@ -248,7 +248,7 @@ void data_type_base::process_all_text(const data_type_metadata *metadata)
 		try {
 			instance->process_text();
 		} catch (...) {
-			std::throw_with_nested(std::runtime_error("Failed to process text for the " + metadata->get_class_identifier() + " instance \"" + instance->get_identifier() + "\"."));
+			std::throw_with_nested(std::runtime_error(std::format("Failed to process text for the {} instance \"{}\".", metadata->get_class_identifier(), instance->get_identifier())));
 		}
 	}
 }
