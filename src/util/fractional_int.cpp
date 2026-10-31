@@ -58,7 +58,7 @@ const fractional_int<N> &fractional_int<N>::min(const fractional_int &lhs, const
 }
 
 template <int N>
-const fractional_int<N> &fractional_int<N>::min(const fractional_int &lhs, const int64_t rhs)
+fractional_int<N> fractional_int<N>::min(const fractional_int &lhs, const int64_t rhs)
 {
 	return fractional_int::min(lhs, fractional_int(rhs));
 }
@@ -74,7 +74,7 @@ const fractional_int<N> &fractional_int<N>::max(const fractional_int &lhs, const
 }
 
 template <int N>
-const fractional_int<N> &fractional_int<N>::max(const fractional_int &lhs, const int64_t rhs)
+fractional_int<N> fractional_int<N>::max(const fractional_int &lhs, const int64_t rhs)
 {
 	return fractional_int::max(lhs, fractional_int(rhs));
 }

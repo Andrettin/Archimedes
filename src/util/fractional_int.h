@@ -15,9 +15,9 @@ public:
 	static std::string to_rest_string(int64_t rest);
 
 	static const fractional_int &min(const fractional_int &lhs, const fractional_int &rhs);
-	static const fractional_int &min(const fractional_int &lhs, const int64_t rhs);
+	static fractional_int min(const fractional_int &lhs, const int64_t rhs);
 	static const fractional_int &max(const fractional_int &lhs, const fractional_int &rhs);
-	static const fractional_int &max(const fractional_int &lhs, const int64_t rhs);
+	static fractional_int max(const fractional_int &lhs, const int64_t rhs);
 
 	constexpr fractional_int()
 	{
