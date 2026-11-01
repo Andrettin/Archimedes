@@ -241,8 +241,33 @@ std::string fractional_int<N>::to_string(const bool show_as_fraction) const
 }
 
 template <int N>
-std::string fractional_int<N>::to_formatted_string() const
+std::string fractional_int<N>::to_formatted_string(const bool truncate) const
 {
+	if (truncate) {
+		//ensure that at least two significant digits will be displayed, but otherwise try to truncate to as close to integers as possible
+		if (this->abs() >= 10) {
+			return number::to_formatted_string(this->to_int64());
+		}
+
+		if constexpr (N >= 2) {
+			if (this->abs() >= 1) {
+				return decimal_int(*this).to_formatted_string(false);
+			}
+		}
+
+		if constexpr (N >= 3) {
+			if (this->abs() >= fractional_int(decimillesimal_int::from_value(1000))) {
+				return centesimal_int(*this).to_formatted_string(false);
+			}
+		}
+
+		if constexpr (N >= 4) {
+			if (this->abs() >= fractional_int(decimillesimal_int::from_value(100))) {
+				return millesimal_int(*this).to_formatted_string(false);
+			}
+		}
+	}
+
 	const int64_t integer_value = this->to_int64();
 	std::string number_str;
 	if (integer_value == 0 && this->value < 0) {
