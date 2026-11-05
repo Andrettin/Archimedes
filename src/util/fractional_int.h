@@ -90,9 +90,9 @@ public:
 	constexpr bool operator >=(const int other) const;
 
 	constexpr const fractional_int<N> &operator +=(const fractional_int<N> &other);
-	constexpr const fractional_int<N> &operator +=(const int other);
+	constexpr const fractional_int<N> &operator +=(const int64_t other);
 	constexpr const fractional_int<N> &operator -=(const fractional_int<N> &other);
-	constexpr const fractional_int<N> &operator -=(const int other);
+	constexpr const fractional_int<N> &operator -=(const int64_t other);
 
 	template <int N2>
 	constexpr const fractional_int<N> &operator *=(const fractional_int<N2> &other)
@@ -118,9 +118,9 @@ public:
 	constexpr const fractional_int<N> &operator /=(const int64_t other);
 	constexpr const fractional_int<N> &operator /=(const uint64_t other);
 	constexpr fractional_int<N> operator +(const fractional_int<N> &other) const;
-	constexpr fractional_int<N> operator +(const int other) const;
+	constexpr fractional_int<N> operator +(const int64_t other) const;
 	constexpr fractional_int<N> operator -(const fractional_int<N> &other) const;
-	constexpr fractional_int<N> operator -(const int other) const;
+	constexpr fractional_int<N> operator -(const int64_t other) const;
 
 	template <int N2>
 	constexpr fractional_int<N> operator *(const fractional_int<N2> &other) const
@@ -164,6 +164,13 @@ public:
 		lhs *= fractional_int<N>::divisor;
 		lhs /= rhs.get_value();
 		return lhs;
+	}
+
+	friend constexpr fractional_int<N> operator +(const int64_t lhs, const fractional_int<N> &rhs)
+	{
+		fractional_int res(lhs);
+		res += rhs;
+		return res;
 	}
 
 	friend constexpr fractional_int<N> operator -(const int64_t lhs, const fractional_int<N> &rhs)
