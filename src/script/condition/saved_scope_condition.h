@@ -1,7 +1,6 @@
 #pragma once
 
 #include "script/condition/scope_condition.h"
-#include "util/assert_util.h"
 
 namespace archimedes {
 

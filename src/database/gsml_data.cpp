@@ -3,7 +3,6 @@
 #include "database/gsml_data.h"
 
 #include "database/gsml_operator.h"
-#include "database/gsml_property_visitor.h"
 #include "util/geocoordinate.h"
 #include "util/path_util.h"
 

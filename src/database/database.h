@@ -4,7 +4,6 @@
 #include "database/gsml_data.h"
 #include "util/qunique_ptr.h"
 #include "util/singleton.h"
-#include "util/type_traits.h"
 
 namespace archimedes {
 

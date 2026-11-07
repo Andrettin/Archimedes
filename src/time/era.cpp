@@ -3,7 +3,6 @@
 #include "time/era.h"
 
 #include "util/assert_util.h"
-#include "util/vector_util.h"
 
 namespace archimedes {
 	

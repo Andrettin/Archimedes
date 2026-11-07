@@ -3,7 +3,6 @@
 #include "text_processor_base.h"
 
 #include "language/word.h"
-#include "util/assert_util.h"
 #include "util/queue_util.h"
 #include "util/string_util.h"
 

@@ -8,7 +8,6 @@
 #include "language/word.h"
 #include "language/word_type.h"
 #include "util/assert_util.h"
-#include "util/log_util.h"
 #include "util/markov_generator.h"
 #include "util/path_util.h"
 #include "util/string_util.h"

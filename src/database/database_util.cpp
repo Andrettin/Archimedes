@@ -2,7 +2,7 @@
 
 #include "database/database_util.h"
 
-#include "database/data_type.h"
+#include "database/data_type_metadata.h"
 #include "database/database.h"
 
 namespace archimedes::database_util {

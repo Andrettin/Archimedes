@@ -3,7 +3,6 @@
 #include "database/data_entry.h"
 
 #include "database/data_entry_history.h"
-#include "database/database.h"
 #include "game/game_rule.h"
 #include "game/game_rules_base.h"
 #include "time/calendar.h"

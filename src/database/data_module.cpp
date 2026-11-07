@@ -3,7 +3,6 @@
 #include "database/data_module.h"
 
 #include "database/database.h"
-#include "util/container_util.h"
 
 namespace archimedes {
 

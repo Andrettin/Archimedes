@@ -7,7 +7,6 @@
 #include "util/geocoordinate.h"
 #include "util/georectangle.h"
 #include "util/geoshape_util.h"
-#include "util/point_util.h"
 
 #pragma warning(push, 0)
 #include <QPainter>

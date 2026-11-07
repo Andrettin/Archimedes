@@ -1,8 +1,5 @@
 #pragma once
 
-#include "util/qunique_ptr.h"
-#include "util/type_traits.h"
-
 namespace archimedes {
 	class data_module;
 	class data_type_metadata;

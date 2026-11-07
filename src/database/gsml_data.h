@@ -4,6 +4,7 @@
 #include "database/gsml_element_visitor.h"
 #include "database/gsml_property.h"
 #include "database/gsml_property_visitor.h"
+#include "util/type_traits.h"
 
 namespace archimedes {
 

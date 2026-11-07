@@ -2,7 +2,6 @@
 
 #include "util/angle_util.h"
 
-#include "util/decimillesimal_int.h"
 #include "util/number_util.h"
 
 #include <boost/math/constants/constants.hpp>
