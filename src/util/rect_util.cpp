@@ -3,7 +3,6 @@
 #include "util/rect_util.h"
 
 #include "util/number_util.h"
-#include "util/point_util.h"
 
 namespace archimedes::rect {
 

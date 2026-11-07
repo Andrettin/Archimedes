@@ -7,7 +7,6 @@
 #include "script/condition/or_condition.h"
 #include "script/condition/tooltip_condition.h"
 #include "util/string_util.h"
-#include "util/type_traits.h"
 
 namespace archimedes {
 
