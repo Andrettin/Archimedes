@@ -2,6 +2,7 @@
 
 #include "script/condition/condition_base.h"
 #include "util/gender.h"
+#include "util/string_conversion_util.h"
 
 namespace archimedes {
 
@@ -12,7 +13,7 @@ public:
 	explicit gender_condition(const std::string &value, const gsml_operator condition_operator)
 		: condition_base<scope_type, context_type>(condition_operator)
 	{
-		this->gender = magic_enum::enum_cast<archimedes::gender>(value).value();
+		this->gender = string::to_enum<archimedes::gender>(value);
 	}
 
 	virtual const std::string &get_class_identifier() const override

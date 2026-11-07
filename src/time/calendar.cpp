@@ -6,6 +6,7 @@
 #include "database/gsml_property.h"
 #include "time/day_of_the_week.h"
 #include "time/month.h"
+#include "util/string_conversion_util.h"
 
 namespace archimedes {
 
@@ -33,7 +34,7 @@ void calendar::process_gsml_scope(const gsml_data &scope)
 			const std::string &key = property.get_key();
 			const std::string &value = property.get_value();
 
-			this->month_names[magic_enum::enum_cast<month>(key).value()] = value;
+			this->month_names[string::to_enum<month>(key)] = value;
 		});
 	} else {
 		data_entry::process_gsml_scope(scope);

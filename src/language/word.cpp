@@ -12,6 +12,7 @@
 #include "language/word_type.h"
 #include "util/assert_util.h"
 #include "util/container_util.h"
+#include "util/string_conversion_util.h"
 #include "util/string_util.h"
 #include "util/vector_util.h"
 
@@ -39,7 +40,7 @@ void word::process_noun_inflection_scope(std::map<grammatical_number, std::map<g
 		if (const std::optional<grammatical_number> number = magic_enum::enum_cast<grammatical_number>(key)) {
 			inflections[number.value()][grammatical_case::none] = value;
 		} else {
-			const grammatical_case grammatical_case = magic_enum::enum_cast<archimedes::grammatical_case>(key).value();
+			const grammatical_case grammatical_case = string::to_enum<archimedes::grammatical_case>(key);
 			inflections[grammatical_number::none][grammatical_case] = value;
 		}
 	});
@@ -47,7 +48,7 @@ void word::process_noun_inflection_scope(std::map<grammatical_number, std::map<g
 	scope.for_each_child([&inflections](const gsml_data &child_scope) {
 		const std::string &child_tag = child_scope.get_tag();
 
-		const grammatical_number number = magic_enum::enum_cast<grammatical_number>(child_tag).value();
+		const grammatical_number number = string::to_enum<grammatical_number>(child_tag);
 
 		word::process_noun_inflection_scope(inflections[number], child_scope);
 	});
@@ -59,7 +60,7 @@ void word::process_noun_inflection_scope(std::map<grammatical_case, std::string>
 		const std::string &key = property.get_key();
 		const std::string &value = property.get_value();
 
-		const grammatical_case grammatical_case = magic_enum::enum_cast<archimedes::grammatical_case>(key).value();
+		const grammatical_case grammatical_case = string::to_enum<archimedes::grammatical_case>(key);
 		inflections[grammatical_case] = value;
 	});
 }
