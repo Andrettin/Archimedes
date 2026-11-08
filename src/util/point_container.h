@@ -9,7 +9,7 @@ struct point_compare final
 
 struct point_hash final
 {
-	size_t operator()(const QPoint &point) const
+	size_t operator()(const QPoint &point) const noexcept
 	{
 		return qHash(point);
 	}
