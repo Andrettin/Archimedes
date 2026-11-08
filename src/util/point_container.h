@@ -20,7 +20,6 @@ using point_set = std::set<QPoint, point_compare>;
 template <typename T>
 using point_map = std::map<QPoint, T, point_compare>;
 
-template <typename T>
 using point_unordered_set = std::unordered_set<QPoint, point_hash>;
 
 template <typename T>
