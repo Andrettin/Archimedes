@@ -26,9 +26,10 @@ inline constexpr int to_index(const QPoint &point, const QSize &size)
 	return point::to_index(point.x(), point.y(), size);
 }
 
-inline constexpr QPoint from_index(const int index, const int width)
+template <typename number_type>
+inline constexpr QPoint from_index(const number_type index, const number_type width)
 {
-	return QPoint(index % width, index / width);
+	return QPoint(static_cast<int>(index % width), static_cast<int>(index / width));
 }
 
 inline constexpr QPoint from_index(const int index, const QSize &size)
