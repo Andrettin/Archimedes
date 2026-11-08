@@ -28,7 +28,7 @@ void normalize(std::string &str)
 	string::replace(str, "\u014C", "O");
 	string::replace(str, "\u014D", "o");
 	string::replace(str, "\u016A", "U");
-	string::replace(str, "\u016A", "u");
+	string::replace(str, "\u016B", "u");
 
 	//replace superscript versions of characters with their normal versions
 	string::replace(str, "\u02B7", "w");
