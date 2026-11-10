@@ -117,6 +117,18 @@ inline QVariantMap to_qvariant_map(const T &map)
 }
 
 template <typename T>
+inline const typename T::mapped_type &get_or_default(const T &map, const typename T::key_type &key, const typename T::mapped_type &default_value)
+{
+	const auto find_iterator = map.find(key);
+
+	if (find_iterator != map.end()) {
+		return find_iterator->second;
+	}
+
+	return default_value;
+}
+
+template <typename T>
 inline std::vector<typename T::key_type> to_weighted_vector(const T &map)
 {
 	static_assert(std::is_integral_v<typename T::mapped_type>);
