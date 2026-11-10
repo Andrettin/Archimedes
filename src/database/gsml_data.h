@@ -80,6 +80,8 @@ public:
 			return std::stoll(key_str);
 		} else if constexpr (std::is_same_v<key_type, centesimal_int> || std::is_same_v<key_type, decimillesimal_int>) {
 			return key_type(key_str);
+		} else if constexpr (std::is_same_v<key_type, std::string>) {
+			return key_str;
 		} else {
 			static_assert(false);
 		}
