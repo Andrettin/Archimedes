@@ -12,6 +12,7 @@
 #include "language/word_type.h"
 #include "util/assert_util.h"
 #include "util/container_util.h"
+#include "util/map_util.h"
 #include "util/string_conversion_util.h"
 #include "util/string_util.h"
 #include "util/vector_util.h"
@@ -301,14 +302,9 @@ std::string word::get_noun_inflection(const grammatical_number number, const gra
 	return this->get_name() + this->language->GetNounEnding(number, grammatical_case, word_junction_type);
 }
 
-const std::string &word::GetVerbInflection(int grammatical_number, int grammatical_person, int grammatical_tense, int grammatical_mood)
+const std::string &word::GetVerbInflection(const int grammatical_number, const int grammatical_person, const int grammatical_tense, const int grammatical_mood)
 {
-	auto find_iterator = this->NumberPersonTenseMoodInflections.find(std::make_tuple(grammatical_number, grammatical_person, grammatical_tense, grammatical_mood));
-	if (find_iterator != this->NumberPersonTenseMoodInflections.end()) {
-		return find_iterator->second;
-	}
-
-	return this->get_name();
+	return archimedes::map::get_or_default(this->NumberPersonTenseMoodInflections, std::make_tuple(grammatical_number, grammatical_person, grammatical_tense, grammatical_mood), this->get_name());
 }
 
 std::string word::GetAdjectiveInflection(int comparison_degree, int article_type, const grammatical_case grammatical_case, const grammatical_number number, const grammatical_gender gender)
