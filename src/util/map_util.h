@@ -129,9 +129,10 @@ template <typename T>
 }
 
 template <typename T>
-requires (std::is_scalar_v<typename T::mapped_type>)
 [[nodiscard]] inline typename T::mapped_type get_or_default(const T &map, const typename T::key_type &key, typename T::mapped_type &&default_value)
 {
+	static_assert(std::is_scalar_v<typename T::mapped_type>);
+
 	const auto find_iterator = map.find(key);
 
 	if (find_iterator != map.end()) {
