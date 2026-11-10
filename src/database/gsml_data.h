@@ -42,6 +42,8 @@ public:
 				key_str = std::to_string(key);
 			} else if constexpr (std::is_same_v<typename map_type::key_type, centesimal_int> || std::is_same_v<typename map_type::key_type, decimillesimal_int>) {
 				key_str = key.to_string();
+			} else if constexpr (std::is_same_v<typename map_type::key_type, std::string>) {
+				key_str = key;
 			} else {
 				static_assert(false);
 			}
