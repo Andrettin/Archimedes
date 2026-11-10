@@ -117,8 +117,22 @@ inline QVariantMap to_qvariant_map(const T &map)
 }
 
 template <typename T>
-inline const typename T::mapped_type &get_or_default(const T &map, const typename T::key_type &key, const typename T::mapped_type &default_value)
+[[nodiscard]] inline const typename T::mapped_type &get_or_default(const T &map, const typename T::key_type &key, const typename T::mapped_type &default_value)
 {
+	const auto find_iterator = map.find(key);
+
+	if (find_iterator != map.end()) {
+		return find_iterator->second;
+	}
+
+	return default_value;
+}
+
+template <typename T>
+[[nodiscard]] inline typename T::mapped_type get_or_default(const T &map, const typename T::key_type &key, typename T::mapped_type &&default_value = {})
+{
+	static_assert(std::is_integral_v<typename T::mapped_type>);
+
 	const auto find_iterator = map.find(key);
 
 	if (find_iterator != map.end()) {
