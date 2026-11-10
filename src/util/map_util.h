@@ -131,7 +131,7 @@ template <typename T>
 template <typename T>
 [[nodiscard]] inline typename T::mapped_type get_or_default(const T &map, const typename T::key_type &key, typename T::mapped_type &&default_value = {})
 {
-	static_assert(std::is_integral_v<typename T::mapped_type>);
+	static_assert(std::is_scalar_v<typename T::mapped_type>);
 
 	const auto find_iterator = map.find(key);
 
