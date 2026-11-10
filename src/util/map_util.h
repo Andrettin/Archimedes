@@ -129,10 +129,9 @@ template <typename T>
 }
 
 template <typename T>
-[[nodiscard]] inline typename T::mapped_type get_or_default(const T &map, const typename T::key_type &key, typename T::mapped_type &&default_value = {})
+requires (std::is_scalar_v<typename T::mapped_type>)
+[[nodiscard]] inline typename T::mapped_type get_or_default(const T &map, const typename T::key_type &key, typename T::mapped_type &&default_value)
 {
-	static_assert(std::is_scalar_v<typename T::mapped_type>);
-
 	const auto find_iterator = map.find(key);
 
 	if (find_iterator != map.end()) {
@@ -140,6 +139,13 @@ template <typename T>
 	}
 
 	return default_value;
+}
+
+template <typename T>
+requires (std::is_arithmetic_v<typename T::mapped_type> || std::is_pointer_v<typename T::mapped_type>)
+[[nodiscard]] inline typename T::mapped_type get_or_default(const T &map, const typename T::key_type &key)
+{
+	return map::get_or_default(map, key, typename T::mapped_type{});
 }
 
 template <typename T>
