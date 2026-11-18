@@ -104,6 +104,10 @@ public:
 	{
 	}
 
+	explicit gsml_data(const char *tag) : gsml_data(std::string_view(tag))
+	{
+	}
+
 	explicit gsml_data(const std::string &tag, const gsml_operator scope_operator)
 		: gsml_data(std::string(tag), scope_operator)
 	{
