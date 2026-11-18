@@ -186,7 +186,7 @@ inline std::optional<typename T::key_type> get_highest_value_key(const T &map)
 	std::optional<typename T::mapped_type> best_value;
 
 	for (const auto &[key, value] : map) {
-		if (!best_value.has_value() || value > best_value) {
+		if (!best_value.has_value() || value > best_value.value()) {
 			best_value = value;
 			best_key = key;
 		}
@@ -202,10 +202,10 @@ inline std::vector<typename T::key_type> get_highest_value_keys(const T &map)
 	std::optional<typename T::mapped_type> best_value;
 
 	for (const auto &[key, value] : map) {
-		if (!best_value.has_value() || value > best_value) {
+		if (!best_value.has_value() || value > best_value.value()) {
 			best_keys.clear();
 			best_value = value;
-		} else if (value < best_value) {
+		} else if (value < best_value.value()) {
 			continue;
 		}
 
