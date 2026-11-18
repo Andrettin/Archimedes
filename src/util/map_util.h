@@ -179,4 +179,40 @@ inline typename T::mapped_type get_total_value(const T &map)
 	return total_value;
 }
 
+template <typename T>
+inline std::optional<typename T::key_type> get_highest_value_key(const T &map)
+{
+	std::optional<typename T::key_type> best_key;
+	std::optional<typename T::mapped_type> best_value;
+
+	for (const auto &[key, value] : map) {
+		if (!best_value.has_value() || value > best_value) {
+			best_value = value;
+			best_key = key;
+		}
+	}
+
+	return best_key;
+}
+
+template <typename T>
+inline std::vector<typename T::key_type> get_highest_value_keys(const T &map)
+{
+	std::vector<typename T::key_type> best_keys;
+	std::optional<typename T::mapped_type> best_value;
+
+	for (const auto &[key, value] : map) {
+		if (!best_value.has_value() || value > best_value) {
+			best_keys.clear();
+			best_value = value;
+		} else if (value < best_value) {
+			continue;
+		}
+
+		best_keys.push_back(key);
+	}
+
+	return best_keys;
+}
+
 }
