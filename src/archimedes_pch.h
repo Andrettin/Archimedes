@@ -90,6 +90,7 @@
 #include "database/data_type.h"
 #include "util/decimillesimal_int.h"
 #include "util/dice.h"
+#include "util/point_util.h"
 
 //metatype definitions
 Q_DECLARE_METATYPE(std::filesystem::path)
