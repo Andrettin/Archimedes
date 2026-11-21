@@ -2,6 +2,8 @@
 
 #include "util/log_level.h"
 
+#include <syncstream>
+
 namespace archimedes::log {
 
 log_level min_log_level = log_level::warning;
@@ -22,7 +24,7 @@ void log(const log_level level, const std::string_view &message)
 			break;
 	}
 
-	*ostream << "[" << QDateTime::currentDateTime().toString(log::date_string_format).toStdString() << "] " << "[" << get_log_level_name(level) << "] " << message << std::endl;
+	std::osyncstream(*ostream) << "[" << QDateTime::currentDateTime().toString(log::date_string_format).toStdString() << "] " << "[" << get_log_level_name(level) << "] " << message << std::endl;
 }
 
 void log_error(const std::string_view &error_message)
