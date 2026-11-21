@@ -86,7 +86,8 @@ public:
 
 	static const std::vector<T *> &get_all()
 	{
-		return reinterpret_cast<const std::vector<T *> &>(data_type_base::get_all(QMetaType::fromType<T>()));
+		static const std::vector<T *> &instances = reinterpret_cast<const std::vector<T *> &>(data_type_base::get_all(QMetaType::fromType<T>()));
+		return instances;
 	}
 
 	static std::vector<const T *> get_all_const()
@@ -131,7 +132,7 @@ public:
 	template <typename function_type>
 	static void sort_instances(const function_type &function)
 	{
-		std::vector<T *> &instances = reinterpret_cast<std::vector<T *> &>(data_type_base::get_all_modifiable(QMetaType::fromType<T>()));
+		static std::vector<T *> &instances = reinterpret_cast<std::vector<T *> &>(data_type_base::get_all_modifiable(QMetaType::fromType<T>()));
 		std::sort(instances.begin(), instances.end(), function);
 
 		for (size_t i = 0; i < instances.size(); ++i) {
