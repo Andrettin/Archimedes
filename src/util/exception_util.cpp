@@ -17,6 +17,12 @@ void report(const std::exception_ptr &exception)
 		}
 
 		log::log_error(aggregate_exception.what());
+	} catch (const QUnhandledException &exception) {
+		if (exception.exception() != nullptr) {
+			exception::report(exception.exception());
+		} else {
+			log::log_error(exception.what());
+		}
 	} catch (const std::exception &exception) {
 		try {
 			std::rethrow_if_nested(exception);
@@ -25,6 +31,8 @@ void report(const std::exception_ptr &exception)
 		}
 
 		log::log_error(exception.what());
+	} catch (...) {
+		log::log_error("Unknown exception.");
 	}
 }
 
